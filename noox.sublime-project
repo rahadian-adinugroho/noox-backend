@@ -14,8 +14,8 @@
 			"path": "resources"
 		},
 		{
-			"name": "Tests",
-			"path": "tests"
+			"name": "Database",
+			"path": "database"
 		},
 		{
 			"name": "Public",
@@ -24,6 +24,10 @@
 		{
 			"name": "Configurations",
 			"path": "config"
+		},
+		{
+			"name": "Tests",
+			"path": "tests"
 		}
 	]
 }
