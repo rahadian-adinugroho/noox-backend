@@ -20,7 +20,7 @@ class CreateUserNewsPreferencesTable extends Migration
             $table->primary(['userid', 'catid']);
 
             $table->foreign('userid')
-            ->references('userid')->on('users')
+            ->references('userid')->on('user')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 

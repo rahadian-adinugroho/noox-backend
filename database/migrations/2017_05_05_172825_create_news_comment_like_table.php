@@ -25,7 +25,7 @@ class CreateNewsCommentLikeTable extends Migration
             ->onUpdate('cascade');
 
             $table->foreign('userid')
-            ->references('userid')->on('users')
+            ->references('userid')->on('user')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });
