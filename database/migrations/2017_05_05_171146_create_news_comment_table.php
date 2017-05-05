@@ -14,25 +14,26 @@ class CreateNewsCommentTable extends Migration
     public function up()
     {
         Schema::create('news_comment', function (Blueprint $table) {
-            $table->increments('cmid');
-            $table->integer('newsid')->unsigned();
-            $table->integer('userid')->unsigned();
-            $table->dateTime('created');
+            $table->increments('id');
+            $table->integer('news_id')->unsigned();
+            $table->integer('user_id')->unsigned();
+            $table->dateTime('created_at');
+            $table->timestamp('updated_at')->nullable();
             $table->text('content');
-            $table->integer('refcmid')->unsigned();
+            $table->integer('parent_id')->unsigned()->nullable();
 
-            $table->foreign('newsid')
-            ->references('newsid')->on('news')
+            $table->foreign('news_id')
+            ->references('id')->on('news')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 
-            $table->foreign('userid')
-            ->references('userid')->on('user')
+            $table->foreign('user_id')
+            ->references('id')->on('user')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 
-            $table->foreign('refcmid')
-            ->references('cmid')->on('news_comment')
+            $table->foreign('parent_id')
+            ->references('id')->on('news_comment')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });

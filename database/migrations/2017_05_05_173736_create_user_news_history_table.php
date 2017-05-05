@@ -14,19 +14,19 @@ class CreateUserNewsHistoryTable extends Migration
     public function up()
     {
         Schema::create('user_news_history', function (Blueprint $table) {
-            $table->integer('userid')->unsigned();
-            $table->integer('newsid')->unsigned();
+            $table->integer('user_id')->unsigned();
+            $table->integer('news_id')->unsigned();
             $table->dateTime('date');
 
-            $table->primary(['userid', 'newsid']);
+            $table->primary(['user_id', 'news_id']);
 
-            $table->foreign('userid')
-            ->references('userid')->on('user')
+            $table->foreign('user_id')
+            ->references('id')->on('user')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 
-            $table->foreign('newsid')
-            ->references('newsid')->on('news')
+            $table->foreign('news_id')
+            ->references('id')->on('news')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });

@@ -14,18 +14,18 @@ class CreateNewsCommentLikeTable extends Migration
     public function up()
     {
         Schema::create('news_comment_like', function (Blueprint $table) {
-            $table->integer('cmid')->unsigned();
-            $table->integer('userid')->unsigned();
+            $table->integer('comment_id')->unsigned();
+            $table->integer('user_id')->unsigned();
 
-            $table->primary(['cmid', 'userid']);
+            $table->primary(['comment_id', 'user_id']);
 
-            $table->foreign('cmid')
-            ->references('cmid')->on('news_comment')
+            $table->foreign('comment_id')
+            ->references('id')->on('news_comment')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 
-            $table->foreign('userid')
-            ->references('userid')->on('user')
+            $table->foreign('user_id')
+            ->references('id')->on('user')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });

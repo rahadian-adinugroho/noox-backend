@@ -14,18 +14,18 @@ class CreateUserNewsPreferencesTable extends Migration
     public function up()
     {
         Schema::create('user_news_preferences', function (Blueprint $table) {
-            $table->integer('userid')->unsigned();
-            $table->integer('catid')->unsigned();
+            $table->integer('user_id')->unsigned();
+            $table->integer('category_id')->unsigned();
 
-            $table->primary(['userid', 'catid']);
+            $table->primary(['user_id', 'category_id']);
 
-            $table->foreign('userid')
-            ->references('userid')->on('user')
+            $table->foreign('user_id')
+            ->references('id')->on('user')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 
-            $table->foreign('catid')
-            ->references('catid')->on('news_category')
+            $table->foreign('category_id')
+            ->references('id')->on('news_category')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });

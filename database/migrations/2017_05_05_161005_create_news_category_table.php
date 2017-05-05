@@ -14,7 +14,7 @@ class CreateNewsCategoryTable extends Migration
     public function up()
     {
         Schema::create('news_category', function (Blueprint $table) {
-            $table->increments('catid');
+            $table->increments('id');
             $table->string('name', 32);
         });
     }

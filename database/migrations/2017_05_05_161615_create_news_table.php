@@ -14,21 +14,21 @@ class CreateNewsTable extends Migration
     public function up()
     {
         Schema::create('news', function (Blueprint $table) {
-            $table->increments('newsid');
-            $table->integer('sourceid')->unsigned();
-            $table->integer('catid')->unsigned();
+            $table->increments('id');
+            $table->integer('source_id')->unsigned();
+            $table->integer('cat_id')->unsigned();
             $table->string('title', 128);
             $table->dateTime('pubtime');
             $table->string('author', 64);
             $table->text('content');
 
-            $table->foreign('sourceid')
-            ->references('sourceid')->on('news_source')
+            $table->foreign('source_id')
+            ->references('id')->on('news_source')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 
-            $table->foreign('catid')
-            ->references('catid')->on('news_category')
+            $table->foreign('cat_id')
+            ->references('id')->on('news_category')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });

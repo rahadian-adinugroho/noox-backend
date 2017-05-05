@@ -14,9 +14,9 @@ class CreateNewsSourceTable extends Migration
     public function up()
     {
         Schema::create('news_source', function (Blueprint $table) {
-            $table->increments('sourceid');
-            $table->string('sourcename', 64)->unique();
-            $table->string('baseurl', 32);
+            $table->increments('id');
+            $table->string('source_name', 64)->unique();
+            $table->string('base_url', 32);
         });
     }
 

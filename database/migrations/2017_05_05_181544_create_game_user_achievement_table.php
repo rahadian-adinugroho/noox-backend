@@ -13,20 +13,20 @@ class CreateGameUserAchievementTable extends Migration
      */
     public function up()
     {
-        Schema::create('game_user_achievement', function (Blueprint $table) {
-            $table->string('acvkey', 32);
-            $table->integer('userid')->unsigned();
+        Schema::create('user_achievement', function (Blueprint $table) {
+            $table->integer('acv_id')->unsigned();
+            $table->integer('user_id')->unsigned();
             $table->dateTime('earndate');
 
-            $table->primary(['acvkey', 'userid']);
+            $table->primary(['acv_id', 'user_id']);
 
-            $table->foreign('acvkey')
-            ->references('acvkey')->on('game_achievement')
+            $table->foreign('acv_id')
+            ->references('id')->on('achievement_list')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 
-            $table->foreign('userid')
-            ->references('userid')->on('user')
+            $table->foreign('user_id')
+            ->references('id')->on('user')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });
@@ -39,6 +39,6 @@ class CreateGameUserAchievementTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('game_user_achievement');
+        Schema::dropIfExists('user_achievement');
     }
 }
