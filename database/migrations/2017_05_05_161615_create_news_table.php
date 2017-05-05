@@ -17,9 +17,10 @@ class CreateNewsTable extends Migration
             $table->increments('id');
             $table->integer('source_id')->unsigned();
             $table->integer('cat_id')->unsigned();
+            $table->text('url');
             $table->string('title', 128);
             $table->dateTime('pubtime');
-            $table->string('author', 64);
+            $table->string('author', 64)->nullable();
             $table->text('content');
 
             $table->foreign('source_id')
