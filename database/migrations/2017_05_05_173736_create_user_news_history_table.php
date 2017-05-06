@@ -13,7 +13,7 @@ class CreateUserNewsHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_news_history', function (Blueprint $table) {
+        Schema::create('user_read_history', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->integer('news_id')->unsigned();
             $table->dateTime('date');
@@ -39,6 +39,6 @@ class CreateUserNewsHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_news_history');
+        Schema::dropIfExists('user_read_history');
     }
 }
