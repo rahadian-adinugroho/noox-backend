@@ -25,4 +25,9 @@ class News extends Model
     {
     	return $this->hasMany('Noox\Models\NewsComment')->orderBy('created_at', 'desc');
     }
+
+    public function likes()
+    {
+        return $this->hasMany('Noox\Models\NewsLike');
+    }
 }
