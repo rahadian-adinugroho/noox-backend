@@ -4,7 +4,7 @@ namespace Noox\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class NewsLike extends Model
+class NewsCommentLike extends Model
 {
     use Traits\HasCompositePrimaryKey;
 

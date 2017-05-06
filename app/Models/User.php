@@ -19,8 +19,8 @@ class User extends Model
     	return $this->hasMany('Noox\Models\NewsComment')->orderBy('created_at', 'desc');
     }
 
-    public function likes()
+    public function commentLikes()
     {
-    	return $this->hasMany('Noox\Models\NewsLike');
+    	return $this->hasMany('Noox\Models\NewsCommentLike');
     }
 }

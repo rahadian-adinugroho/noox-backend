@@ -31,6 +31,6 @@ class NewsComment extends Model
 
     public function likes()
     {
-        return $this->hasMany('Noox\Models\NewsLike', 'comment_id');
+        return $this->hasMany('Noox\Models\NewsCommentLike', 'comment_id');
     }
 }
