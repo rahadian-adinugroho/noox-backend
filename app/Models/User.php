@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Noox\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,13 +9,18 @@ class User extends Model
     protected $table = 'user';
     protected $fillable = array('fb_id','google_id', 'name', 'email', 'password', 'gender', 'birthday');
 
+    public function history()
+    {
+    	return $this->hasMany('Noox\Models\UserReadHistory')->orderBy('last_read', 'desc');
+    }
+
     public function comments()
     {
-    	return $this->hasMany('App\NewsComment')->orderBy('created_at', 'desc');
+    	return $this->hasMany('Noox\Models\NewsComment')->orderBy('created_at', 'desc');
     }
 
     public function likes()
     {
-    	return $this->hasMany('App\NewsLike');
+    	return $this->hasMany('Noox\Models\NewsLike');
     }
 }

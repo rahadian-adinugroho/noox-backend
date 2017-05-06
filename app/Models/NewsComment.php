@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Noox\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,26 +11,26 @@ class NewsComment extends Model
 
     public function author()
     {
-    	return $this->belongsTo('App\User', 'user_id');
+    	return $this->belongsTo('Noox\Models\User', 'user_id');
     }
 
     public function news()
     {
-    	return $this->belongsTo('App\News');
+    	return $this->belongsTo('Noox\Models\News');
     }
 
     public function parent()
     {
-        return $this->belongsTo('App\NewsComment', 'parent_id');
+        return $this->belongsTo('Noox\Models\NewsComment', 'parent_id');
     }
 
     public function replies()
     {
-        return $this->hasMany('App\NewsComment', 'parent_id');
+        return $this->hasMany('Noox\Models\NewsComment', 'parent_id');
     }
 
     public function likes()
     {
-        return $this->hasMany('App\NewsLike', 'comment_id');
+        return $this->hasMany('Noox\Models\NewsLike', 'comment_id');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Noox\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +13,6 @@ class NewsSource extends Model
 
     public function news()
     {
-    	return $this->hasMany('App\News', 'source_id')->orderBy('created_at', 'desc');
+    	return $this->hasMany('Noox\Models\News', 'source_id')->orderBy('created_at', 'desc');
     }
 }

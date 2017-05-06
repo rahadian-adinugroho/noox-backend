@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Noox\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +13,6 @@ class NewsCategory extends Model
 
     public function news()
     {
-    	return $this->hasMany('App\News', 'cat_id');
+    	return $this->hasMany('Noox\Models\News', 'cat_id');
     }
 }

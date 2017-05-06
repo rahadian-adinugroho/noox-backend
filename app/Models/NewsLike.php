@@ -1,25 +1,26 @@
 <?php
 
-namespace App;
+namespace Noox\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class NewsLike extends Model
 {
-	protected $primaryKey = null;
+    use Traits\HasCompositePrimaryKey;
+
+	protected $primaryKey = array('comment_id', 'user_id');
 	public $incrementing  = false;
 	public $timestamps    = false;
 
 	protected $table      = 'news_comment_like';
-	protected $fillable   = array('comment_id', 'user_id');
 
     public function owner()
     {
-    	return $this->belongsTo('App\User');
+    	return $this->belongsTo('Noox\Models\User');
     }
 
     public function comment($value='')
     {
-    	return $this->belongsTo('App\NewsComment', 'comment_id');
+    	return $this->belongsTo('Noox\Models\NewsComment', 'comment_id');
     }
 }

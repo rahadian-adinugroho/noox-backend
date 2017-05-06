@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Noox\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,16 +13,16 @@ class News extends Model
 
     public function source()
     {
-    	return $this->belongsTo('App\NewsSource', 'source_id');
+    	return $this->belongsTo('Noox\Models\NewsSource', 'source_id');
     }
 
     public function category()
     {
-    	return $this->belongsTo('App\NewsCategory', 'cat_id');
+    	return $this->belongsTo('Noox\Models\NewsCategory', 'cat_id');
     }
 
     public function comments()
     {
-    	return $this->hasMany('App\NewsComment')->orderBy('created_at', 'desc');
+    	return $this->hasMany('Noox\Models\NewsComment')->orderBy('created_at', 'desc');
     }
 }
