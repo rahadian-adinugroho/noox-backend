@@ -16,7 +16,8 @@ class CreateUserNewsHistoryTable extends Migration
         Schema::create('user_read_history', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->integer('news_id')->unsigned();
-            $table->dateTime('date');
+            $table->dateTime('first_read');
+            $table->timestamp('last_read')->nullable();
 
             $table->primary(['user_id', 'news_id']);
 
