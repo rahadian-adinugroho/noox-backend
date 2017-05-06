@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class NewsCategory extends Model
 {
-    protected $table = 'news_category';
-    protected $fillable = array('name');
+	public $timestamps  = false;
+	
+	protected $table    = 'news_category';
+	protected $fillable = array('name');
 
     public function news()
     {

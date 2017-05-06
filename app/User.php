@@ -13,4 +13,9 @@ class User extends Model
     {
     	return $this->hasMany('App\NewsComment')->orderBy('created_at', 'desc');
     }
+
+    public function likes()
+    {
+    	return $this->hasMany('App\NewsLike');
+    }
 }

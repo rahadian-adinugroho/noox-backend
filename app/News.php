@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class News extends Model
 {
-    protected $table = 'news';
+    public $timestamps  = false;
+    
+    protected $table    = 'news';
     protected $fillable = array('source_id','cat_id', 'title', 'pubtime', 'author', 'content');
 
     public function source()

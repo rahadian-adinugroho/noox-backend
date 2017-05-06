@@ -28,4 +28,9 @@ class NewsComment extends Model
     {
         return $this->hasMany('App\NewsComment', 'parent_id');
     }
+
+    public function likes()
+    {
+        return $this->hasMany('App\NewsLike', 'comment_id');
+    }
 }
