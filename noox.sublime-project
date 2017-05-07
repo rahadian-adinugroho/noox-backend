@@ -28,6 +28,10 @@
 		{
 			"name": "Tests",
 			"path": "tests"
+		},
+		{
+			"name": "Vendor",
+			"path": "vendor"
 		}
 	]
 }

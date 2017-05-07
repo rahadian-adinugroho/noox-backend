@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => Noox\User::class,
+            'model' => Noox\Models\User::class,
         ],
 
         // 'users' => [

@@ -2,12 +2,16 @@
 
 namespace Noox\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class User extends Authenticatable
 {
+    use Notifiable;
+
     protected $table = 'user';
     protected $fillable = array('fb_id','google_id', 'name', 'email', 'password', 'gender', 'birthday');
+    protected $hidden = array('password', 'remember_token');
 
     public function history()
     {
