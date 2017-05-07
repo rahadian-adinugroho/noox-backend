@@ -15,6 +15,10 @@ Route::get('/', function () {
 	return view('welcome');
 });
 
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('/insert', function() {
 	Noox\Models\User::create(['name'=>'Jalil Master','email'=>'jalilmaster@gmail.com','password'=>'k123k12ndn2']);
 	return 'Biodata Created';
@@ -67,7 +71,7 @@ Route::get('/read/{id}', function($id) {
 	{
 		$query->select('id', 'name');
 	}
-	, 'source', 'category'])->find($id);
+	, 'source', 'category'])->withCount('likes')->find($id);
 
 	if(is_null($news))
 	{
@@ -104,27 +108,77 @@ Route::get('/comment_insert', function() {
 
 Route::get('/comment_get', function() {
 	$comments = Noox\Models\NewsComment::with([
-		'author' => function ($query) {
+		'author' => function ($query)
+		{
 			$query->select('id', 'name');
 		},
-		'replies' => function ($query) {
+		'replies' => function ($query)
+		{
 			$query->select('id', 'user_id', 'content', 'parent_id')->withCount('likes');
-		}, 'replies.author'=> function ($query) {
+		},
+		'replies.author'=> function ($query)
+		{
 			$query->select('id', 'name');
-		}])->select('id','user_id', 'created_at', 'content')->withCount(['likes', 'replies'])->find(2);
+		}
+		])->select('id','user_id', 'created_at', 'content')->withCount(['likes', 'replies'])->find(2);
 	return $comments;
 });
 
+Route::get('/user/{id}', function($id) {
+	$user = Noox\Models\User::with([
+		'comments' => function($query)
+		{
+			$query->select('user_id', 'news_id', 'created_at', 'content')->whereNull('parent_id');
+		},
+		'comments.news' => function($query)
+		{
+			$query->select('id', 'title');
+		}
+		])->select('id', 'name', 'created_at as member_since')->withCount([
+		'comments' => function($query)
+		{
+			$query->whereNull('parent_id');
+		}
+		])->find($id);
+	if(!is_null($user))
+	{
+		$ret = ['user' => $user];
+		return $ret;
+	}
+	else
+	{
+		return '404';
+	}
+	
+});
+
 Route::get('/user_like', function() {
-	$count = Noox\Models\User::select('name')->withCount('likes')->find(1);
+	$count = Noox\Models\User::select('id', 'name')->with('newsLikes.news')->withCount(['newsLikes', 'commentLikes'])->find(1);
 	return $count;
 });
 
-Route::get('/comment_like', function() {
-	$existing = Noox\Models\NewsLike::where('user_id', 1)->where('comment_id', 2)->first();
+Route::get('/news_like', function() {
+	$existing = Noox\Models\NewsLike::where('user_id', 1)->where('news_id', 1)->first();
 	if(is_null($existing))
 	{
 		$like = new Noox\Models\NewsLike();
+		$like->user_id = 1;
+		$like->news_id = 1;
+		$like->save();
+		$res = $like;
+	}
+	else
+	{
+		$res = ['error' => 'code', 'msg' => 'Already like this news.'];
+	}
+	return $res;
+});
+
+Route::get('/comment_like', function() {
+	$existing = Noox\Models\NewsCommentLike::where('user_id', 1)->where('comment_id', 2)->first();
+	if(is_null($existing))
+	{
+		$like = new Noox\Models\NewsCommentLike();
 		$like->user_id = 1;
 		$like->comment_id = 2;
 		$like->save();
