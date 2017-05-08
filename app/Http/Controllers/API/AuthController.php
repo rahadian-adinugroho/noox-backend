@@ -6,6 +6,11 @@ use JWTAuth;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
+/**
+ * @resource Authentication
+ *
+ * API endpoints for authentication purpose.
+ */
 class AuthController extends BaseController
 {
     /**
