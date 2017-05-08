@@ -73,4 +73,26 @@ class UserTest extends TestCase
         $this->post('/api/users', $data)
         ->assertStatus(422);
     }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/users.
+     */
+    public function it_fetch_user_details()
+    {
+        $this->seed('UserTableSeeder');
+        $this->get('/api/user/1')
+        ->assertJson([
+            'data' => [
+            'id'        => 1,
+            'name' => "Jalil Boy",
+            'level'      => 1,
+            'xp'     => "0",
+            'comments_count'    => 0,
+            'news_likes_count' => 0,
+            "comments" => []
+            ]
+            ]);
+    }
 }

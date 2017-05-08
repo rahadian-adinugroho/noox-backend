@@ -26,6 +26,8 @@ $api->version('v1', function ($api)
     $api->post('auth/logout', 'Noox\Http\Controllers\API\AuthController@logout');
 
     $api->post('users', 'Noox\Http\Controllers\API\UserController@register');
+
+    $api->get('user/{id}', 'Noox\Http\Controllers\API\UserController@details');
 });
 
 $api->version('v1', ['middleware' => 'api.auth'], function ($api)

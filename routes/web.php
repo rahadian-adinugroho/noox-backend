@@ -126,19 +126,17 @@ Route::get('/comment_get', function() {
 
 Route::get('/user/{id}', function($id) {
 	$user = Noox\Models\User::with([
-		'comments' => function($query)
-		{
+		'comments' => function($query){
 			$query->select('user_id', 'news_id', 'created_at', 'content')->whereNull('parent_id');
 		},
-		'comments.news' => function($query)
-		{
+		'comments.news' => function($query){
 			$query->select('id', 'title');
 		}
-		])->select('id', 'name', 'created_at as member_since')->withCount([
-		'comments' => function($query)
-		{
+		])->select('id', 'name', 'created_at as member_since', 'level', 'xp')->withCount([
+		'comments' => function($query){
 			$query->whereNull('parent_id');
-		}
+		},
+		'newsLikes'
 		])->find($id);
 	if(!is_null($user))
 	{

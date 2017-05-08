@@ -10,7 +10,11 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $table = 'user';
-    protected $fillable = array('fb_id','google_id', 'name', 'email', 'password', 'gender', 'birthday');
+    protected $fillable = array('fb_id','google_id', 'name', 'email', 'password', 'gender', 'birthday', 'level', 'xp');
+    protected $attributes = [
+    'level' => 1,
+    'xp'    => 0,
+    ];
     protected $hidden = array('password', 'remember_token');
 
     public function history()
