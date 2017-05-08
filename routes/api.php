@@ -21,10 +21,14 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) 
 {
-    $api->get('auth/login', function() 
-    {
-        return ['Fruits' => 'Delicious and healthy!'];
-    });
+    $api->post('auth/login', 'Noox\Http\Controllers\API\AuthController@authenticate');
+
+    $api->post('auth/logout', 'Noox\Http\Controllers\API\AuthController@logout');
 
     $api->post('users', 'Noox\Http\Controllers\API\UserController@register');
+});
+
+$api->version('v1', ['middleware' => 'api.auth'], function ($api)
+{
+    $api->get('auth/renew_token', 'Noox\Http\Controllers\API\AuthController@getToken');
 });

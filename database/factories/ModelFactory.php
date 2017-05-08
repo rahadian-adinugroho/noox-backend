@@ -12,7 +12,7 @@
 */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(Noox\User::class, function (Faker\Generator $faker) {
+$factory->define(Noox\Models\User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
