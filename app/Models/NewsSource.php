@@ -13,6 +13,6 @@ class NewsSource extends Model
 
     public function news()
     {
-    	return $this->hasMany('Noox\Models\News', 'source_id')->orderBy('created_at', 'desc');
+    	return $this->hasMany('Noox\Models\News', 'source_id')->orderBy('pubtime', 'desc');
     }
 }

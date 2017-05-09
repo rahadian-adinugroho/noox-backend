@@ -13,6 +13,6 @@ class NewsCategory extends Model
 
     public function news()
     {
-    	return $this->hasMany('Noox\Models\News', 'cat_id');
+    	return $this->hasMany('Noox\Models\News', 'cat_id')->orderBy('pubtime', 'desc');
     }
 }
