@@ -45,7 +45,7 @@ trait NPerGroup
     $newBase = $this->newQuery()
       ->from(DB::raw("({$subQuery}) as {$table}"))
       ->mergeBindings($query->getQuery())
-      ->where($rankAlias, '<=', 2)
+      ->where($rankAlias, '<=', $n)
       ->getQuery();
  
     // replace underlying builder to get rid of previous clauses
