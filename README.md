@@ -41,6 +41,12 @@ Before migrating, make sure that you have created the database and change the .e
 $ php artisan migrate
 ```
 
+Seed the database.
+You may want to seed the database with some dummy data.
+
+```sh
+$ php artisan db:seed
+```
 
 And finally, start the server.
 
