@@ -14,9 +14,10 @@ class UserTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        
+        Schema::disableForeignKeyConstraints();
         User::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        Schema::enableForeignKeyConstraints();
         
         $users = [
         ['email' => 'jalilboy@jalil.org', 'password' => 'jalils', 'name' => 'Jalil Boy', 'gender' => 'm', 'birthday' => '2017-01-01'],

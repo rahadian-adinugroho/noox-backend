@@ -14,9 +14,10 @@ class NewsSourceTableSeeder extends Seeder
     public function run()
     {
     	Model::unguard();
-    	DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    	NewsSource::truncate();
-    	DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        
+    	Schema::disableForeignKeyConstraints();
+        NewsSource::truncate();
+        Schema::enableForeignKeyConstraints();
 
     	$entries = [
     	['source_name' => 'Detik', 'base_url' => 'http://www.detik.com'],

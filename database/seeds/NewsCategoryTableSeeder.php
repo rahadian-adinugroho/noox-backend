@@ -14,9 +14,10 @@ class NewsCategoryTableSeeder extends Seeder
     public function run()
     {
     	Model::unguard();
-    	DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    	NewsCategory::truncate();
-    	DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        
+    	Schema::disableForeignKeyConstraints();
+        NewsCategory::truncate();
+        Schema::enableForeignKeyConstraints();
 
     	$entries = [
     	['name' => 'National'],

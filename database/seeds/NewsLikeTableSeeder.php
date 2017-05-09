@@ -14,9 +14,10 @@ class NewsLikeTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        
+        Schema::disableForeignKeyConstraints();
         NewsLike::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        Schema::enableForeignKeyConstraints();
 
         $entries = [
         ['news_id' => 1, 'user_id' => 1],

@@ -14,9 +14,10 @@ class NewsCommentTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-    	DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    	NewsComment::truncate();
-    	DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        
+    	Schema::disableForeignKeyConstraints();
+        NewsComment::truncate();
+        Schema::enableForeignKeyConstraints();
 
     	$entries = [
     	[
