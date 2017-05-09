@@ -21,6 +21,11 @@ class News extends Model
     	return $this->belongsTo('Noox\Models\NewsCategory', 'cat_id');
     }
 
+    public function readers()
+    {
+        return $this->belongsToMany('Noox\Models\User', 'user_read_history')->withTimestamps('first_read', 'last_read')->orderBy('last_read', 'desc');
+    }
+
     public function comments()
     {
     	return $this->hasMany('Noox\Models\NewsComment')->orderBy('created_at', 'desc');
