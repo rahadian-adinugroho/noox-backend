@@ -14,13 +14,16 @@ class UserTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        DB::table('user')->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        User::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        
         $users = [
-            ['email' => 'jalilboy@jalil.org', 'password' => 'jalils', 'name' => 'Jalil Boy', 'gender' => 'm', 'birthday' => '2017-01-01'],
-            ['email' => 'jalilmaster@jalil.org', 'password' => 'jalils', 'name' => 'Jalil Master', 'gender' => 'm', 'birthday' => '2015-01-01'],
-            ['email' => 'jalildad@jalil.org', 'password' => 'jalils', 'name' => 'Jalil Boy', 'gender' => 'm', 'birthday' => '2016-01-01'],
+        ['email' => 'jalilboy@jalil.org', 'password' => 'jalils', 'name' => 'Jalil Boy', 'gender' => 'm', 'birthday' => '2017-01-01'],
+        ['email' => 'jalilmaster@jalil.org', 'password' => 'jalils', 'name' => 'Jalil Master', 'gender' => 'm', 'birthday' => '2015-01-01'],
+        ['email' => 'jalildad@jalil.org', 'password' => 'jalils', 'name' => 'Jalil Dad', 'gender' => 'm', 'birthday' => '2016-01-01'],
         ];
-        // Loop through fruits above and create the record in DB
+
         foreach ($users as $key => $user) {
         	$entry = new User;
         	$entry->email = $user['email'];
@@ -28,8 +31,8 @@ class UserTableSeeder extends Seeder
         	$entry->name = $user['name'];
         	$entry->gender = $user['gender'];
         	$entry->birthday = $user['birthday'];
-         	$entry->save();
-        }
-        Model::reguard();
-    }
+          $entry->save();
+      }
+      Model::reguard();
+  }
 }
