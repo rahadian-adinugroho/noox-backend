@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use JWTAuth;
 use Noox\Models\User;
 
-class UserTest extends TestCase
+class ApiUserTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -77,7 +77,7 @@ class UserTest extends TestCase
     /**
      * @test
      *
-     * Test: POST /api/users.
+     * Test: get /api/user/1.
      */
     public function it_fetch_user_details()
     {

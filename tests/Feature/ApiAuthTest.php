@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use JWTAuth;
 use App\Models\User;
 
-class AuthTest extends TestCase
+class ApiAuthTest extends TestCase
 {
 	use DatabaseMigrations;
 
