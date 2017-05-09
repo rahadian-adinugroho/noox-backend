@@ -3,7 +3,6 @@
 namespace Noox\Http\Controllers\API;
 
 use Illuminate\Http\Request;
-use Noox\Http\Controllers\Controller;
 use JWTAuth;
 use Noox\Models\User;
 

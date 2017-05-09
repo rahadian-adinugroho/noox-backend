@@ -28,6 +28,8 @@ $api->version('v1', function ($api)
     $api->post('users', 'Noox\Http\Controllers\API\UserController@register');
 
     $api->get('user/{id}', 'Noox\Http\Controllers\API\UserController@details');
+
+    $api->get('news/{id}', 'Noox\Http\Controllers\API\NewsController@details');
 });
 
 $api->version('v1', ['middleware' => 'api.auth'], function ($api)
