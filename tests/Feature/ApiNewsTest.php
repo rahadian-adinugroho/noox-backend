@@ -56,7 +56,6 @@ class NewsTest extends TestCase
                 'content',
                 'likes_count',
                 'comments_count',
-                'comments' => []
             ]
             ]);
     }
