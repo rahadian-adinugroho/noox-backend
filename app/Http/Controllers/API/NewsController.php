@@ -17,13 +17,58 @@ class NewsController extends BaseController
 {
     /**
      * News details.
-     * Return the details of the news along with some comments
+     * Return the details of the news with 'likes' status if the requester supplied a valid token.
      * 
      * @param  integer $id
      * 
      * @return \Illuminate\Http\Response
      */
     public function details($id)
+    {
+        // try to get the user id if token exist
+        try {
+            $userId = JWTAuth::parseToken()->getPayload()->get('sub');
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            $userId = null;
+        }
+        $query = News::
+        with(['source', 'category'])
+        ->withCount(['likes', 'comments']);
+
+        if ($userId) {
+            $query->with(['likes' => function($q) use ($userId) 
+            {
+                $q->where('user_id', $userId);
+            }]);
+        }
+        $data = $query->find($id);
+
+        if(!is_null($data))
+        {
+            if ($userId) {
+                if ($data->readers()->where('user_id', $userId)->exists()) {
+                    $data->readers()->updateExistingPivot($userId, ['last_read' => Carbon::now()]);
+                } else {
+                    $data->readers()->attach($userId);
+                }
+            }
+            return response()->json(compact('data'));
+        }
+        else
+        {
+            return $this->response->errorNotFound('News not found.');
+        }
+    }
+
+    /**
+     * News details.
+     * Return the details of the news along with some comments.
+     * 
+     * @param  integer $id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function detailsWithComments($id)
     {
         // try to get the user id if token exist
         try {
@@ -46,21 +91,25 @@ class NewsController extends BaseController
                         $query->select('id', 'name');
                     }])
                     ->withCount('likes');
+
                     if ($userId) {
                         $query->with(['likes' => function($q) use ($userId) 
                         {
                             $q->where('user_id', $userId);
-                        }])->exists();
+                        }]);
                     }
+
                 },])
                 ->withCount(['replies', 'likes'])
                 ->whereNull('parent_id');
+
                 if ($userId) {
                     $query->with(['likes' => function($q) use ($userId) 
                     {
                         $q->where('user_id', $userId);
                     }]);
                 }
+
                 $query->take(10);
             },
             'comments.author' => function ($query) 
@@ -69,12 +118,14 @@ class NewsController extends BaseController
             },
             'source', 'category'])
         ->withCount(['likes', 'comments']);
+
         if ($userId) {
             $query->with(['likes' => function($q) use ($userId) 
             {
                 $q->where('user_id', $userId);
             }]);
         }
+
         $data = $query->find($id);
 
         if(!is_null($data))
@@ -105,6 +156,7 @@ class NewsController extends BaseController
      */
     public function getComments(Request $r, $newsId)
     {
+        \DB::enableQueryLog();
         // try to get the user id if token exist
         try {
             $userId = JWTAuth::parseToken()->getPayload()->get('sub');
@@ -113,22 +165,38 @@ class NewsController extends BaseController
         }
         $news = News::find($newsId);
         if ($news) {
-            $data =  
+            $query =  
             $news->comments()
             ->select('id', 'news_id', 'user_id', 'created_at', 'content')
             ->with([
-                'latestReplies' => function($q) {
+                'latestReplies' => function($q) use ($userId) {
                     $q
                     ->select('id', 'news_id', 'user_id', 'created_at', 'content', 'parent_id')
                     ->with(['author' => function($q) {
                         $q->select('id', 'name');
                     }])
                     ->withCount('likes');
+
+                    if ($userId) {
+                        $q->with(['likes' => function($q) use ($userId) 
+                        {
+                            $q->where('user_id', $userId);
+                        }]);
+                    }
                 },'author' => function($q) {
                     $q->select('id', 'name');
                 }])
-            ->withCount(['replies', 'likes'])
-            ->paginate($r->input('perPage'));
+            ->withCount(['replies', 'likes']);
+
+            if ($userId) {
+                $query->with(['likes' => function($q) use ($userId) 
+                {
+                    $q->where('user_id', $userId);
+                }]);
+            }
+
+            $data = $query->paginate($r->input('perPage'));
+            // print_r(\DB::getQueryLog());
             return response()->json(compact('data'));
         } else {
             return $this->response->errorNotFound('News not found.');
@@ -175,12 +243,14 @@ class NewsController extends BaseController
                     $q->select('id', 'name');
                 }])
                 ->withCount('likes');
+
                 if ($userId) {
                     $query->with([
                         'likes' => function($q) use ($userId) {
                             $q->where('user_id', $userId);
                         }]);
                 }
+
                 $replies = $query->paginate($r->input('perPage'), ['*'], 'replyPage');
             } else {
                 $replies = null;
