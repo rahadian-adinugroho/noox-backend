@@ -30,9 +30,15 @@ $api->version('v1', function ($api)
     $api->get('user/{id}', 'Noox\Http\Controllers\API\UserController@details');
 
     $api->get('news/{id}', 'Noox\Http\Controllers\API\NewsController@details');
+
+    $api->get('news/{id}/comments', 'Noox\Http\Controllers\API\NewsController@getComments');
+
+    $api->get('news_comment/{id}', 'Noox\Http\Controllers\API\NewsController@commentDetails');
 });
 
 $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 {
+    $api->post('news/{id}/comment', 'Noox\Http\Controllers\API\NewsController@submitComment');
+
     $api->get('auth/renew_token', 'Noox\Http\Controllers\API\AuthController@getToken');
 });
