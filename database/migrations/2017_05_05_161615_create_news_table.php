@@ -24,12 +24,12 @@ class CreateNewsTable extends Migration
             $table->text('content');
 
             $table->foreign('source_id')
-            ->references('id')->on('news_source')
+            ->references('id')->on('news_sources')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 
             $table->foreign('cat_id')
-            ->references('id')->on('news_category')
+            ->references('id')->on('news_categories')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });

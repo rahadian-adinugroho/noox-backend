@@ -20,12 +20,12 @@ class CreateUserNewsPreferencesTable extends Migration
             $table->primary(['user_id', 'category_id']);
 
             $table->foreign('user_id')
-            ->references('id')->on('user')
+            ->references('id')->on('users')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 
             $table->foreign('category_id')
-            ->references('id')->on('news_category')
+            ->references('id')->on('news_categories')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });

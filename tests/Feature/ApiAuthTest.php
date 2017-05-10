@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use JWTAuth;
-use App\Models\User;
+use Noox\Models\User;
 
 class ApiAuthTest extends TestCase
 {
@@ -38,7 +38,7 @@ class ApiAuthTest extends TestCase
      */
     public function it_authenticate_a_user()
     {
-        $user = factory(\Noox\Models\User::class)->create(['password' => bcrypt('foo')]);
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
 
         $this->post('/api/auth/login', ['email' => $user->email, 'password' => 'foo'])
         ->assertJsonStructure(['lifetime', 'gracetime', 'token']);
@@ -51,7 +51,7 @@ class ApiAuthTest extends TestCase
      */
     public function it_renew_a_token()
     {
-        $user = factory(\Noox\Models\User::class)->create(['password' => bcrypt('foo')]);
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
 
         $this->get('/api/auth/renew_token', $this->headers($user))
         ->assertJsonStructure(['lifetime', 'gracetime', 'token']);
@@ -64,7 +64,7 @@ class ApiAuthTest extends TestCase
      */
     public function it_invalidate_a_token()
     {
-        $user = factory(\Noox\Models\User::class)->create(['password' => bcrypt('foo')]);
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
 
         $token = JWTAuth::fromUser($user);
 

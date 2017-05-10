@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNewsSourceTable extends Migration
+class CreateNewsSourcesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateNewsSourceTable extends Migration
      */
     public function up()
     {
-        Schema::create('news_source', function (Blueprint $table) {
+        Schema::create('news_sources', function (Blueprint $table) {
             $table->increments('id');
             $table->string('source_name', 64)->unique();
             $table->string('base_url', 32);
@@ -27,6 +27,6 @@ class CreateNewsSourceTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('news_source');
+        Schema::dropIfExists('news_sources');
     }
 }

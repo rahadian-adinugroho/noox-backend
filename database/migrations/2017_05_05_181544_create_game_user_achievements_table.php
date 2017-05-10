@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGameUserAchievementTable extends Migration
+class CreateGameUserAchievementsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateGameUserAchievementTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_achievement', function (Blueprint $table) {
+        Schema::create('user_achievements', function (Blueprint $table) {
             $table->integer('acv_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->dateTime('earndate');
@@ -26,7 +26,7 @@ class CreateGameUserAchievementTable extends Migration
             ->onUpdate('cascade');
 
             $table->foreign('user_id')
-            ->references('id')->on('user')
+            ->references('id')->on('users')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });
@@ -39,6 +39,6 @@ class CreateGameUserAchievementTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_achievement');
+        Schema::dropIfExists('user_achievements');
     }
 }

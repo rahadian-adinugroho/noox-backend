@@ -8,7 +8,6 @@ class NewsComment extends Model
 {
     use Traits\NPerGroup;
 
-    protected $table = 'news_comment';
     protected $fillable = array('news_id', 'user_id', 'content', 'parent_id');
 
     public function author()

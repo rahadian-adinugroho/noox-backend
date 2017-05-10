@@ -12,8 +12,6 @@ class NewsCommentLike extends Model
 	public $incrementing  = false;
 	public $timestamps    = false;
 
-	protected $table      = 'news_comment_like';
-
     public function owner()
     {
     	return $this->belongsTo('Noox\Models\User');

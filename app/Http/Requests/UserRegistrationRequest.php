@@ -23,7 +23,7 @@ class UserRegistrationRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'    => 'required|email|unique:user',
+            'email'    => 'required|email|unique:users',
             'password' => 'required|min:6',
             'name'     => 'required|regex:/^[A-Za-z\s]+$/u',
             'gender'   => 'nullable|size:1',

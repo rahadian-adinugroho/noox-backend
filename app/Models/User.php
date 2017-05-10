@@ -9,7 +9,6 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'user';
     protected $fillable = array('fb_id','google_id', 'name', 'email', 'password', 'gender', 'birthday', 'level', 'xp');
     protected $attributes = [
     'level' => 1,

@@ -8,7 +8,6 @@ class NewsCategory extends Model
 {
 	public $timestamps  = false;
 	
-	protected $table    = 'news_category';
 	protected $fillable = array('name');
 
     public function news()

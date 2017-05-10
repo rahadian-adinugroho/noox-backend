@@ -8,7 +8,6 @@ class NewsSource extends Model
 {
 	public $timestamps  = false;
 
-	protected $table    = 'news_source';
 	protected $fillable = array('source_name', 'base_url');
 
     public function news()

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNewsCommentLikeTable extends Migration
+class CreateNewsLikesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,19 @@ class CreateNewsCommentLikeTable extends Migration
      */
     public function up()
     {
-        Schema::create('news_comment_like', function (Blueprint $table) {
-            $table->integer('comment_id')->unsigned();
+        Schema::create('news_likes', function (Blueprint $table) {
+            $table->integer('news_id')->unsigned();
             $table->integer('user_id')->unsigned();
 
-            $table->primary(['comment_id', 'user_id']);
+            $table->primary(['news_id', 'user_id']);
 
-            $table->foreign('comment_id')
-            ->references('id')->on('news_comment')
+            $table->foreign('news_id')
+            ->references('id')->on('news')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 
             $table->foreign('user_id')
-            ->references('id')->on('user')
+            ->references('id')->on('users')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });
@@ -38,6 +38,6 @@ class CreateNewsCommentLikeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('news_comment_like');
+        Schema::dropIfExists('news_likes');
     }
 }
