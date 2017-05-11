@@ -271,18 +271,39 @@ class NewsController extends BaseController
      */
     public function submitComment(\Noox\Http\Requests\SubmitNewsCommentRequest $request, $newsId)
     {
-        $user = JWTAuth::toUser();
+        if (! $news = News::find($newsId)) {
+            return $this->response->error('News not found.', 422);
+        }
+
         $comment = new NewsComment;
 
-        $comment->news_id = $newsId;
+        $comment->user_id = JWTAuth::getPayload()->get('sub');
         $comment->content = $request->input('content');
 
-        try {
-            $res = $user->comments()->save($comment);
+        if ($res = $news->comments()->save($comment)) {
             return $this->response->created(url('/api/news_comment/'.$res->id), ['status' => true, 'message' => 'Comment saved.']);
-        } catch (\Illuminate\Database\QueryException $e) {
-            $this->response->errorBadRequest('News not found.');
         }
         return $this->response->errorInternal('Unable to save comment at this moment.');
+    }
+
+    public function submitCommentReply(\Noox\Http\Requests\SubmitNewsCommentRequest $request, $commentId)
+    {
+        if (!$parent = NewsComment::find($commentId)) {
+            return $this->response->error('Comment not found.', 422);
+        }
+        if ($parent->parent_id) {
+            return $this->response->error('You cannot reply a comment reply.', 422);
+        }
+
+        $comment = new NewsComment;
+
+        $comment->user_id = JWTAuth::getPayload()->get('sub');
+        $comment->news_id = $parent->news_id;
+        $comment->content = $request->input('content');
+
+        if ($res = $parent->replies()->save($comment)) {
+            return $this->response->created(url('/api/news_comment/'.$res->id), ['status' => true, 'message' => 'Comment saved.']);
+        }
+        return $this->response->errorInternal('Unable to save reply at this moment.');
     }
 }

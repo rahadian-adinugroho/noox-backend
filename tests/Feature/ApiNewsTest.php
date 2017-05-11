@@ -141,7 +141,7 @@ class NewsTest extends TestCase
         $this->seed('UserTableSeeder');
         $this->seed('NewsCommentTableSeeder');
 
-        $this->get('/api/news_comment/1')
+        $this->get('/api/news/comment/1')
         ->assertJsonStructure([
             'comment' => [
                 'id',
@@ -218,10 +218,6 @@ class NewsTest extends TestCase
      */
     public function it_rejects_unauthenticated_user_comment()
     {
-        $this->seed('NewsCategoryTableSeeder');
-        $this->seed('NewsSourceTableSeeder');
-        $this->seed('NewsTableSeeder');
-
         $this->post('/api/news/1/comment', ['content' => 'Nice news.'], $this->headers())
         ->assertStatus(401);
     }
@@ -249,12 +245,85 @@ class NewsTest extends TestCase
      */
     public function it_rejects_deformed_user_comment()
     {
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/1/comment', ['content' => ''], $this->headers($user))
+        ->assertStatus(422);
+    }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/news/comment/1/reply.
+     */
+    public function it_rejects_unauthenticated_user_comment_reply()
+    {
+        $this->post('/api/news/comment/1/reply', ['content' => 'I agree.'], $this->headers())
+        ->assertStatus(401);
+    }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/news/comment/1/reply.
+     */
+    public function it_accepts_authenticated_user_comment_reply()
+    {
         $this->seed('NewsCategoryTableSeeder');
         $this->seed('NewsSourceTableSeeder');
         $this->seed('NewsTableSeeder');
+        $this->seed('UserTableSeeder');
+        $this->seed('NewsCommentTableSeeder');
 
         $user = factory(User::class)->create(['password' => bcrypt('foo')]);
-        $this->post('/api/news/1/comment', ['content' => ''], $this->headers($user))
+        $this->post('/api/news/comment/1/reply', ['content' => 'I agree.'], $this->headers($user))
+        ->assertStatus(201);
+    }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/news/comment/1/reply.
+     */
+    public function it_rejects_deformed_user_comment_reply()
+    {
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/comment/1/reply', ['content' => ''], $this->headers($user))
+        ->assertStatus(422);
+    }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/news/comment/1/reply.
+     */
+    public function it_rejects_reply_if_comment_not_found()
+    {
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+        $this->seed('UserTableSeeder');
+        $this->seed('NewsCommentTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/comment/20/reply', ['content' => 'I agree.'], $this->headers($user))
+        ->assertStatus(422);
+    }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/news/comment/1/reply.
+     */
+    public function it_rejects_reply_of_reply()
+    {
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+        $this->seed('UserTableSeeder');
+        $this->seed('NewsCommentTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/comment/2/reply', ['content' => 'I also agree.'], $this->headers($user))
         ->assertStatus(422);
     }
 }
