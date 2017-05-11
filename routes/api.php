@@ -38,9 +38,13 @@ $api->version('v1', function ($api)
 
 $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 {
+    $api->post('user/{id}/report', 'Noox\Http\Controllers\API\UserController@submitReport');
+
     $api->post('news/{id}/comment', 'Noox\Http\Controllers\API\NewsController@submitComment');
 
     $api->post('news/comment/{id}/reply', 'Noox\Http\Controllers\API\NewsController@submitCommentReply');
+
+    $api->post('news/{id}/report', 'Noox\Http\Controllers\API\NewsController@submitReport');
 
     $api->get('auth/renew_token', 'Noox\Http\Controllers\API\AuthController@getToken');
 });

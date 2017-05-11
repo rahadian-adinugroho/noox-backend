@@ -326,4 +326,44 @@ class NewsTest extends TestCase
         $this->post('/api/news/comment/2/reply', ['content' => 'I also agree.'], $this->headers($user))
         ->assertStatus(422);
     }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/news/1/report.
+     */
+    public function it_accepts_report_from_authenticated_user()
+    {
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+        $this->seed('ReportStatusesTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/1/report', ['content' => 'This news is turns out to be a hoax.'], $this->headers($user))
+        ->assertStatus(201);
+    }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/news/1/report.
+     */
+    public function it_rejects_report_from_unauthenticated_user()
+    {
+        $this->post('/api/news/1/report', ['content' => 'This news is turns out to be a hoax.'], $this->headers())
+        ->assertStatus(401);
+    }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/news/1/report.
+     */
+    public function it_rejects_deformed_user_report()
+    {
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/1/report', ['content' => ''], $this->headers($user))
+        ->assertStatus(422);
+    }
 }

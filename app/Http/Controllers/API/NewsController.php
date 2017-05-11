@@ -275,8 +275,7 @@ class NewsController extends BaseController
             return $this->response->error('News not found.', 422);
         }
 
-        $comment = new NewsComment;
-
+        $comment          = new NewsComment;
         $comment->user_id = JWTAuth::getPayload()->get('sub');
         $comment->content = $request->input('content');
 
@@ -286,6 +285,14 @@ class NewsController extends BaseController
         return $this->response->errorInternal('Unable to save comment at this moment.');
     }
 
+    /**
+     * Submit reply to a comment.
+     * Use this API to submit a reply to comment with id {id}.
+     * 
+     * @param string $content   
+     * 
+     * @return \Illuminate\Http\Response
+     */
     public function submitCommentReply(\Noox\Http\Requests\SubmitNewsCommentRequest $request, $commentId)
     {
         if (!$parent = NewsComment::find($commentId)) {
@@ -295,8 +302,7 @@ class NewsController extends BaseController
             return $this->response->error('You cannot reply a comment reply.', 422);
         }
 
-        $comment = new NewsComment;
-
+        $comment          = new NewsComment;
         $comment->user_id = JWTAuth::getPayload()->get('sub');
         $comment->news_id = $parent->news_id;
         $comment->content = $request->input('content');
@@ -305,5 +311,30 @@ class NewsController extends BaseController
             return $this->response->created(url('/api/news_comment/'.$res->id), ['status' => true, 'message' => 'Comment saved.']);
         }
         return $this->response->errorInternal('Unable to save reply at this moment.');
+    }
+
+    /**
+     * Submit a report for news.
+     * Use this API to submit a report for news with is {id}. The submitter has to be authenticated before doing this.
+     * 
+     * @param  string $content
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function submitReport(\Noox\Http\Requests\SubmitReportRequest $request, $newsId)
+    {
+        if(! $news = News::find($newsId)) {
+            return $this->response->error('News not found.', 422);
+        }
+
+        $report            = new \Noox\Models\Report;
+        $report->user_id   = JWTAuth::getPayload()->get('sub');
+        $report->content   = $request->input('content');
+        $report->status_id = \Noox\Models\ReportStatus::where('name', '=', 'open')->firstOrFail()->id;
+
+        if ($res = $news->reports()->save($report)) {
+            return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);
+        }
+        return $this->response->errorInternal('Unable to save your report at this moment.');
     }
 }

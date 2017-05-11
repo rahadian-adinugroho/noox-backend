@@ -95,4 +95,45 @@ class ApiUserTest extends TestCase
             ]
             ]);
     }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/user/3/report.
+     */
+    public function it_accepts_report_from_authenticated_user()
+    {
+        $this->seed('UserTableSeeder');
+        $this->seed('ReportStatusesTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/user/3/report', ['content' => 'This person is a spammer.'], $this->headers($user))
+        ->assertStatus(201);
+    }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/user/3/report.
+     */
+    public function it_rejects_report_from_unauthenticated_user()
+    {
+        $this->post('/api/user/3/report', ['content' => 'This person is a spammer.'], $this->headers())
+        ->assertStatus(401);
+    }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/user/3/report.
+     */
+    public function it_rejects_deformed_report()
+    {
+        $this->seed('UserTableSeeder');
+        $this->seed('ReportStatusesTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/user/3/report', ['content' => ''], $this->headers($user))
+        ->assertStatus(422);
+    }
 }
