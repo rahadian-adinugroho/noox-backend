@@ -11,6 +11,11 @@ class News extends Model
     protected $table    = 'news';
     protected $fillable = array('source_id','cat_id', 'title', 'pubtime', 'author', 'content');
 
+    public function reports()
+    {
+        return $this->morphMany('Noox\Models\Report', 'reportable');
+    }
+
     public function source()
     {
     	return $this->belongsTo('Noox\Models\NewsSource', 'source_id');

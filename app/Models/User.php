@@ -16,6 +16,11 @@ class User extends Authenticatable
     ];
     protected $hidden = array('password', 'remember_token');
 
+    public function reports()
+    {
+        return $this->morphMany('Noox\Models\Report', 'reportable');
+    }
+
     public function newsReadHistory()
     {
     	return $this->belongsToMany('Noox\Models\News', 'user_read_history')->withTimestamps('first_read', 'last_read')->orderBy('last_read', 'desc');
