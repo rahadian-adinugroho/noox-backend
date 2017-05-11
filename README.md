@@ -13,13 +13,6 @@ $ cd noox-backend
 $ composer install
 ```
 
-Generate key for the framework and API.
-
-```sh
-$ php artisan key:generate
-$ php artisan jwt:generate
-```
-
 Then open the .env file.
 
 ```sh
@@ -34,16 +27,18 @@ Edit following entries:
 >DB_USERNAME=myusername
 >DB_PASSWORD=mypass
 
+Generate key for the framework and API.
+
+```sh
+$ php artisan key:generate
+$ php artisan jwt:generate
+```
+
 Run database migration.
 Before migrating, make sure that you have created the database and change the .env file according to the database name.
 
 ```sh
 $ php artisan migrate
-```
-You may want to run a test against most API end points to test your setup.
-
-```sh
-$ vendor/bin/phpunit
 ```
 
 Seed the database.
