@@ -40,6 +40,11 @@ Before migrating, make sure that you have created the database and change the .e
 ```sh
 $ php artisan migrate
 ```
+You may want to run a test against most API end points to test your setup.
+
+```sh
+$ vendor/bin/phpunit
+```
 
 Seed the database.
 You may want to seed the database with some dummy data.
@@ -51,7 +56,7 @@ $ php artisan db:seed
 And finally, start the server.
 
 ```sh
-$ php artisan serve
+$ php artisan serve --host=[YOUR IP ADDRESS]
 ```
 
 ### Todos
