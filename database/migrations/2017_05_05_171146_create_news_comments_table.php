@@ -17,8 +17,7 @@ class CreateNewsCommentsTable extends Migration
             $table->increments('id');
             $table->integer('news_id')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->dateTime('created_at');
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamps();
             $table->text('content');
             $table->integer('parent_id')->unsigned()->nullable();
 

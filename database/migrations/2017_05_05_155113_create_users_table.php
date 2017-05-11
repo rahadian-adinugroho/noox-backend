@@ -24,8 +24,7 @@ class CreateUsersTable extends Migration
             $table->date('birthday')->nullable();
             $table->integer('level')->unsigned();
             $table->integer('xp');
-            $table->dateTime('created_at');
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamps();
             $table->rememberToken();
         });
     }
