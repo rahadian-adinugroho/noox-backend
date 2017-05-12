@@ -7,7 +7,7 @@ $(".navbar-trigger").on("click", function () {
 	 	}
 });
 $(".news-others-container").on("click", function () {
-	alert('tar bikin ke related page nya ha');
+	document.location.href = base_url + '/news/read/' + $(this).data("id");
 });
 function openAboutModal(){
 	if ($(".navbar-container").hasClass("expanded")) {
@@ -30,7 +30,7 @@ function popNavbar(){
 }
 
 function failCoverPicture(image) {
-    image.src = 'img/img-unavailable.png';
+    image.src = base_url+'img/img-unavailable.png';
     return true;
 }
 $(window).on("resize", popNavbar);
