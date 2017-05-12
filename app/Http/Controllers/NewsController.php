@@ -8,7 +8,16 @@ use Noox\Models\News;
 
 class NewsController extends Controller
 {
-    public function read($newsId)
+    /**
+     * View news article.
+     * Take news id from URL, and display the news content if available. When news not found it will return 404 error.
+     * 
+     * @param  integer $newsId
+     * @param  string $title
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function read($newsId, $title = null)
     {
         if (! $news = News::with(['category', 'source'])->find($newsId)) {
             abort(404, 'Artikel tidak ditemukan :(');

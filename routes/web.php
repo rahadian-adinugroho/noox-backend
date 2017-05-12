@@ -19,4 +19,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/news/read/{id}', 'NewsController@read');
+Route::get('/news/read/{id}/{title?}', 'NewsController@read');
