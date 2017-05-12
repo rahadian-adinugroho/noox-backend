@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="news-picture">
-        <img src="{{ asset( 'images/news/'.$news->id ) }}" onerror="this.onerror=null;this.src=base_url+'/img/img-unavailable.png'"/>
+        <img src="{{ asset( 'images/news/'.$news->id.'.jpg' ) }}" onerror="this.onerror=null;this.src=base_url+'/img/img-unavailable.png'"/>
     </div>
     <div class="news-author">Author : <span class="author">{{ ucwords(strtolower($news->author)) }}</span></div>
     <div class="news-separator"></div>
@@ -31,7 +31,7 @@
         @foreach ($otherNews as $data)
         <div class="news-others-container" data-id="{{ $data->id }}">
             <div class="no-photo">
-                <img src="{{ asset( 'images/news/'.$data->id ) }}" onerror="this.onerror=null;this.src=base_url+'/img/img-unavailable.png'" />
+                <img src="{{ asset( 'images/news/'.$data->id.'.jpg' ) }}" onerror="this.onerror=null;this.src=base_url+'/img/img-unavailable.png'" />
             </div>
             <div class="no-title">{{ $data->title }}</div>
             <div class="no-asset">

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>{{ config('app.name', 'Noox') }}</title>
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-    <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
+    <link rel="shortcut icon" type="image/png" href="{{ asset('favicon.ico') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('fonts/stylesheet.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/index.css') }}">
