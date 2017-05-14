@@ -3,6 +3,7 @@
 namespace Noox\Models;
 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -39,5 +40,22 @@ class User extends Authenticatable
     public function commentLikes()
     {
     	return $this->hasMany('Noox\Models\NewsCommentLike');
+    }
+
+    public function getStats($user_id = null)
+    {
+        if (! $user_id) {
+            if (! $user_id = $this->id) {
+                return null;
+            }
+        }
+
+        $news_read_count = DB::select('SELECT `name`, `t`.`read_count` FROM `news_categories` LEFT JOIN (SELECT `cat_id`, COUNT(*) AS `read_count` FROM `news` JOIN `user_read_history` ON `user_read_history`.`news_id` = `news`.`id` AND `user_read_history`.`user_id` = ? GROUP BY `cat_id`) AS `t` ON `t`.`cat_id` = `news_categories`.`id`', [$user_id]);
+
+        $news_read_count = array_map(function($data){
+            return [$data->name => ($data->read_count) ?: 0];
+        }, $news_read_count);
+
+        return compact('user_id', 'news_read_count');
     }
 }
