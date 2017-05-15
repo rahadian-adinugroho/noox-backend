@@ -22,9 +22,14 @@ class User extends Authenticatable
         return $this->morphMany('Noox\Models\Report', 'reportable');
     }
 
+    public function submittedReports()
+    {
+        return $this->hasMany('Noox\Models\Report');
+    }
+
     public function newsReadHistory()
     {
-    	return $this->belongsToMany('Noox\Models\News', 'user_read_history')->withTimestamps('first_read', 'last_read')->orderBy('last_read', 'desc');
+    	return $this->belongsToMany('Noox\Models\News', 'user_read_history')->withTimestamps('first_read', 'last_read');
     }
 
     public function comments()
@@ -52,6 +57,7 @@ class User extends Authenticatable
         'xp'      => $this->xp,
         ];
 
+        // use subquery for database adaptability
         $subquery = DB::table('news')
         ->select('cat_id', DB::raw('COUNT(*) as `read_count`'))
         ->join('user_read_history', 'user_read_history.news_id' , '=', 'news.id')
@@ -64,11 +70,6 @@ class User extends Authenticatable
         ->mergeBindings($subquery)
         ->get();
 
-        // $news_read_count->map(function($data){
-        //     return [$data->name => ($data->read_count) ?: 0];
-        // });
-        // $news_read_count = DB::select('SELECT `name`, `t`.`read_count` FROM `news_categories` LEFT JOIN (SELECT `cat_id`, COUNT(*) AS `read_count` FROM `news` JOIN `user_read_history` ON `user_read_history`.`news_id` = `news`.`id` AND `user_read_history`.`user_id` = ? GROUP BY `cat_id`) AS `t` ON `t`.`cat_id` = `news_categories`.`id`', [$user_id]);
-
         $news_read_count = array_map(function($data){
             return [$data->name => ($data->read_count) ?: 0];
         }, $news_read_count->toArray());
@@ -77,8 +78,23 @@ class User extends Authenticatable
 
         $comment_count = $this->comments()->count();
 
+        $liked_comments_count = $this->comments()->has('likes', '>=', 1)->count();
+
         $comment_likes_count = $this->commentLikes()->count();
 
-        return compact('user_data', 'news_likes_count', 'comment_count', 'comment_likes_count', 'news_read_count');
+        $report_count = $this->submittedReports()->count();
+
+        //check db seed to get an idea about where this value came from
+        $approved_report_count = $this->submittedReports()->where('status_id', 4)->count();
+        
+        return compact(
+            'user_data', 
+            'news_likes_count',
+            'comment_count',
+            'comment_likes_count',
+            'liked_comments_count',
+            'report_count',
+            'approved_report_count',
+            'news_read_count');
     }
 }
