@@ -52,7 +52,7 @@ class UserController extends BaseController
     {
         $data = User::with([
             'comments' => function($query){
-                $query->select('user_id', 'news_id', 'created_at', 'content')->whereNull('parent_id');
+                $query->select('user_id', 'news_id', 'created_at', 'content')->whereNull('parent_id')->orderBy('created_at', 'desc');
             },
             'comments.news' => function($query){
                 $query->select('id', 'title');
