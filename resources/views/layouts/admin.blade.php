@@ -12,13 +12,6 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <link href="{{ asset('admin/css/app.css') }}" rel="stylesheet">
-  <!-- Bootstrap -->
-  <!-- <link href="{{ asset('admin/vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet"> -->
-  <!-- Font Awesome -->
-  <!-- <link href="{{ asset('admin/vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet"> -->
-
-  <!-- Custom Theme Style -->
-  <!-- <link href="{{ asset('admin/css/custom.min.css') }}" rel="stylesheet"> -->
 
   <script>
         window.Laravel = {!! json_encode([
@@ -188,16 +181,6 @@
     </div>
 
     <script src="{{ asset('admin/js/app.js') }}"></script>
-    <!-- jQuery -->
-    <!-- <script src="{{ asset('admin/vendors/jquery/dist/jquery.min.js') }}"></script> -->
-    <!-- Bootstrap -->
-    <!-- <script src="{{ asset('admin/vendors/bootstrap/dist/js/bootstrap.min.js') }}"></script> -->
-    <!-- FastClick -->
-    <!-- <script src="{{ asset('admin/vendors/fastclick/lib/fastclick.js') }}"></script> -->
-    <!-- NProgress -->
-    <!-- <script src="{{ asset('admin/vendors/nprogress/nprogress.js') }}"></script> -->
-    
-    <!-- Custom Theme Scripts -->
-    <!-- <script src="{{ asset('admin/js/custom.min.js') }}"></script> -->
+
   </body>
   </html>
