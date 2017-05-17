@@ -244,10 +244,12 @@ $(document).ready(function() {
 // NProgress
 if (typeof NProgress != 'undefined') {
     $(document).ready(function () {
-        NProgress.start();
+        console.log('start load');
+        NProgress.done();
     });
 
     $(window).on('load', function () {
-        NProgress.done();
+        console.log('finish load');
+        NProgress.start();
     });
 }
