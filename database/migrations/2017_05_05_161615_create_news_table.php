@@ -22,6 +22,7 @@ class CreateNewsTable extends Migration
             $table->dateTime('pubtime');
             $table->string('author', 64)->nullable();
             $table->text('content');
+            $table->softDeletes();
 
             $table->foreign('source_id')
             ->references('id')->on('news_sources')
