@@ -13,6 +13,11 @@ class CreateAdminsTable extends Migration
      */
     public function up()
     {
+        // Ideally, the role should use a pivot table.
+        // The app is still small and to simplify the relation we use a constant instead.
+        // 
+        // standard admin = 1
+        // super admin    = 2
         Schema::create('admins', function (Blueprint $table) {
             $table->increments('id');
             $table->string('email', 100)->unique();
