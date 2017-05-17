@@ -54,12 +54,12 @@
               <a data-toggle="tooltip" data-placement="top" title="Settings">
                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
               </a>
-              <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+              <!-- <a data-toggle="tooltip" data-placement="top" title="FullScreen">
                 <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
               </a>
               <a data-toggle="tooltip" data-placement="top" title="Lock">
                 <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-              </a>
+              </a> -->
               <a data-toggle="tooltip" data-placement="top" title="Logout" href="{{ route('admin.logout.submit') }}" onclick="event.preventDefault();
                  document.getElementById('logout-form').submit();">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
@@ -87,11 +87,9 @@
                     <li><a href="javascript:;"> Profile</a></li>
                     <li>
                       <a href="javascript:;">
-                        <span class="badge bg-red pull-right">50%</span>
                         <span>Settings</span>
                       </a>
                     </li>
-                    <li><a href="javascript:;">Help</a></li>
                     <li><a href="{{ route('admin.logout.submit') }}" onclick="event.preventDefault();
                  document.getElementById('logout-form').submit();"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                   </ul>
@@ -105,49 +103,13 @@
                   <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
                     <li>
                       <a>
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                        <span class="image"><img src="{{ asset('admin/images/user.png') }}" alt="Profile Image" /></span>
                         <span>
-                          <span>John Smith</span>
+                          <span>Report</span>
                           <span class="time">3 mins ago</span>
                         </span>
                         <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <a>
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <a>
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <a>
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                          Someone just submitted a report. (Connect with laravel echo/socket. Trigger with event class.)
                         </span>
                       </a>
                     </li>
