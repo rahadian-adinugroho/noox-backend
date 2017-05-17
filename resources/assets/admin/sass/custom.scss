@@ -1,3 +1,4 @@
+
 .left_col {
   background: #2A3F54;
 }
@@ -3684,6 +3685,12 @@ a.hiddenanchor {
   border: 1px solid #A878AF;
   outline: none;
 }
+
+.login_content form .has-error input[type="text"], .login_content form .has-error input[type="email"], .login_content form .has-error input[type="password"] {
+  margin: 0 0 10px !important;
+  border-color: #A94442 !important;
+}
+
 #username {
   background-position: 10px 10px !important
 }

@@ -60,7 +60,8 @@
               <a data-toggle="tooltip" data-placement="top" title="Lock">
                 <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
               </a>
-              <a data-toggle="tooltip" data-placement="top" title="Logout" href="admin/logout">
+              <a data-toggle="tooltip" data-placement="top" title="Logout" href="{{ route('admin.logout.submit') }}" onclick="event.preventDefault();
+                 document.getElementById('logout-form').submit();">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
               </a>
             </div>
@@ -79,7 +80,7 @@
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    John Doe
+                    {{ Auth::user()->name }}
                     <span class=" fa fa-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -91,7 +92,8 @@
                       </a>
                     </li>
                     <li><a href="javascript:;">Help</a></li>
-                    <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                    <li><a href="{{ route('admin.logout.submit') }}" onclick="event.preventDefault();
+                 document.getElementById('logout-form').submit();"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                   </ul>
                 </li>
 
@@ -179,7 +181,9 @@
         <!-- /footer content -->
       </div>
     </div>
-
+    <form id="logout-form" action="{{ route('admin.logout.submit') }}" method="POST" style="display: none;">
+      {{ csrf_field() }}
+    </form>
     <script src="{{ asset('admin/js/app.js') }}"></script>
 
   </body>

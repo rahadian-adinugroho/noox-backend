@@ -2,7 +2,7 @@
   <div class="menu_section">
     <h3>General</h3>
     <ul class="nav side-menu">
-      <li><a href="{{ url('admin') }}"><i class="fa fa-home"></i>Home</a></li>
+      <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i>Home</a></li>
       <li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
         <ul class="nav child_menu">
           <li><a href="form.html">General Form</a></li>
