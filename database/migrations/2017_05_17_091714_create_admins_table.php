@@ -24,7 +24,7 @@ class CreateAdminsTable extends Migration
             $table->string('password', 128);
             $table->string('name', 64);
             $table->integer('role')->unsigned();
-            $table->string('api_token', 64);
+            $table->string('api_token', 64)->unique();
             $table->timestamps();
             $table->rememberToken();
         });
