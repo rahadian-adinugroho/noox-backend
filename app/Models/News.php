@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class News extends Model
 {
+    use SoftDeletes;
+    
     public $timestamps  = false;
     
-    protected $table    = 'news';
+    protected $dates    = ['deleted_at'];
     protected $fillable = array('source_id','cat_id', 'title', 'pubtime', 'author', 'content');
 
     public function reports()
