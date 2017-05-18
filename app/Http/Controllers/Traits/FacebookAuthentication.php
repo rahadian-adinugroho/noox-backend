@@ -14,7 +14,7 @@ trait FacebookAuthentication
    * Attempt to verify the supplied access token with facebook and match the returned FB ID with the user in database.
    * 
    * @param  \Illuminate\Http\Request $request
-   * @return \Noox\Models\User
+   * @return Noox\Models\User
    */
   public function attemptFbAuth(Request $request)
   {
@@ -29,6 +29,26 @@ trait FacebookAuthentication
         if ($user = User::where('fb_id', '=', $fbid)->first()) {
             return $user;
         }
+    }
+    return;
+  }
+
+  /**
+   * Attempt to extract Facebook ID from supplied access token.
+   * 
+   * @param  \Illuminate\Http\Request $request
+   * @return string
+   */
+  public function extractFbId(Request $request)
+  {
+    if (! $fbToken = $request->input('fb_token')) {
+        return;
+    }
+
+    $result = $this->exec_auth($fbToken);
+    $fbid   = '';
+    if (!empty($result->data) && $result->data->is_valid) {
+      return $result->data->user_id;
     }
     return;
   }

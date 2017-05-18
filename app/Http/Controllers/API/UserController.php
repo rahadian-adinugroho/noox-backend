@@ -2,9 +2,10 @@
 
 namespace Noox\Http\Controllers\API;
 
-use Illuminate\Http\Request;
-use JWTAuth;
 use Noox\Models\User;
+use Noox\Http\Controllers\Traits\FacebookAuthentication;
+use JWTAuth;
+use Illuminate\Http\Request;
 
 /**
  * @resource User
@@ -13,6 +14,7 @@ use Noox\Models\User;
  */
 class UserController extends BaseController
 {
+    use FacebookAuthentication;
     /**
      * Register a user.
      *
@@ -25,12 +27,22 @@ class UserController extends BaseController
      */
     public function register(\Noox\Http\Requests\UserRegistrationRequest $request)
     {
+        $fbid = '';
+        if ($request->input('fb_token')) {
+            $fbid = $this->extractFbId($request);
+            if ($fbid && User::where('fb_id', '=', $fbid)->count()) {
+                return $this->response
+                ->errorBadRequest('This Facebook account has already linked with '.config('app.name').' app.');
+            }
+        }
+
         $id = User::create([
-           'email'    => $request->input('email'),
-           'password' => bcrypt($request->input('password')),
-           'name'     => $request->input('name'),
-           'gender'   => $request->input('gender', null),
-           'birthday' => $request->input('birthdat', null),
+            'fb_id'    => $fbid ?: null,
+            'email'    => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+            'name'     => $request->input('name'),
+            'gender'   => $request->input('gender', null),
+            'birthday' => $request->input('birthdat', null),
            ])->id;
 
         if ($id) {
