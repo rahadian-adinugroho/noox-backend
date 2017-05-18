@@ -2,6 +2,8 @@
 
 namespace Noox\Providers;
 
+use Noox\Models\Admin;
+use Noox\Policies\AdminPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -13,7 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'Noox\Model' => 'Noox\Policies\ModelPolicy',
+        Admin::class => AdminPolicy::class,
     ];
 
     /**

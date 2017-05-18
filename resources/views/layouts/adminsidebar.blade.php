@@ -30,23 +30,10 @@
   <div class="menu_section">
     <h3>Administrative</h3>
     <ul class="nav side-menu">
-      <li><a href="javascript:;"><i class="fa fa-rebel"></i> Administrators </a></li>        <ul class="nav child_menu">
-          <li><a href="#level1_1">Level One</a>
-            <li><a>Level One<span class="fa fa-chevron-down"></span></a>
-              <ul class="nav child_menu">
-                <li class="sub_menu"><a href="level2.html">Level Two</a>
-                </li>
-                <li><a href="#level2_1">Level Two</a>
-                </li>
-                <li><a href="#level2_2">Level Two</a>
-                </li>
-              </ul>
-            </li>
-            <li><a href="#level1_2">Level One</a>
-            </li>
-          </ul>
-        </li>                  
-    </ul>
+    @can('create', Noox\Models\Admin::class)
+      <li><a href="javascript:;"><i class="fa fa-rebel"></i> Administrators </a></li>
+    @endcan
+      <li><a href="javascript:;"><i class="fa fa-list-ul"></i> System Logs </a></li>
   </div>
 
   </div>
