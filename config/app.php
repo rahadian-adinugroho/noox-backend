@@ -174,7 +174,8 @@ return [
         Dingo\Api\Provider\LaravelServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Mpociot\ApiDoc\ApiDocGeneratorServiceProvider::class,
-
+        Yajra\Datatables\DatatablesServiceProvider::class,
+        
         /*
          * Application Service Providers...
          */
