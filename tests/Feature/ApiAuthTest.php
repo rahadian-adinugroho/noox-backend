@@ -41,7 +41,7 @@ class ApiAuthTest extends TestCase
         $user = factory(User::class)->create(['password' => bcrypt('foo')]);
 
         $this->post('/api/auth/login', ['email' => $user->email, 'password' => 'foo'])
-        ->assertJsonStructure(['lifetime', 'gracetime', 'token']);
+        ->assertJsonStructure(['valid_until', 'refresh_before', 'token']);
     }
 
     /**
@@ -54,7 +54,7 @@ class ApiAuthTest extends TestCase
         $user = factory(User::class)->create(['password' => bcrypt('foo')]);
 
         $this->get('/api/auth/renew_token', $this->headers($user))
-        ->assertJsonStructure(['lifetime', 'gracetime', 'token']);
+        ->assertJsonStructure(['valid_until', 'refresh_before', 'token']);
     }
 
     /**

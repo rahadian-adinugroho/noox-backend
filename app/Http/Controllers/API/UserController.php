@@ -95,6 +95,13 @@ class UserController extends BaseController
             }
         }
 
+    /**
+     * Submit new user preferences.
+     * In JSON: {"categories" : ["national", "crime"]}
+     * 
+     * @param  \Illuminate\Http\Request
+     * @return \Illuminate\Http\Response
+     */
     public function updatePreferences(Request $request)
     {
         if (! $request->has('categories')) {
@@ -106,8 +113,24 @@ class UserController extends BaseController
         $catIds = $this->getCategoriesId($categories);
 
         if ($user->newsPreferences()->sync($catIds)) {
-            return response()->json(['message' => 'Preference saved.']);
+            return response()->json(['message' => 'Preferences saved.']);
         }
+    }
+
+    /**
+     * Get current user preferences.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function viewPreferences()
+    {
+        $user = User::find(JWTAuth::getPayload()->get('sub'));
+
+        $categories = $user->newsPreferences()->get()->map(function($category){
+            return $category->name;
+        });
+
+        return response()->json(compact('categories'));
     }
 
     /**
@@ -135,6 +158,12 @@ class UserController extends BaseController
         return $this->response->errorInternal('Unable to save your report at this moment.');
     }
 
+    /**
+     * Convert the categories into its own id.
+     * 
+     * @param  array $categories
+     * @return array
+     */
     protected function getCategoriesId(array $categories)
     {
         return NewsCategory::select('id')

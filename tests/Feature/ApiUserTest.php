@@ -76,6 +76,36 @@ class ApiUserTest extends TestCase
 
     /**
      * @test
+     * 
+     * Test: POST /api/personal/news_preferences
+     */
+    public function it_accepts_valid_user_preferences()
+    {
+        $this->seed('UserTableSeeder');
+        $this->seed('NewsCategoryTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/personal/news_preferences', ['categories' => ['national', 'technology']], $this->headers($user))
+        ->assertStatus(200);
+    }
+
+    /**
+     * @test
+     *
+     * Test: GET /api/personal/news_preferences
+     */
+    public function it_returns_current_user_preferences()
+    {
+        $this->seed('UserTableSeeder');
+        $this->seed('NewsCategoryTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->get('/api/personal/news_preferences', $this->headers($user))
+        ->assertJsonStructure(['categories' => []]);
+    }
+
+    /**
+     * @test
      *
      * Test: get /api/user/1.
      */
