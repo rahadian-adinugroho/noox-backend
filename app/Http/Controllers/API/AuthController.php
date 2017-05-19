@@ -2,6 +2,7 @@
 
 namespace Noox\Http\Controllers\API;
 
+use Carbon\Carbon;
 use JWTAuth;
 use Noox\Http\Controllers\Traits\FacebookAuthentication;
 use Illuminate\Http\Request;
@@ -56,8 +57,8 @@ class AuthController extends BaseController
         // all good so return the token
         if ($token) {
                 $ret = [
-            'lifetime'  => config('jwt.ttl'),
-            'gracetime' => config('jwt.refresh_ttl'),
+            'valid_until'  => Carbon::now()->addMinutes(config('jwt.ttl'))->timestamp,
+            'refresh_before' => Carbon::now()->addMinutes(config('jwt.refresh_ttl'))->timestamp,
             'token'     => $token,
             ];
             return response()->json($ret);
@@ -106,8 +107,8 @@ class AuthController extends BaseController
             return $this->response->errorInternal('Not able to refresh Token');
         }
         $ret = [
-        'lifetime'  => \Config::get('jwt.ttl'),
-        'gracetime' => \Config::get('jwt.refresh_ttl'),
+        'valid_until'  => Carbon::now()->addMinutes(config('jwt.ttl'))->timestamp,
+        'refresh_before' => Carbon::now()->addMinutes(config('jwt.refresh_ttl'))->timestamp,
         'token'     => $refreshedToken,
         ];
         return response()->json($ret);

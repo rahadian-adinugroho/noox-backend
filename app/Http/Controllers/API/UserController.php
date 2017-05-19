@@ -3,8 +3,10 @@
 namespace Noox\Http\Controllers\API;
 
 use Noox\Models\User;
+use Noox\Models\NewsCategory;
 use Noox\Http\Controllers\Traits\FacebookAuthentication;
 use JWTAuth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -15,6 +17,7 @@ use Illuminate\Http\Request;
 class UserController extends BaseController
 {
     use FacebookAuthentication;
+
     /**
      * Register a user.
      *
@@ -36,17 +39,26 @@ class UserController extends BaseController
             }
         }
 
-        $id = User::create([
+        $user = User::create([
             'fb_id'    => $fbid ?: null,
             'email'    => $request->input('email'),
             'password' => bcrypt($request->input('password')),
             'name'     => $request->input('name'),
             'gender'   => $request->input('gender', null),
             'birthday' => $request->input('birthdat', null),
-           ])->id;
+            ]);
 
-        if ($id) {
-            return $this->response->created(url('/api/user/'.$id), ['status' => true, 'message' => 'User created.']);
+        if ($user) {
+            $token = JWTAuth::fromUser($user);
+            $tokenPack = [
+            'valid_until'   => Carbon::now()->addMinutes(config('jwt.ttl'))->timestamp,
+            'refresh_before' => Carbon::now()->addMinutes(config('jwt.refresh_ttl'))->timestamp,
+            'token'        => $token,
+            ];
+
+            return $this->response->created(
+                url('/api/user/'.$user->id),
+                ['status' => true, 'message' => 'User created.', 'token' => $tokenPack]);
         } else {
             return $this->response->errorBadRequest();
         }
@@ -81,6 +93,21 @@ class UserController extends BaseController
             } else {
                 return $this->response->errorNotFound('User not found.');
             }
+        }
+
+    public function updatePreferences(Request $request)
+    {
+        if (! $request->has('categories')) {
+            $this->response->errorBadRequest('Categories not supplied.');
+        }
+        $user = User::find(JWTAuth::getPayload()->get('sub'));
+
+        $categories = $request->input('categories');
+        $catIds = $this->getCategoriesId($categories);
+
+        if ($user->newsPreferences()->sync($catIds)) {
+            return response()->json(['message' => 'Preference saved.']);
+        }
     }
 
     /**
@@ -106,5 +133,15 @@ class UserController extends BaseController
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);
         }
         return $this->response->errorInternal('Unable to save your report at this moment.');
+    }
+
+    protected function getCategoriesId(array $categories)
+    {
+        return NewsCategory::select('id')
+        ->whereIn('name', $categories)
+        ->get()
+        ->map(function($data){
+            return $data->id;
+        });
     }
 }

@@ -27,6 +27,11 @@ class User extends Authenticatable
         return $this->hasMany('Noox\Models\Report');
     }
 
+    public function newsPreferences()
+    {
+        return $this->belongsToMany('Noox\Models\NewsCategory', 'user_news_preferences', 'user_id', 'category_id');
+    }
+
     public function newsReadHistory()
     {
     	return $this->belongsToMany('Noox\Models\News', 'user_read_history')->withTimestamps('first_read', 'last_read');
