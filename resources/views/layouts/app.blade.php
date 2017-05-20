@@ -19,7 +19,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
 
-        token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjQsImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDAwXC9hcGlcL3VzZXJzIiwiaWF0IjoxNDk1MjkzMTQ4LCJleHAiOjE0OTUzODMxNDgsIm5iZiI6MTQ5NTI5MzE0OCwianRpIjoidE91ZW1iaHdLNjVUVFZFSiJ9.AyaHALgo2AOICIX-IcLv9Fk4VOsI5TJe1s5nMQFl0AY';
+        token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoidXNlciIsInN1YiI6NCwiaXNzIjoiaHR0cDpcL1wvbG9jYWxob3N0OjgwMDBcL2FwaVwvdXNlcnMiLCJpYXQiOjE0OTUzMDUzMjIsImV4cCI6MTQ5NTM5NTMyMiwibmJmIjoxNDk1MzA1MzIyLCJqdGkiOiJ5NFFhWjNsTzM2emt1V0t0In0.fY-VQUhT5B8U-qx9XRVjdihMUnLIMTJL_rEC0f25oQc';
     </script>
 </head>
 <body>
@@ -88,15 +88,17 @@
     <script src="{{ asset('js/app.js') }}"></script>
 
     <script type="text/javascript">
-        window.Echo.private('Noox.User.4')
-        .listen('.comment-liked', (e) => {
-            console.log('Comment liked!', e);
-        });
+        if (typeof Echo !== "undefined") {
+            Echo.private('Noox.User.4')
+            .listen('.comment-liked', (e) => {
+                console.log('Comment liked!', e);
+            });
 
-        window.Echo.channel('Noox.General')
-        .listen('.test', (e) => {
-            console.log('Test!', e);
-        });
+            Echo.channel('Noox.General')
+            .listen('.test', (e) => {
+                console.log('Test!', e);
+            });
+        }
     </script>
 </body>
 </html>
