@@ -181,7 +181,7 @@ return [
          */
         Noox\Providers\AppServiceProvider::class,
         Noox\Providers\AuthServiceProvider::class,
-        // Noox\Providers\BroadcastServiceProvider::class,
+        Noox\Providers\BroadcastServiceProvider::class,
         Noox\Providers\EventServiceProvider::class,
         Noox\Providers\RouteServiceProvider::class,
 

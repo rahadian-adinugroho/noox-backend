@@ -18,6 +18,8 @@
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
         ]) !!};
+
+        token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjQsImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDAwXC9hcGlcL3VzZXJzIiwiaWF0IjoxNDk1MjkzMTQ4LCJleHAiOjE0OTUzODMxNDgsIm5iZiI6MTQ5NTI5MzE0OCwianRpIjoidE91ZW1iaHdLNjVUVFZFSiJ9.AyaHALgo2AOICIX-IcLv9Fk4VOsI5TJe1s5nMQFl0AY';
     </script>
 </head>
 <body>
@@ -82,6 +84,19 @@
     </div>
 
     <!-- Scripts -->
+    <script type="text/javascript" src="http://localhost:6001/socket.io/socket.io.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+
+    <script type="text/javascript">
+        window.Echo.private('Noox.User.4')
+        .listen('.comment-liked', (e) => {
+            console.log('Comment liked!', e);
+        });
+
+        window.Echo.channel('Noox.General')
+        .listen('.test', (e) => {
+            console.log('Test!', e);
+        });
+    </script>
 </body>
 </html>
