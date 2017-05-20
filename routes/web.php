@@ -27,7 +27,14 @@ Route::get('fire', function(){
 });
 
 Route::get('private', function(){
-    $comment = ['user_id' => 4, 'news_id' => 1, 'content' => 'test'];
-    event(new \Noox\Events\CommentLikedEvent($comment));
+    $parent = \Noox\Models\NewsComment::find(1);
+    $reply = new \Noox\Models\NewsComment;
+
+    $reply->user_id = 4;
+    $reply->news_id = $parent->news_id;
+    $reply->content = 'Nice comment.';
+
+    $res = $parent->replies()->save($reply);
+    event(new \Noox\Events\CommentRepliedEvent($parent, $res));
     return 'comment fired!';
 });
