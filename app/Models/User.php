@@ -15,7 +15,7 @@ class User extends Authenticatable
     'level' => 1,
     'xp'    => 0,
     ];
-    protected $hidden = array('password', 'remember_token');
+    protected $hidden = array('password', 'remember_token', 'pivot');
 
     public function reports()
     {
@@ -25,6 +25,11 @@ class User extends Authenticatable
     public function submittedReports()
     {
         return $this->hasMany('Noox\Models\Report');
+    }
+
+    public function newsPreferences()
+    {
+        return $this->belongsToMany('Noox\Models\NewsCategory', 'user_news_preferences', 'user_id', 'category_id');
     }
 
     public function newsReadHistory()
@@ -39,12 +44,12 @@ class User extends Authenticatable
 
     public function newsLikes()
     {
-        return $this->hasMany('Noox\Models\NewsLike');
+        return $this->belongsToMany('Noox\Models\News', 'news_likes');
     }
 
     public function commentLikes()
     {
-    	return $this->hasMany('Noox\Models\NewsCommentLike');
+    	return $this->belongsToMany('Noox\Models\NewsComment', 'news_comment_likes', 'user_id', 'comment_id');
     }
 
     public function getStats()

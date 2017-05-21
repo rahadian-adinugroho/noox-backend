@@ -171,6 +171,7 @@ return [
         /*
         * Additional Providers
         */
+       Barryvdh\Cors\ServiceProvider::class,
         Dingo\Api\Provider\LaravelServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Mpociot\ApiDoc\ApiDocGeneratorServiceProvider::class,
@@ -181,7 +182,7 @@ return [
          */
         Noox\Providers\AppServiceProvider::class,
         Noox\Providers\AuthServiceProvider::class,
-        // Noox\Providers\BroadcastServiceProvider::class,
+        Noox\Providers\BroadcastServiceProvider::class,
         Noox\Providers\EventServiceProvider::class,
         Noox\Providers\RouteServiceProvider::class,
 

@@ -40,9 +40,21 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 {
     $api->post('user/{id}/report', 'Noox\Http\Controllers\API\UserController@submitReport');
 
+    $api->get('personal/news_preferences', 'Noox\Http\Controllers\API\UserController@viewPreferences');
+
+    $api->post('personal/news_preferences', 'Noox\Http\Controllers\API\UserController@updatePreferences');
+
+    $api->post('news/{id}/like', 'Noox\Http\Controllers\API\NewsController@submitLike');
+
+    $api->delete('news/{id}/like', 'Noox\Http\Controllers\API\NewsController@deleteLike');
+
     $api->post('news/{id}/comment', 'Noox\Http\Controllers\API\NewsController@submitComment');
 
     $api->post('news/comment/{id}/reply', 'Noox\Http\Controllers\API\NewsController@submitCommentReply');
+
+    $api->post('news/comment/{id}/like', 'Noox\Http\Controllers\API\NewsController@submitCommentLike');
+
+    $api->delete('news/comment/{id}/like', 'Noox\Http\Controllers\API\NewsController@deleteCommentLike');
 
     $api->post('news/{id}/report', 'Noox\Http\Controllers\API\NewsController@submitReport');
 

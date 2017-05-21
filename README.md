@@ -54,8 +54,38 @@ And finally, start the server.
 $ php artisan serve --host=[YOUR IP ADDRESS]
 ```
 
+## Event Broadcasting
+
+To enable event broadcasting. Make sure:
+* You have started Redis server.
+* You have installed laravel-echo-server globally from npm.
+* Configure the laravel-echo-server.json according to your system configuration.
+* Set the BROADCAST_DRIVER in .env to redis.
+* Include socket.io.js & laravel-echo in the page with event listener.
+
+### Starting the server
+
+First, start both Laravel queue worker and listener.
+
+```sh
+$ cd noox-backend
+$ php artisan queue:work
+$ php artisan queue:listen
+```
+
+Then, start the Laravel server.
+
+```sh
+$ php artisan serve
+```
+
+Finally, start the laravel-echo-server.
+
+```sh
+$ laravel-echo-server start
+```
+
 ### Todos
 
  - More API.
  - CMS.
- 

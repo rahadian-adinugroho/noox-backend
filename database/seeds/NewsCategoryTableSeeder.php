@@ -20,15 +20,15 @@ class NewsCategoryTableSeeder extends Seeder
         Schema::enableForeignKeyConstraints();
 
     	$entries = [
-    	['name' => 'National'],
-    	['name' => 'Business'],
-    	['name' => 'Crime'],
-    	['name' => 'Health'],
-    	['name' => 'Lifestyle'],
-    	['name' => 'Automotive'],
-    	['name' => 'Politic'],
-    	['name' => 'Sport'],
-    	['name' => 'Technology'],
+    	['name' => 'national'],
+    	['name' => 'business'],
+    	['name' => 'crime'],
+    	['name' => 'health'],
+    	['name' => 'lifestyle'],
+    	['name' => 'automotive'],
+    	['name' => 'politic'],
+    	['name' => 'sport'],
+    	['name' => 'technology'],
     	];
 
     	NewsCategory::insert($entries);

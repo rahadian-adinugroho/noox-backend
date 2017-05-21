@@ -2,9 +2,12 @@
 
 namespace Noox\Http\Controllers\API;
 
-use Illuminate\Http\Request;
-use JWTAuth;
 use Noox\Models\User;
+use Noox\Models\NewsCategory;
+use Noox\Http\Controllers\Traits\FacebookAuthentication;
+use JWTAuth;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 /**
  * @resource User
@@ -13,6 +16,8 @@ use Noox\Models\User;
  */
 class UserController extends BaseController
 {
+    use FacebookAuthentication;
+
     /**
      * Register a user.
      *
@@ -25,16 +30,35 @@ class UserController extends BaseController
      */
     public function register(\Noox\Http\Requests\UserRegistrationRequest $request)
     {
-        $id = User::create([
-           'email'    => $request->input('email'),
-           'password' => bcrypt($request->input('password')),
-           'name'     => $request->input('name'),
-           'gender'   => $request->input('gender', null),
-           'birthday' => $request->input('birthdat', null),
-           ])->id;
+        $fbid = '';
+        if ($request->input('fb_token')) {
+            $fbid = $this->extractFbId($request);
+            if ($fbid && User::where('fb_id', '=', $fbid)->count()) {
+                return $this->response
+                ->errorBadRequest('This Facebook account has already linked with '.config('app.name').' app.');
+            }
+        }
 
-        if ($id) {
-            return $this->response->created(url('/api/user/'.$id), ['status' => true, 'message' => 'User created.']);
+        $user = User::create([
+            'fb_id'    => $fbid ?: null,
+            'email'    => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+            'name'     => $request->input('name'),
+            'gender'   => $request->input('gender', null),
+            'birthday' => $request->input('birthdat', null),
+            ]);
+
+        if ($user) {
+            $token = JWTAuth::fromUser($user, ['type' => 'user']);
+            $tokenPack = [
+            'valid_until'   => Carbon::now()->addMinutes(config('jwt.ttl'))->timestamp,
+            'refresh_before' => Carbon::now()->addMinutes(config('jwt.refresh_ttl'))->timestamp,
+            'token'        => $token,
+            ];
+
+            return $this->response->created(
+                url('/api/user/'.$user->id),
+                ['status' => true, 'message' => 'User created.', 'token' => $tokenPack]);
         } else {
             return $this->response->errorBadRequest();
         }
@@ -69,6 +93,44 @@ class UserController extends BaseController
             } else {
                 return $this->response->errorNotFound('User not found.');
             }
+        }
+
+    /**
+     * Submit new user preferences.
+     * In JSON: {"categories" : ["national", "crime"]}
+     * 
+     * @param  \Illuminate\Http\Request
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePreferences(Request $request)
+    {
+        if (! $request->has('categories')) {
+            $this->response->errorBadRequest('Categories not supplied.');
+        }
+        $user = User::find(JWTAuth::getPayload()->get('sub'));
+
+        $categories = $request->input('categories');
+        $catIds = $this->getCategoriesId($categories);
+
+        if ($user->newsPreferences()->sync($catIds)) {
+            return response()->json(['message' => 'Preferences saved.']);
+        }
+    }
+
+    /**
+     * Get current user preferences.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function viewPreferences()
+    {
+        $user = User::find(JWTAuth::getPayload()->get('sub'));
+
+        $categories = $user->newsPreferences()->get()->map(function($category){
+            return $category->name;
+        });
+
+        return response()->json(compact('categories'));
     }
 
     /**
@@ -94,5 +156,21 @@ class UserController extends BaseController
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);
         }
         return $this->response->errorInternal('Unable to save your report at this moment.');
+    }
+
+    /**
+     * Convert the categories into its own id.
+     * 
+     * @param  array $categories
+     * @return array
+     */
+    protected function getCategoriesId(array $categories)
+    {
+        return NewsCategory::select('id')
+        ->whereIn('name', $categories)
+        ->get()
+        ->map(function($data){
+            return $data->id;
+        });
     }
 }

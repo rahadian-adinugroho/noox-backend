@@ -7,6 +7,11 @@ use Carbon\Carbon;
 use JWTAuth;
 use Noox\Models\News;
 use Noox\Models\NewsComment;
+use Noox\Events\CommentRepliedEvent;
+use Noox\Notifications\NewsCommentReplied;
+use Noox\Notifications\NewsCommentLiked;
+use Noox\Events\CommentLikedEvent;
+use Noox\Events\NewsReportedEvent;
 
 /**
  * @resource News
@@ -38,7 +43,7 @@ class NewsController extends BaseController
         if ($userId) {
             $query->with(['likes' => function($q) use ($userId) 
             {
-                $q->where('user_id', $userId);
+                $q->select('user_id', 'name')->where('user_id', $userId);
             }]);
         }
         $data = $query->find($id);
@@ -146,8 +151,56 @@ class NewsController extends BaseController
     }
 
     /**
+     * Submit a like for news.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function submitLike($newsId)
+    {
+        if (! $news = News::find($newsId)) {
+            $this->response->errorNotFound('News does not exist.');
+        }
+
+        $user = auth()->getUser();
+
+        try {
+            $news->likes()->attach($user->id);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                $this->response->errorBadRequest('This user already liked this news.');
+            } else {
+                $this->response->errorInternal('Please try again later.');
+            }
+        }
+        
+        return response()->json(['message' => 'User like has been saved.']);
+    }
+
+    /**
+     * Unlike a news.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteLike($newsId)
+    {
+        if (! $news = News::find($newsId)) {
+            $this->response->errorNotFound('News does not exist.');
+        }
+
+        $user = auth()->getUser();
+
+        try {
+            $news->likes()->detach($user->id);
+        } catch (\Illuminate\Database\QueryException $e) {
+            $this->response->errorInternal('Please try again later.');
+        }
+
+        return $this->response->noContent();
+    }
+
+    /**
      * Get news comments.
-     * Retrieve comments for the news. You may set 'perPage' query in the URL to set item per page. Refer to 'next_page_url' in the response to retrieve next page url.
+     * Retrieve comments for the news. Refer to 'next_page_url' in the response to retrieve next page url.
      * 
      * @param  integer $perPage
      * @param  integer $page
@@ -156,7 +209,6 @@ class NewsController extends BaseController
      */
     public function getComments(Request $r, $newsId)
     {
-        \DB::enableQueryLog();
         // try to get the user id if token exist
         try {
             $userId = JWTAuth::parseToken()->getPayload()->get('sub');
@@ -180,7 +232,7 @@ class NewsController extends BaseController
                     if ($userId) {
                         $q->with(['likes' => function($q) use ($userId) 
                         {
-                            $q->where('user_id', $userId);
+                            $q->select('user_id', 'name')->where('user_id', $userId);
                         }]);
                     }
                 },'author' => function($q) {
@@ -195,8 +247,7 @@ class NewsController extends BaseController
                 }]);
             }
 
-            $data = $query->paginate($r->input('perPage'));
-            // print_r(\DB::getQueryLog());
+            $data = $query->paginate();
             return response()->json(compact('data'));
         } else {
             return $this->response->errorNotFound('News not found.');
@@ -205,7 +256,7 @@ class NewsController extends BaseController
 
     /**
      * Get comment details.
-     * Will return the comment and its replies. The replies are paginated. You may set 'perPage' query in the URL to set reply per page. Refer to 'next_page_url' in the response to retrieve next page url.
+     * Will return the comment and its replies. The replies are paginated. Refer to 'next_page_url' in the response to retrieve next page url.
      * The 'likes' variable will exist if the client supplied a valid JWT token. The 'likes' variable determines whether the user already liked the comment or not. If it is not an empty array, it means the user already liked the comment with that particular 'likes' attribute.
      * 
      * @param  integer $perPage
@@ -230,7 +281,7 @@ class NewsController extends BaseController
         if ($userId) {
             $q->with([
                 'likes' => function($q) use ($userId) {
-                    $q->where('user_id', $userId);
+                    $q->select('user_id', 'name')->where('user_id', $userId);
                 }]);
         }
         $comment = $q->find($newsId);
@@ -247,11 +298,11 @@ class NewsController extends BaseController
                 if ($userId) {
                     $query->with([
                         'likes' => function($q) use ($userId) {
-                            $q->where('user_id', $userId);
+                            $q->select('user_id', 'name')->where('user_id', $userId);
                         }]);
                 }
 
-                $replies = $query->paginate($r->input('perPage'), ['*'], 'replyPage');
+                $replies = $query->paginate();
             } else {
                 $replies = null;
             }
@@ -276,7 +327,7 @@ class NewsController extends BaseController
         }
 
         $comment          = new NewsComment;
-        $comment->user_id = JWTAuth::getPayload()->get('sub');
+        $comment->user_id = auth()->getUser()->id;
         $comment->content = $request->input('content');
 
         if ($res = $news->comments()->save($comment)) {
@@ -303,14 +354,70 @@ class NewsController extends BaseController
         }
 
         $comment          = new NewsComment;
-        $comment->user_id = JWTAuth::getPayload()->get('sub');
+        $comment->user_id = auth()->getUser()->id;
         $comment->news_id = $parent->news_id;
         $comment->content = $request->input('content');
 
         if ($res = $parent->replies()->save($comment)) {
+            $parentAuthor = $parent->author;
+            if (auth()->getUser()->id != $parentAuthor->id) {
+                $res->author = auth()->getUser();
+                $parentAuthor->notify(new NewsCommentReplied($parent, $res));
+            }
             return $this->response->created(url('/api/news_comment/'.$res->id), ['status' => true, 'message' => 'Comment saved.']);
         }
         return $this->response->errorInternal('Unable to save reply at this moment.');
+    }
+
+    /**
+     * Submit a like for comment.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function submitCommentLike($commentId)
+    {
+        if (!$comment = NewsComment::find($commentId)) {
+            return $this->response->error('Comment not found.', 422);
+        }
+
+        $user = auth()->getUser();
+
+        try {
+            $comment->likes()->attach($user->id);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                $this->response->errorBadRequest('This user already liked this comment.');
+            } else {
+                $this->response->errorInternal('Please try again later.');
+            }
+        }
+        $commentAuthor = $comment->author;
+        if ($user->id != $commentAuthor->id) {
+            $commentAuthor->notify(new NewsCommentLiked($comment, $user));
+        }
+        return response()->json(['message' => 'User like has been saved.']);
+    }
+
+    /**
+     * Unlike a comment.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteCommentLike($commentId)
+    {
+        if (!$comment = NewsComment::find($commentId)) {
+            return $this->response->error('Comment not found.', 422);
+        }
+
+        $user = auth()->getUser();
+
+        try {
+            $comment->likes()->detach($user->id);
+        } catch (\Illuminate\Database\QueryException $e) {
+            $this->response->errorInternal('Please try again later.');
+        }
+        
+        return $this->response->noContent();
     }
 
     /**
@@ -327,12 +434,15 @@ class NewsController extends BaseController
             return $this->response->error('News not found.', 422);
         }
 
+        $reporter = auth()->getUser();
+
         $report            = new \Noox\Models\Report;
-        $report->user_id   = JWTAuth::getPayload()->get('sub');
+        $report->user_id   = $reporter->id;
         $report->content   = $request->input('content');
         $report->status_id = \Noox\Models\ReportStatus::where('name', '=', 'open')->firstOrFail()->id;
 
         if ($res = $news->reports()->save($report)) {
+            event(new NewsReportedEvent($res, $reporter));
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);
         }
         return $this->response->errorInternal('Unable to save your report at this moment.');
