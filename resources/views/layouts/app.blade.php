@@ -18,8 +18,6 @@
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
         ]) !!};
-
-        token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoidXNlciIsInN1YiI6MSwiaXNzIjoiaHR0cDpcL1wvbG9jYWxob3N0OjgwMDBcL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE0OTUzMDg2MjYsImV4cCI6MTQ5NTM5ODYyNiwibmJmIjoxNDk1MzA4NjI2LCJqdGkiOiJSQjZaM0gxZzhSdURyZklXIn0.Oir_spqZVUJeK2hxFakjtTUtPZi6qSigPbxIdh5EOL4';
     </script>
 </head>
 <body>
@@ -84,22 +82,6 @@
     </div>
 
     <!-- Scripts -->
-    <script type="text/javascript" src="http://192.168.2.2:6001/socket.io/socket.io.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
-
-    <script type="text/javascript">
-        if (typeof Echo !== "undefined") {
-            Echo.private('Noox.Models.User.1')
-            .listen('.comment-replied', (e) => {
-                console.log('Comment replied!', e);
-            })
-            .listen('.comment-liked', (e) => {
-                console.log('Comment liked!', e);
-            })
-            .notification((notification) => {
-                console.log('Notification!', notification);
-            });
-        }
-    </script>
 </body>
 </html>

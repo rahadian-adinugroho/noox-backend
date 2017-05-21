@@ -296,6 +296,7 @@ window.spawnNoty = function (text, type = 'info', onCloseCallback = null) {
     }
 };
 
+// Init laravel-echo
 import Echo from 'laravel-echo'
 
 if (typeof io !== "undefined") {
