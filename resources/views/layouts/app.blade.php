@@ -84,7 +84,7 @@
     </div>
 
     <!-- Scripts -->
-    <script type="text/javascript" src="http://localhost:6001/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://192.168.2.2:6001/socket.io/socket.io.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 
     <script type="text/javascript">
@@ -95,16 +95,9 @@
             })
             .listen('.comment-liked', (e) => {
                 console.log('Comment liked!', e);
-            });
-
-            Echo.private('Noox.Models.User.1')
+            })
             .notification((notification) => {
                 console.log('Notification!', notification);
-            });
-
-            Echo.channel('Noox.General')
-            .listen('.test', (e) => {
-                console.log('Test!', e);
             });
         }
     </script>

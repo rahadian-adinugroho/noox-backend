@@ -35,7 +35,7 @@ import Echo from 'laravel-echo'
 if (typeof io !== "undefined") {
     window.Echo = new Echo({
     broadcaster: 'socket.io',
-    host: 'http://localhost:6001',
+    host: window.location.hostname+':6001',
     auth:
     {
         headers:

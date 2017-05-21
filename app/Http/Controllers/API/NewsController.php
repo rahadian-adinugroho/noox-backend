@@ -9,6 +9,7 @@ use Noox\Models\News;
 use Noox\Models\NewsComment;
 use Noox\Events\CommentRepliedEvent;
 use Noox\Notifications\NewsCommentReplied;
+use Noox\Notifications\NewsCommentLiked;
 use Noox\Events\CommentLikedEvent;
 use Noox\Events\NewsReportedEvent;
 
@@ -390,8 +391,10 @@ class NewsController extends BaseController
                 $this->response->errorInternal('Please try again later.');
             }
         }
-        
-        event(new CommentLikedEvent($comment, $user));
+        $commentAuthor = $comment->author;
+        if ($user->id != $commentAuthor->id) {
+            $commentAuthor->notify(new NewsCommentLiked($comment, $user));
+        }
         return response()->json(['message' => 'User like has been saved.']);
     }
 
