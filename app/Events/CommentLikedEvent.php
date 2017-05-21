@@ -10,23 +10,30 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class CommentRepliedEvent implements ShouldBroadcast
+class CommentLikedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * Replied comment ID.
+     * Liked comment ID.
      * 
      * @var integer
      */
     public $comment_id;
 
     /**
-     * Replier user data (ID, name)
+     * Liked comment parent ID.
+     * 
+     * @var integer
+     */
+    public $comment_parent_id;
+
+    /**
+     * Liker user data (ID, name)
      * 
      * @var string
      */
-    public $replier;
+    public $liker;
 
     /**
      * The original comment object.
@@ -40,13 +47,13 @@ class CommentRepliedEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($comment, $reply)
+    public function __construct($comment, $liker)
     {
         $this->comment    = $comment;
 
-        $replyAuthor         = $reply->author;
-        $this->comment_id    = $comment->id;
-        $this->replier = ['id' => $replyAuthor->id, 'name' => $replyAuthor->name];
+        $this->comment_id        = $comment->id;
+        $this->comment_parent_id = $comment->parent_id;
+        $this->liker             = ['id' => $liker->id, 'name' => $liker->name];
     }
 
     /**
@@ -61,6 +68,6 @@ class CommentRepliedEvent implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        return 'comment-replied';
+        return 'comment-liked';
     }
 }

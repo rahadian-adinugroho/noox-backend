@@ -8,6 +8,9 @@ use JWTAuth;
 use Noox\Models\News;
 use Noox\Models\NewsComment;
 use Noox\Events\CommentRepliedEvent;
+use Noox\Notifications\NewsCommentReplied;
+use Noox\Events\CommentLikedEvent;
+use Noox\Events\NewsReportedEvent;
 
 /**
  * @resource News
@@ -277,7 +280,7 @@ class NewsController extends BaseController
         if ($userId) {
             $q->with([
                 'likes' => function($q) use ($userId) {
-                    $q->where('user_id', $userId);
+                    $q->select('user_id', 'name')->where('user_id', $userId);
                 }]);
         }
         $comment = $q->find($newsId);
@@ -355,7 +358,11 @@ class NewsController extends BaseController
         $comment->content = $request->input('content');
 
         if ($res = $parent->replies()->save($comment)) {
-            event(new CommentRepliedEvent($parent, $res));
+            $parentAuthor = $parent->author;
+            if (auth()->getUser()->id != $parentAuthor->id) {
+                $res->author = auth()->getUser();
+                $parentAuthor->notify(new NewsCommentReplied($parent, $res));
+            }
             return $this->response->created(url('/api/news_comment/'.$res->id), ['status' => true, 'message' => 'Comment saved.']);
         }
         return $this->response->errorInternal('Unable to save reply at this moment.');
@@ -384,6 +391,7 @@ class NewsController extends BaseController
             }
         }
         
+        event(new CommentLikedEvent($comment, $user));
         return response()->json(['message' => 'User like has been saved.']);
     }
 
@@ -423,12 +431,15 @@ class NewsController extends BaseController
             return $this->response->error('News not found.', 422);
         }
 
+        $reporter = auth()->getUser();
+
         $report            = new \Noox\Models\Report;
-        $report->user_id   = auth()->getUser()->id;
+        $report->user_id   = $reporter->id;
         $report->content   = $request->input('content');
         $report->status_id = \Noox\Models\ReportStatus::where('name', '=', 'open')->firstOrFail()->id;
 
         if ($res = $news->reports()->save($report)) {
+            event(new NewsReportedEvent($res, $reporter));
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);
         }
         return $this->response->errorInternal('Unable to save your report at this moment.');

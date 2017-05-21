@@ -89,9 +89,17 @@
 
     <script type="text/javascript">
         if (typeof Echo !== "undefined") {
-            Echo.private('Noox.User.1')
+            Echo.private('Noox.Models.User.1')
             .listen('.comment-replied', (e) => {
                 console.log('Comment replied!', e);
+            })
+            .listen('.comment-liked', (e) => {
+                console.log('Comment liked!', e);
+            });
+
+            Echo.private('Noox.Models.User.1')
+            .notification((notification) => {
+                console.log('Notification!', notification);
             });
 
             Echo.channel('Noox.General')
