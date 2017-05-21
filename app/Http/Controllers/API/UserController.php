@@ -49,7 +49,7 @@ class UserController extends BaseController
             ]);
 
         if ($user) {
-            $token = JWTAuth::fromUser($user);
+            $token = JWTAuth::fromUser($user, ['type' => 'user']);
             $tokenPack = [
             'valid_until'   => Carbon::now()->addMinutes(config('jwt.ttl'))->timestamp,
             'refresh_before' => Carbon::now()->addMinutes(config('jwt.refresh_ttl'))->timestamp,

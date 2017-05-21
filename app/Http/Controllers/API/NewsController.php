@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use JWTAuth;
 use Noox\Models\News;
 use Noox\Models\NewsComment;
+use Noox\Events\CommentRepliedEvent;
 
 /**
  * @resource News
@@ -308,6 +309,7 @@ class NewsController extends BaseController
         $comment->content = $request->input('content');
 
         if ($res = $parent->replies()->save($comment)) {
+            event(new CommentRepliedEvent($parent, $res));
             return $this->response->created(url('/api/news_comment/'.$res->id), ['status' => true, 'message' => 'Comment saved.']);
         }
         return $this->response->errorInternal('Unable to save reply at this moment.');
