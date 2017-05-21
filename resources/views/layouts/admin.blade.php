@@ -17,6 +17,10 @@
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
         ]) !!};
+
+        window.Noox = {!! json_encode([
+            'JWTToken' => session('JWTToken'),
+        ]) !!};
   </script>
 </head>
 
