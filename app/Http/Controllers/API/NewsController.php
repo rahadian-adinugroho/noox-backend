@@ -5,11 +5,14 @@ namespace Noox\Http\Controllers\API;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use JWTAuth;
+use Notification;
+use Noox\Models\Admin;
 use Noox\Models\News;
 use Noox\Models\NewsComment;
 use Noox\Events\CommentRepliedEvent;
 use Noox\Notifications\NewsCommentReplied;
 use Noox\Notifications\NewsCommentLiked;
+use Noox\Notifications\NewsReportBeyondThreshold;
 use Noox\Events\CommentLikedEvent;
 use Noox\Events\NewsReportedEvent;
 
@@ -442,7 +445,9 @@ class NewsController extends BaseController
         $report->status_id = \Noox\Models\ReportStatus::where('name', '=', 'open')->firstOrFail()->id;
 
         if ($res = $news->reports()->save($report)) {
-            event(new NewsReportedEvent($res, $reporter));
+            if ($news->reports()->count() > 5) {
+                Notification::send(Admin::all(), new NewsReportBeyondThreshold($news));
+            }
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);
         }
         return $this->response->errorInternal('Unable to save your report at this moment.');

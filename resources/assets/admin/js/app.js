@@ -251,3 +251,63 @@ if (typeof NProgress != 'undefined') {
         NProgress.start();
     });
 }
+
+window.handleNotification = function (notification) {
+    if (/NewsReportBeyondThreshold/i.test(notification.type)) {
+        var val = $('#noox-notification-badge').html();
+        $('#noox-notification-badge').html(parseInt(val)+1);
+        spawnNoty(notification.text, 'warning');
+    }
+};
+
+window.spawnNoty = function (text, type = 'info', onCloseCallback = null) {
+    if (text.length > 0) {
+       return new Noty({
+          type: type,
+          layout: 'topRight',
+          theme: 'relax',
+          text: text,
+          timeout: 5000,
+          progressBar: true,
+          closeWith: ['click', 'button'],
+          animation: {
+            open: 'noty_effects_open',
+            close: 'noty_effects_close'
+          },
+          id: false,
+          force: false,
+          killer: false,
+          queue: 'global',
+          container: false,
+          buttons: [],
+          sounds: {
+            sources: [],
+            volume: 1,
+            conditions: []
+          },
+          titleCount: {
+            conditions: []
+          },
+          modal: false,
+          callbacks: {
+            onClose: onCloseCallback,
+          }
+        }).show();
+    }
+};
+
+import Echo from 'laravel-echo'
+
+if (typeof io !== "undefined") {
+    window.Echo = new Echo({
+    broadcaster: 'socket.io',
+    host: window.location.hostname+':6001',
+    auth:
+    {
+        headers:
+        {
+            'Authorization': 'Bearer ' + window.Noox.JWTToken
+        }
+    }
+});
+}

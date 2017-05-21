@@ -102,24 +102,26 @@
                 <li role="presentation" class="dropdown">
                   <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-envelope-o"></i>
-                    <span class="badge bg-green">1</span>
+                    <span class="badge bg-green" id="noox-notification-badge">{{ Auth::user()->unreadNotifications()->count() ?: '' }}</span>
                   </a>
                   <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                    @foreach (Auth::user()->unreadNotifications()->take(5)->get() as $notification)
                     <li>
-                      <a>
+                      <a href="{{ $notification->data['target_url'] }}">
                         <span class="image"><img src="{{ asset('admin/images/user.png') }}" alt="Profile Image" /></span>
                         <span>
-                          <span>Report</span>
-                          <span class="time">3 mins ago</span>
+                          <span><strong>{{ $notification->data['title'] }}</strong></span>
+                          <span class="time">{{ $notification->created_at->diffForHumans() }}</span>
                         </span>
                         <span class="message">
-                          Someone just submitted a report. (Connect with laravel echo/socket. Trigger with event class.)
+                          {{ $notification->data['text'] }}
                         </span>
                       </a>
                     </li>
+                    @endforeach
                     <li>
                       <div class="text-center">
-                        <a>
+                        <a href="{{ url('cms/notifications') }}">
                           <strong>See All Alerts</strong>
                           <i class="fa fa-angle-right"></i>
                         </a>
@@ -150,7 +152,16 @@
     <form id="logout-form" action="{{ route('admin.logout.submit') }}" method="POST" style="display: none;">
       {{ csrf_field() }}
     </form>
-    <script src="{{ asset('admin/js/app.js') }}"></script>
 
+    <script type="text/javascript" src="http://192.168.2.2:6001/socket.io/socket.io.js"></script>
+    <script src="{{ asset('admin/js/app.js') }}"></script>
+    <script type="text/javascript">
+      if (typeof Echo !== "undefined") {
+            Echo.private("Noox.Models.Admin.{{Auth::guard('admin')->user()->id}}")
+            .notification((notification) => {
+                handleNotification(notification);
+            });
+        }
+    </script>
   </body>
   </html>
