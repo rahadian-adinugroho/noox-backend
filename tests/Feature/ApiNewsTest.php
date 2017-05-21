@@ -60,6 +60,46 @@ class NewsTest extends TestCase
             ]);
     }
 
+    /**
+     * @test
+     * 
+     * Test: POST /api/news/1/like
+     * Test: DELETE /api/news/1/like
+     */
+    public function it_accepts_and_deletes_user_like()
+    {
+        $this->seed('UserTableSeeder');
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/1/like', [], $this->headers($user))
+        ->assertStatus(200);
+
+        $this->delete('/api/news/1/like', [], $this->headers($user))
+        ->assertStatus(204);
+    }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/news/1/like
+     */
+    public function it_rejects_duplicate_user_like()
+    {
+        $this->seed('UserTableSeeder');
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/1/like', [], $this->headers($user));
+
+        $this->post('/api/news/1/like', [], $this->headers($user))
+        ->assertStatus(400);
+    }
+
      /**
      * not compatible
      *
@@ -289,6 +329,48 @@ class NewsTest extends TestCase
         $user = factory(User::class)->create(['password' => bcrypt('foo')]);
         $this->post('/api/news/comment/1/reply', ['content' => ''], $this->headers($user))
         ->assertStatus(422);
+    }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/news/comment/1/like.
+     * Test: DELETE /api/news/comment/1/like.
+     */
+    public function it_accepts_and_deletes_user_comment_like()
+    {
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+        $this->seed('UserTableSeeder');
+        $this->seed('NewsCommentTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/comment/1/like', [], $this->headers($user))
+        ->assertStatus(200);
+
+        $this->delete('/api/news/comment/1/like', [], $this->headers($user))
+        ->assertStatus(204);
+    }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/news/comment/1/like.
+     */
+    public function it_rejects_duplicate_user_comment_like()
+    {
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+        $this->seed('UserTableSeeder');
+        $this->seed('NewsCommentTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/comment/1/like', [], $this->headers($user));
+
+        $this->post('/api/news/comment/1/like', [], $this->headers($user))
+        ->assertStatus(400);
     }
 
     /**

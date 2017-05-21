@@ -13,6 +13,7 @@ class News extends Model
     
     protected $dates    = ['deleted_at'];
     protected $fillable = array('source_id','cat_id', 'title', 'pubtime', 'author', 'content');
+    protected $hidden   = ['pivot'];
 
     public function reports()
     {
@@ -31,7 +32,7 @@ class News extends Model
 
     public function readers()
     {
-        return $this->belongsToMany('Noox\Models\User', 'user_read_history')->withTimestamps('first_read', 'last_read')->orderBy('last_read', 'desc');
+        return $this->belongsToMany('Noox\Models\User', 'user_read_history')->withTimestamps('first_read', 'last_read');
     }
 
     public function comments()
@@ -41,6 +42,6 @@ class News extends Model
 
     public function likes()
     {
-        return $this->hasMany('Noox\Models\NewsLike');
+        return $this->belongsToMany('Noox\Models\User', 'news_likes');
     }
 }

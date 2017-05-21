@@ -9,6 +9,7 @@ class NewsComment extends Model
     use Traits\NPerGroup;
 
     protected $fillable = array('news_id', 'user_id', 'content', 'parent_id');
+    protected $hidden = array('pivot');
 
     public function author()
     {
@@ -37,6 +38,6 @@ class NewsComment extends Model
 
     public function likes()
     {
-        return $this->hasMany('Noox\Models\NewsCommentLike', 'comment_id');
+        return $this->belongsToMany('Noox\Models\User', 'news_comment_likes', 'comment_id', 'user_id');
     }
 }
