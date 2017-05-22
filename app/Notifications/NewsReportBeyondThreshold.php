@@ -59,7 +59,7 @@ class NewsReportBeyondThreshold extends Notification
         return [
             'title'      => 'News report',
             'text'       => 'News "' . $this->news->title . '" total reports are beyond permitted threshold.',
-            'target_url' => url('cms/news/'. $this->news->id .'/reports'), 
+            'target_url' => 'cms/news/'. $this->news->id .'/reports', 
         ];
     }
 }

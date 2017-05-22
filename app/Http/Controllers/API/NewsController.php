@@ -445,7 +445,7 @@ class NewsController extends BaseController
         $report->status_id = \Noox\Models\ReportStatus::where('name', '=', 'open')->firstOrFail()->id;
 
         if ($res = $news->reports()->save($report)) {
-            if ($news->reports()->count() > 5) {
+            if ($news->reports()->count() > config('noox.news_report_threshold')) {
                 Notification::send(Admin::all(), new NewsReportBeyondThreshold($news));
             }
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);
