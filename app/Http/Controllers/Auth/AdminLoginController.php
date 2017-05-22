@@ -48,7 +48,7 @@ class AdminLoginController extends Controller
 
     public function showLoginForm()
     {
-        return view('admin.login');
+        return view('cms.login');
     }
 
     /**
@@ -73,7 +73,7 @@ class AdminLoginController extends Controller
         if ($this->attemptLogin($request)) {
             Config::set('auth.providers.users.model', Admin::class);
             $token = JWTAuth::fromUser(Auth::guard('admin')->user(), ['type' => 'admin']);
-            
+
             $request->session()->put('JWTToken', $token);
             return $this->sendLoginResponse($request);
         }
