@@ -34,7 +34,7 @@ class UserController extends Controller
     }
 
     /**
-     * Return the all reported users
+     * Return the all users by ranking.
      * 
      * @return Illuminate\Http\Response
      */
@@ -44,7 +44,7 @@ class UserController extends Controller
     }
 
     /**
-     * View the profile of the requested admin. Return current authenticated admin profile by default.
+     * View the details of the requested data.
      * 
      * @param  integer $id
      * @return Illuminate\Http\Response

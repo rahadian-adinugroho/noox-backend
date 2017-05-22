@@ -25,4 +25,6 @@ Route::get('/users/reported', 'CMS\UserController@reported')->name('cms.users.re
 
 Route::get('/users/ranking', 'CMS\UserController@ranking')->name('cms.users.ranking');
 
-Route::get('/user/{id}', 'CMS\UserController@view')->name('cms.users.profile');
+Route::get('/user/{id}', 'CMS\UserController@view')->name('cms.user.profile');
+
+Route::get('/user/{id}/reports', 'CMS\UserController@userReports')->name('cms.user.reports');

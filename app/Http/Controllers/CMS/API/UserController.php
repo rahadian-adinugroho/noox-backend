@@ -24,7 +24,7 @@ class UserController extends Controller
         $users = User::select(['id', 'name', 'email', 'created_at', 'updated_at']);
 
         return Datatables::of($users)->addColumn('action', function ($user) {
-                return '<a href="'.route('cms.users.profile', [$user->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
+                return '<a href="'.route('cms.user.profile', [$user->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
             })
             ->make(true);
     }
@@ -39,8 +39,8 @@ class UserController extends Controller
         $users = User::select(['id', 'name', 'email'])->withCount('reports')->has('reports');
 
         return Datatables::of($users)->addColumn('action', function ($user) {
-                return '<a href="'.route('cms.users.profile', [$user->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>'
-                        .'<a href="'.route('cms.users.profile', [$user->id]).'" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-edit"></i> View Reports</a>';
+                return '<a href="'.route('cms.user.profile', [$user->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>'
+                        .'<a href="'.route('cms.user.reports', [$user->id]).'" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-edit"></i> View Reports</a>';
             })
             ->make(true);
     }
@@ -55,7 +55,7 @@ class UserController extends Controller
         $users = User::select(['id', 'name', 'email', 'level', 'xp']);
 
         return Datatables::of($users)->addColumn('action', function ($user) {
-                return '<a href="'.route('cms.users.profile', [$user->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
+                return '<a href="'.route('cms.user.profile', [$user->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
             })
             ->make(true);
     }
