@@ -30,7 +30,7 @@ class AdminPolicy
      * @param  \Noox\Models\Admin  $admin
      * @return mixed
      */
-    public function view(Admin $user, Admin $admin)
+    public function profile(Admin $user, Admin $admin)
     {
         return $user->id === $admin->id;
     }

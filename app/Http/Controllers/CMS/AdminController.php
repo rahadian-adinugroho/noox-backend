@@ -1,10 +1,11 @@
 <?php
 
-namespace Noox\Http\Controllers;
+namespace Noox\Http\Controllers\CMS;
 
 use Auth;
 use Noox\Models\Admin;
 use Illuminate\Http\Request;
+use Noox\Http\Controllers\Controller;
 
 class AdminController extends Controller
 {
@@ -29,16 +30,16 @@ class AdminController extends Controller
      * @param  integer $id
      * @return Illuminate\Http\Response
      */
-    public function view($id = null)
+    public function profile($id = null)
     {
         if (is_null($id)) {
             $user = Auth::user();
         } else {
-            $user = Admin::find($id);
+            $user = Admin::findOrFail($id);
         }
 
         try {
-            $this->authorize('view', $user);
+            $this->authorize('profile', $user);
             echo "this is your profile<br>";
             var_dump($user);
         } catch (\Illuminate\Auth\Access\AuthorizationException $e) {

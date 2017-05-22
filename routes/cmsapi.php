@@ -14,7 +14,5 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:admin-api')->group(function() {
-    Route::get('/tables', function (Request $request) {
-        return Auth::user();
-    });
+    Route::get('/users', 'CMS\API\UserController@index');
 });

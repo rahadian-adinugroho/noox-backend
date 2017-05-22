@@ -40,6 +40,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebRoutes();
 
         $this->mapCmsApiRoutes();
+
+        $this->mapCmsRoutes();
     }
 
     /**
@@ -72,7 +74,22 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Define the "api" routes for the application.
+     * This is the route file for CMS.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapCmsRoutes()
+    {
+        Route::prefix('cms')
+             ->middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/cms.php'));
+    }
+
+    /**
+     * This is the route file for CMS API (Datatables, edit, etc.)
      *
      * These routes are typically stateless.
      *
