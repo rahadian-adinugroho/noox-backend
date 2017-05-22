@@ -12,6 +12,8 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <link href="{{ asset('admin/css/app.css') }}" rel="stylesheet">
+  <!-- page specific styles -->
+  @yield('pagespecificstyles')
 
   <script>
         window.Laravel = {!! json_encode([
@@ -20,6 +22,7 @@
 
         window.Noox = {!! json_encode([
             'JWTToken' => session('JWTToken'),
+            'apiToken' => Auth::user()->api_token,
         ]) !!};
   </script>
 </head>
@@ -58,12 +61,6 @@
               <a data-toggle="tooltip" data-placement="top" title="Settings">
                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
               </a>
-              <!-- <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="Lock">
-                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-              </a> -->
               <a data-toggle="tooltip" data-placement="top" title="Logout" href="{{ route('admin.logout.submit') }}" onclick="event.preventDefault();
                  document.getElementById('logout-form').submit();">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
@@ -153,11 +150,14 @@
       {{ csrf_field() }}
     </form>
 
-    <script type="text/javascript" src="http://192.168.2.2:6001/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://localhost:6001/socket.io/socket.io.js"></script>
     <script src="{{ asset('admin/js/app.js') }}"></script>
+    <!-- page specific scripts -->
+    @yield('pagespecificscripts')
+
     <script type="text/javascript">
       if (typeof Echo !== "undefined") {
-            Echo.private("Noox.Models.Admin.{{Auth::guard('admin')->user()->id}}")
+            Echo.private("Noox.Models.Admin.{{Auth::user()->id}}")
             .notification((notification) => {
                 handleNotification(notification);
             });
