@@ -12,9 +12,9 @@
       </li>
       <li><a><i class="fa fa-users"></i> Users <span class="fa fa-chevron-down"></span></a>
         <ul class="nav child_menu">
-          <li><a href="general_elements.html">All</a></li>
-          <li><a href="media_gallery.html">Reported</a></li>
-          <li><a href="typography.html">Ranking</a></li>
+          <li><a href="{{ route('cms.users') }}">All</a></li>
+          <li><a href="{{ route('cms.users.reported') }}">Reported</a></li>
+          <li><a href="{{ route('cms.users.ranking') }}">Ranking</a></li>
         </ul>
       </li>
       <li><a><i class="fa fa-exclamation-circle"></i> Reports <span class="fa fa-chevron-down"></span></a>

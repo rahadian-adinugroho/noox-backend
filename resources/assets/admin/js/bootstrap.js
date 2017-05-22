@@ -11,9 +11,16 @@ try {
     window.$ = window.jQuery = require('jquery');
 
     require('bootstrap-sass');
+    
     require('fastclick');
     Noty = require('noty');
     NProgress = require('nprogress');
+
+    var dataTable   = require('datatables.net-bs');
+    var responsive  = require('datatables.net-responsive-bs');
+    
+    $.fn.DataTable  = dataTable;
+    $.fn.responsive = responsive;
 } catch (e) {}
 
 /**

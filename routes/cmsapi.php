@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:admin-api')->group(function() {
-    Route::get('/users', 'CMS\API\UserController@index');
-});
+Route::get('/users', 'CMS\API\UserController@index');
+
+Route::get('/users/reported', 'CMS\API\UserController@reported');
+
+Route::get('/users/ranking', 'CMS\API\UserController@ranking');

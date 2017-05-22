@@ -22,7 +22,6 @@
 
         window.Noox = {!! json_encode([
             'JWTToken' => session('JWTToken'),
-            'apiToken' => Auth::user()->api_token,
         ]) !!};
   </script>
 </head>

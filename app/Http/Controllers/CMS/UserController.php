@@ -14,7 +14,7 @@ class UserController extends Controller
     }
 
     /**
-     * Return the dashboard
+     * Return the all users
      * 
      * @return Illuminate\Http\Response
      */
@@ -24,23 +24,37 @@ class UserController extends Controller
     }
 
     /**
+     * Return the all reported users
+     * 
+     * @return Illuminate\Http\Response
+     */
+    public function reported()
+    {
+        return view('cms.users_reported');
+    }
+
+    /**
+     * Return the all reported users
+     * 
+     * @return Illuminate\Http\Response
+     */
+    public function ranking()
+    {
+        return view('cms.users_ranking');
+    }
+
+    /**
      * View the profile of the requested admin. Return current authenticated admin profile by default.
      * 
      * @param  integer $id
      * @return Illuminate\Http\Response
      */
-    public function profile($id = null)
+    public function view($id)
     {
         if (! $user = User::find($id)) {
-            # code...
+            abort(404);
         }
 
-        try {
-            $this->authorize('profile', $user);
-            echo "this is your profile<br>";
-            var_dump($user);
-        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-            return redirect()->route('admin.profile');
-        }
+        return $user;
     }
 }

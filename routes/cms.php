@@ -20,3 +20,9 @@ Route::post('/logout', 'Auth\AdminLoginController@logout')->name('admin.logout.s
 Route::get('/admin/profile/{id?}', 'CMS\AdminController@profile')->name('admin.profile');
 
 Route::get('/users', 'CMS\UserController@index')->name('cms.users');
+
+Route::get('/users/reported', 'CMS\UserController@reported')->name('cms.users.reported');
+
+Route::get('/users/ranking', 'CMS\UserController@ranking')->name('cms.users.ranking');
+
+Route::get('/user/{id}', 'CMS\UserController@view')->name('cms.users.profile');
