@@ -36,3 +36,5 @@ Route::get('/news/reported', 'CMS\NewsController@reported')->name('cms.news.repo
 Route::get('/news/deleted', 'CMS\NewsController@deleted')->name('cms.news.deleted');
 
 Route::get('/news/{id}', 'CMS\NewsController@view')->name('cms.news.details');
+
+Route::get('/news/{id}/reports', 'CMS\NewsController@view')->name('cms.news.reports');

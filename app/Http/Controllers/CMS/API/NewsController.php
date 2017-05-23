@@ -36,7 +36,10 @@ class NewsController extends Controller
      */
     public function reported()
     {
-        $news = News::select(['id', 'title', 'pubtime', 'author'])->with('source')->withCount('reports')->has('reports');
+        $news = News::select(['id', 'title', 'pubtime', 'source_id'])
+            ->with('source')
+            ->withCount('reports')
+            ->has('reports');
 
         return Datatables::of($news)->addColumn('action', function ($news) {
                 return '<a href="'.route('cms.news.details', [$news->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>'

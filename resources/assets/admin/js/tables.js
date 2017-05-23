@@ -4,7 +4,7 @@
  * 
  * @type {String}
  */
-var apiToken = 'Bearer ' + window.Noox.JWTToken;
+var apiToken = 'Bearer ' + window.Noox.jwt;
 
 /**
  * Automatically instantiate DataTables object in the target element.
@@ -96,6 +96,21 @@ $(document).ready(function() {
                 { data: 'title' },
                 { data: 'pubtime' },
                 { data: 'author' },
+                { data: 'source.source_name' },
+                { data: 'action', sortable: false, searchable: false }
+            ]
+        }
+    );
+
+    /**
+     * Reported news table.
+     */
+    dtAttacher('#noox-news-reported', 'news/reported', 
+        {columns: [
+                { data: 'id' },
+                { data: 'title' },
+                { data: 'reports_count', searchable: false },
+                { data: 'pubtime' },
                 { data: 'source.source_name' },
                 { data: 'action', sortable: false, searchable: false }
             ]

@@ -307,7 +307,7 @@ if (typeof io !== "undefined") {
     {
         headers:
         {
-            'Authorization': 'Bearer ' + window.Noox.JWTToken
+            'Authorization': 'Bearer ' + window.Noox.jwt
         }
     }
 });
