@@ -86,4 +86,19 @@ $(document).ready(function() {
         order: [[ 3, 'desc' ], [ 2, 'desc' ]]
         }
     );
+
+    /**
+     * All news table.
+     */
+    dtAttacher('#noox-news-list', 'news', 
+        {columns: [
+                { data: 'id' },
+                { data: 'title' },
+                { data: 'pubtime' },
+                { data: 'author' },
+                { data: 'source.source_name' },
+                { data: 'action', sortable: false, searchable: false }
+            ]
+        }
+    );
 } );

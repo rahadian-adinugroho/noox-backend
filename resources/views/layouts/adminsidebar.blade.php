@@ -5,9 +5,9 @@
       <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i>Home</a></li>
       <li><a><i class="fa fa-newspaper-o"></i> News <span class="fa fa-chevron-down"></span></a>
         <ul class="nav child_menu">
-          <li><a href="form.html">All</a></li>
-          <li><a href="form_advanced.html">Reported</a></li>
-          <li><a href="form_validation.html">Deleted</a></li>
+          <li><a href="{{ route('cms.news') }}">All</a></li>
+          <li><a href="{{ route('cms.news.reported') }}">Reported</a></li>
+          <li><a href="{{ route('cms.news.deleted') }}">Deleted</a></li>
         </ul>
       </li>
       <li><a><i class="fa fa-users"></i> Users <span class="fa fa-chevron-down"></span></a>

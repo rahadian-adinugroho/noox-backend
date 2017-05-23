@@ -28,3 +28,11 @@ Route::get('/users/ranking', 'CMS\UserController@ranking')->name('cms.users.rank
 Route::get('/user/{id}', 'CMS\UserController@view')->name('cms.user.profile');
 
 Route::get('/user/{id}/reports', 'CMS\UserController@userReports')->name('cms.user.reports');
+
+Route::get('/news', 'CMS\NewsController@index')->name('cms.news');
+
+Route::get('/news/reported', 'CMS\NewsController@reported')->name('cms.news.reported');
+
+Route::get('/news/deleted', 'CMS\NewsController@deleted')->name('cms.news.deleted');
+
+Route::get('/news/{id}', 'CMS\NewsController@view')->name('cms.news.details');
