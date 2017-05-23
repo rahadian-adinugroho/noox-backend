@@ -21,7 +21,8 @@ var CURRENT_URL = window.location.href.split('?')[0],
     $LEFT_COL = $('.left_col'),
     $RIGHT_COL = $('.right_col'),
     $NAV_MENU = $('.nav_menu'),
-    $FOOTER = $('footer');
+    $FOOTER = $('footer'),
+    $NOTIFICATION = $('#menu1');
 
 // Sidebar
 $(document).ready(function() {
@@ -254,8 +255,14 @@ if (typeof NProgress != 'undefined') {
 
 window.handleNotification = function (notification) {
     if (/NewsReportBeyondThreshold/i.test(notification.type)) {
-        var val = $('#noox-notification-badge').html();
-        $('#noox-notification-badge').html(parseInt(val)+1);
+        var val = parseInt($('#noox-notification-badge').html());
+        if (isNaN( val )) { val = 0; }
+        $('#noox-notification-badge').html( val + 1 );
+
+        if ( val === 0 ) { $NOTIFICATION.find('li').remove(); }
+        if ( (val + 1) > 5 ) { $NOTIFICATION.find('li').eq(4).remove(); }
+        $NOTIFICATION.prepend(notifGenerator(notification));
+
         spawnNoty(notification.text, 'warning');
     }
 };
@@ -295,6 +302,23 @@ window.spawnNoty = function (text, type = 'info', onCloseCallback = null) {
         }).show();
     }
 };
+
+function notifGenerator(notification) {
+    var html = '';
+    html += '<li>';
+    html += '<a href="' + window.location.origin + '/cms/' + notification.target_url + '">';
+    html += '<span class="image"><img src="' + window.location.origin + '/admin/images/user.png" alt="Profile Image" /></span>';
+    html += '<span>';
+    html += '<span><strong>' + notification.title + '</strong></span>';
+    html += '<span class="time">Some moment ago</span>';
+    html += '</span>';
+    html += '<span class="message">';
+    html += $("<div>").text(notification.text).html();
+    html += '</span>';
+    html += '</a>';
+    html += '</li>';
+    return html;
+}
 
 // Init laravel-echo
 import Echo from 'laravel-echo'

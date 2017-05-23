@@ -116,4 +116,20 @@ $(document).ready(function() {
             ]
         }
     );
+
+    /**
+     * Deleted news table.
+     */
+    dtAttacher('#noox-news-deleted', 'news/deleted', 
+        {columns: [
+                { data: 'id' },
+                { data: 'title' },
+                { data: 'deleted_at' },
+                { data: 'pubtime' },
+                { data: 'author' },
+                { data: 'source.source_name' },
+                { data: 'action', sortable: false, searchable: false }
+            ]
+        }
+    );
 } );

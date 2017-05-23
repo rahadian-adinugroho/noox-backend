@@ -22,3 +22,5 @@ Route::get('/users/ranking', 'CMS\API\UserController@ranking');
 Route::get('/news', 'CMS\API\NewsController@index');
 
 Route::get('/news/reported', 'CMS\API\NewsController@reported');
+
+Route::get('/news/deleted', 'CMS\API\NewsController@deleted');

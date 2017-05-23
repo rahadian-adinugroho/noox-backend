@@ -1,3 +1,10 @@
+@php
+  //This is actually not a good practice. (This is to prevent multiple database query if the var needs to be reused.)
+
+  $unreadNotifications = Auth::user()->unreadNotifications()->count();
+  $latestNotifications = Auth::user()->unreadNotifications()->take(5)->get();
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,31 +105,48 @@
                 <li role="presentation" class="dropdown">
                   <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-envelope-o"></i>
-                    <span class="badge bg-green" id="noox-notification-badge">{{ Auth::user()->unreadNotifications()->count() ?: '' }}</span>
+                    <span class="badge bg-green" id="noox-notification-badge">{{ $unreadNotifications ?: '' }}</span>
                   </a>
                   <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                    @foreach (Auth::user()->unreadNotifications()->take(5)->get() as $notification)
-                    <li>
-                      <a href="{{ $notification->data['target_url'] }}">
-                        <span class="image"><img src="{{ asset('admin/images/user.png') }}" alt="Profile Image" /></span>
-                        <span>
-                          <span><strong>{{ $notification->data['title'] }}</strong></span>
-                          <span class="time">{{ $notification->created_at->diffForHumans() }}</span>
-                        </span>
-                        <span class="message">
-                          {{ $notification->data['text'] }}
-                        </span>
-                      </a>
-                    </li>
-                    @endforeach
-                    <li>
-                      <div class="text-center">
-                        <a href="{{ url('cms/notifications') }}">
-                          <strong>See All Alerts</strong>
-                          <i class="fa fa-angle-right"></i>
+                    @if ( $unreadNotifications )
+                      @foreach ($latestNotifications as $notification)
+                      <li>
+                        <a href="{{ url('cms/' . $notification->data['target_url']) }}">
+                          <span class="image"><img src="{{ asset('admin/images/user.png') }}" alt="Profile Image" /></span>
+                          <span>
+                            <span><strong>{{ $notification->data['title'] }}</strong></span>
+                            <span class="time">{{ $notification->created_at->diffForHumans() }}</span>
+                          </span>
+                          <span class="message">
+                            {{ $notification->data['text'] }}
+                          </span>
                         </a>
-                      </div>
-                    </li>
+                      </li>
+                      @endforeach
+                      @if ( $unreadNotifications > 5 )
+                      <li class="notif-act-button">
+                        <div class="text-center">
+                          <a href="{{ url('cms/notifications') }}">
+                            <strong>See All Notifications</strong>
+                            <i class="fa fa-angle-right"></i>
+                          </a>
+                        </div>
+                      </li>
+                      @endif
+                      <li class="notif-dismiss-button">
+                        <div class="text-center">
+                          <a href="{{ url('cms/notifications') }}">
+                            <strong>{{ ($unreadNotifications === 1) ? 'Dismiss Notification' : 'Dismiss All Notifications' }}</strong>
+                          </a>
+                        </div>
+                      </li>
+                    @else
+                      <li class="notif-button">
+                        <div class="text-center">
+                            <strong>No Notifications</strong>
+                        </div>
+                      </li>
+                    @endif
                   </ul>
                 </li>
               </ul>

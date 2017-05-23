@@ -753,6 +753,30 @@ article.media {
   width: 100%;
 }
 
+/** custom Noox css **/
+
+.notif-button {
+  border-radius: 3px;
+}
+
+.notif-act-button {
+  @extend .notif-button;
+  background: #2A3F54 !important;
+
+  p, strong {
+    color: #E7E7E7;
+  }
+}
+
+.notif-dismiss-button {
+  @extend .notif-button;
+  background: #E43726 !important;
+
+  p, strong {
+    color: #FDF6EE;
+  }
+}
+
 /* *********  custom accordion  **************************** */
 
 *, *:before, *:after {
@@ -1337,15 +1361,15 @@ div.box {
 /* *********  widgets  *************************************** */
 
 ul.msg_list li {
-  background: #f7f7f7;
+  background: #F7F7F7;
   padding: 5px;
   display: flex;
   margin: 6px 6px 0;
   width: 96% !important;
+  border-radius: 3px;
 }
 ul.msg_list li:last-child {
   margin-bottom: 6px;
-  padding: 10px;
 }
 ul.msg_list li a {
   padding: 3px 5px !important;
@@ -2361,10 +2385,10 @@ textarea:focus {
   color: #333333;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
   background-color: #f5f5f5;
-  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -moz-linear-gradient(to bottom, #ffffff, #e6e6e6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
-  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
-  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -webkit-linear-gradient(to bottom, #ffffff, #e6e6e6);
+  background-image: -o-linear-gradient(to bottom, #ffffff, #e6e6e6);
   background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
@@ -3623,11 +3647,11 @@ a.hiddenanchor {
 }
 .login_content h1:before {
   background: rgb(126, 126, 126);
-  background: -moz-linear-gradient(right, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background: -webkit-linear-gradient(right, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background: -o-linear-gradient(right, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background: -ms-linear-gradient(right, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background: linear-gradient(right, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background: -moz-linear-gradient(to left, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background: -webkit-linear-gradient(to left, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background: -o-linear-gradient(to left, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background: -ms-linear-gradient(to left, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background: linear-gradient(to left, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
   left: 0;
 }
 .login_content h1:before, .login_content h1:after {
@@ -3648,11 +3672,11 @@ a.hiddenanchor {
 }
 .login_content h1:before {
   background: rgb(126, 126, 126);
-  background: -moz-linear-gradient(right, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background: -webkit-linear-gradient(right, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background: -o-linear-gradient(right, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background: -ms-linear-gradient(right, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background: linear-gradient(right, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background: -moz-linear-gradient(to left, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background: -webkit-linear-gradient(to left, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background: -o-linear-gradient(to left, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background: -ms-linear-gradient(to left, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background: linear-gradient(to left, rgba(126, 126, 126, 1) 0%, rgba(255, 255, 255, 1) 100%);
   left: 0;
 }
 .login_content form {
@@ -3716,11 +3740,11 @@ a.hiddenanchor {
 }
 .button {
   background: rgb(247, 249, 250);
-  background: -moz-linear-gradient(top, rgba(247, 249, 250, 1) 0%, rgba(240, 240, 240, 1) 100%);
-  background: -webkit-linear-gradient(top, rgba(247, 249, 250, 1) 0%, rgba(240, 240, 240, 1) 100%);
-  background: -o-linear-gradient(top, rgba(247, 249, 250, 1) 0%, rgba(240, 240, 240, 1) 100%);
-  background: -ms-linear-gradient(top, rgba(247, 249, 250, 1) 0%, rgba(240, 240, 240, 1) 100%);
-  background: linear-gradient(top, rgba(247, 249, 250, 1) 0%, rgba(240, 240, 240, 1) 100%);
+  background: -moz-linear-gradient(to bottom, rgba(247, 249, 250, 1) 0%, rgba(240, 240, 240, 1) 100%);
+  background: -webkit-linear-gradient(to bottom, rgba(247, 249, 250, 1) 0%, rgba(240, 240, 240, 1) 100%);
+  background: -o-linear-gradient(to bottom, rgba(247, 249, 250, 1) 0%, rgba(240, 240, 240, 1) 100%);
+  background: -ms-linear-gradient(to bottom, rgba(247, 249, 250, 1) 0%, rgba(240, 240, 240, 1) 100%);
+  background: linear-gradient(to bottom, rgba(247, 249, 250, 1) 0%, rgba(240, 240, 240, 1) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f9fa', endColorstr='#f0f0f0', GradientType=0);
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
