@@ -96,7 +96,7 @@ class UserController extends BaseController
     }
 
     /**
-     * Get the requester's data.
+     * Get personal data.
      * 
      * @return \Illuminate\Http\Response
      */
@@ -113,12 +113,18 @@ class UserController extends BaseController
             'comments' => function($query){
                 $query->whereNull('parent_id');
             },
-            'newsLikes'
+            'newsLikes',
+            'achievements',
             ])->find(JWTAuth::getPayload()->get('sub'));
 
         return response()->json(compact('data'));
     }
 
+    /**
+     * Get personal achievements.
+     * 
+     * @return \Illuminate\Http\Response
+     */
     public function personalAchievements()
     {
         $user = User::find(JWTAuth::getPayload()->get('sub'));
