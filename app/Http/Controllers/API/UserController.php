@@ -96,13 +96,16 @@ class UserController extends BaseController
     }
 
     /**
-     * Get personal data.
+     * Get user's personal data.
      * 
      * @return \Illuminate\Http\Response
      */
     public function personalDetails()
     {
         $data = User::with([
+            'latestAchievement' => function($query){
+                $query->select(['title'])->first();
+            },
             'comments' => function($query){
                 $query->select('user_id', 'news_id', 'created_at', 'content')->whereNull('parent_id')->orderBy('created_at', 'desc');
             },
@@ -121,7 +124,21 @@ class UserController extends BaseController
     }
 
     /**
-     * Get personal achievements.
+     * Get user's personal stats.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function personalStats()
+    {
+        $user = User::find(JWTAuth::getPayload()->get('sub'));
+
+        $data = $user->getStats();
+
+        return response()->json(compact('data'));
+    }
+
+    /**
+     * Get user's personal achievements.
      * 
      * @return \Illuminate\Http\Response
      */
@@ -189,10 +206,10 @@ class UserController extends BaseController
             return $this->response->error('User not found.', 422);
         }
 
-        $report            = new \Noox\Models\Report;
-        $report->user_id   = JWTAuth::getPayload()->get('sub');
-        $report->content   = $request->input('content');
-        $report->status_id = \Noox\Models\ReportStatus::where('name', '=', 'open')->firstOrFail()->id;
+        $report              = new \Noox\Models\Report;
+        $report->reporter_id = JWTAuth::getPayload()->get('sub');
+        $report->content     = $request->input('content');
+        $report->status_id   = \Noox\Models\ReportStatus::where('name', '=', 'open')->firstOrFail()->id;
 
         if ($res = $user->reports()->save($report)) {
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);

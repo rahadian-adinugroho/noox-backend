@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(NewsCommentLikeTableSeeder::class);
         $this->call(ReportsTableSeeder::class);
         $this->call(AchievementsTableSeeder::class);
+        $this->call(UserAchievementsTableSeeder::class);
     }
 }

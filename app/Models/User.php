@@ -31,6 +31,13 @@ class User extends Authenticatable
         return $this->belongsToMany('Noox\Models\Achievement', 'user_achievements')->withPivot('earn_date');
     }
 
+    public function latestAchievement()
+    {
+        return $this->belongsToMany('Noox\Models\Achievement', 'user_achievements')
+        ->withPivot('earn_date')
+        ->orderBy('pivot_earn_date');
+    }
+
     public function reports()
     {
         return $this->morphMany('Noox\Models\Report', 'reportable');
@@ -38,7 +45,7 @@ class User extends Authenticatable
 
     public function submittedReports()
     {
-        return $this->hasMany('Noox\Models\Report');
+        return $this->hasMany('Noox\Models\Report', 'reporter_id');
     }
 
     public function newsPreferences()
@@ -69,11 +76,11 @@ class User extends Authenticatable
     public function getStats()
     {
         $user_data = [
-        'id'      => $this->id,
-        'name'    => $this->name,
-        'created' => $this->created_at->format('Y-m-d H:i:s'),
-        'level'   => $this->level,
-        'xp'      => $this->xp,
+        'id'         => $this->id,
+        'name'       => $this->name,
+        'created'    => $this->created_at->format('Y-m-d H:i:s'),
+        'level'      => $this->level,
+        'experience' => $this->experience,
         ];
 
         // use subquery for database adaptability

@@ -436,10 +436,10 @@ class NewsController extends BaseController
 
         $reporter = auth()->getUser();
 
-        $report            = new \Noox\Models\Report;
-        $report->user_id   = $reporter->id;
-        $report->content   = $request->input('content');
-        $report->status_id = \Noox\Models\ReportStatus::where('name', '=', 'open')->firstOrFail()->id;
+        $report              = new \Noox\Models\Report;
+        $report->reporter_id = $reporter->id;
+        $report->content     = $request->input('content');
+        $report->status_id   = \Noox\Models\ReportStatus::where('name', '=', 'open')->firstOrFail()->id;
 
         if ($res = $news->reports()->save($report)) {
             event(new NewsReportedEvent($res, $reporter));

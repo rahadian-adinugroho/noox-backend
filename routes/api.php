@@ -48,6 +48,8 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 
     $api->post('personal/news_preferences', 'Noox\Http\Controllers\API\UserController@updatePreferences');
 
+    $api->get('personal/stats', 'Noox\Http\Controllers\API\UserController@personalStats');
+
     $api->post('news/{id}/like', 'Noox\Http\Controllers\API\NewsController@submitLike');
 
     $api->delete('news/{id}/like', 'Noox\Http\Controllers\API\NewsController@deleteLike');

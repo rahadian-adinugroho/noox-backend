@@ -144,6 +144,7 @@ class ApiUserTest extends TestCase
             'comments_count',
             'achievements_count',
             'news_likes_count',
+            'latest_achievement',
             'comments',
             ]
             ]);
