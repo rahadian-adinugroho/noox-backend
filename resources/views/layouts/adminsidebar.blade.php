@@ -19,9 +19,9 @@
       </li>
       <li><a><i class="fa fa-exclamation-circle"></i> Reports <span class="fa fa-chevron-down"></span></a>
         <ul class="nav child_menu">
-          <li><a href="general_elements.html">All</a></li>
-          <li><a href="media_gallery.html">News</a></li>
-          <li><a href="typography.html">Users</a></li>
+          <li><a href="{{ route('cms.reports') }}">All</a></li>
+          <li><a href="{{ route('cms.reports.news') }}">News</a></li>
+          <li><a href="{{ route('cms.reports.user') }}">Users</a></li>
           <li><a href="typography.html">Comments</a></li>
         </ul>
       </li>

@@ -12,7 +12,7 @@
   <div class="">
     <div class="page-title">
       <div class="title_left">
-        <h3>News</h3>
+        <h3>Reports</h3>
       </div>
 
       <div class="title_right">
@@ -33,7 +33,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Reported news</h2>
+            <h2>All reports</h2>
             <ul class="nav navbar-right panel_toolbox">
               <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
               </li>
@@ -43,24 +43,24 @@
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
-            <table id="noox-news-reported" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <table id="noox-reports" class="table table-striped table-bordered" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Title</th>
-                        <th># Reports</th>
-                        <th>Publication Time</th>
-                        <th>Source</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Reporter</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th>ID</th>
-                        <th>Title</th>
-                        <th># Reports</th>
-                        <th>Publication Time</th>
-                        <th>Source</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Reporter</th>
                         <th>Actions</th>
                     </tr>
                 </tfoot>
