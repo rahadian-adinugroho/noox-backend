@@ -81,7 +81,7 @@ class UserController extends BaseController
             'comments.news' => function($query){
                 $query->select('id', 'title');
             }
-            ])->select('id', 'name', 'created_at as member_since', 'level', 'xp')->withCount([
+            ])->select('id', 'name', 'created_at as member_since', 'level')->withCount([
             'comments' => function($query){
                 $query->whereNull('parent_id');
             },
@@ -93,7 +93,43 @@ class UserController extends BaseController
             } else {
                 return $this->response->errorNotFound('User not found.');
             }
-        }
+    }
+
+    /**
+     * Get the requester's data.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function personalDetails()
+    {
+        $data = User::with([
+            'comments' => function($query){
+                $query->select('user_id', 'news_id', 'created_at', 'content')->whereNull('parent_id')->orderBy('created_at', 'desc');
+            },
+            'comments.news' => function($query){
+                $query->select('id', 'title');
+            }
+            ])->select('id', 'name', 'created_at as member_since', 'level', 'experience')->withCount([
+            'comments' => function($query){
+                $query->whereNull('parent_id');
+            },
+            'newsLikes'
+            ])->find(JWTAuth::getPayload()->get('sub'));
+
+        return response()->json(compact('data'));
+    }
+
+    public function personalAchievements()
+    {
+        $user = User::find(JWTAuth::getPayload()->get('sub'));
+
+        $data = $user->achievements()
+        ->select(['id', 'key', 'title', 'description', 'earn_date'])
+        ->orderBy('pivot_earn_date', 'desc')
+        ->get();
+
+        return response()->json(compact('data'));
+    }
 
     /**
      * Submit new user preferences.

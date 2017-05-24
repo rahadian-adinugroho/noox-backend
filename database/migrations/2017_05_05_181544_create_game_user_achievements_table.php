@@ -14,14 +14,14 @@ class CreateGameUserAchievementsTable extends Migration
     public function up()
     {
         Schema::create('user_achievements', function (Blueprint $table) {
-            $table->integer('acv_id')->unsigned();
+            $table->integer('achievement_id')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->dateTime('earndate');
+            $table->dateTime('earn_date');
 
-            $table->primary(['acv_id', 'user_id']);
+            $table->primary(['achievement_id', 'user_id']);
 
-            $table->foreign('acv_id')
-            ->references('id')->on('achievement_list')
+            $table->foreign('achievement_id')
+            ->references('id')->on('achievements')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 

@@ -13,11 +13,11 @@ class CreateGameAchievementTable extends Migration
      */
     public function up()
     {
-        Schema::create('achievement_list', function (Blueprint $table) {
+        Schema::create('achievements', function (Blueprint $table) {
             $table->increments('id');
             $table->string('key', 32)->unique();
             $table->string('title', 64);
-            $table->text('desc');
+            $table->text('description');
             $table->integer('xpbonus')->unsigned();
         });
     }
@@ -29,6 +29,6 @@ class CreateGameAchievementTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('achievement_list');
+        Schema::dropIfExists('achievements');
     }
 }

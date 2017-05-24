@@ -40,6 +40,10 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 {
     $api->post('user/{id}/report', 'Noox\Http\Controllers\API\UserController@submitReport');
 
+    $api->get('personal', 'Noox\Http\Controllers\API\UserController@personalDetails');
+
+    $api->get('personal/achievements', 'Noox\Http\Controllers\API\UserController@personalAchievements');
+
     $api->get('personal/news_preferences', 'Noox\Http\Controllers\API\UserController@viewPreferences');
 
     $api->post('personal/news_preferences', 'Noox\Http\Controllers\API\UserController@updatePreferences');

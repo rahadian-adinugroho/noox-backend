@@ -10,12 +10,26 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $fillable = array('fb_id','google_id', 'name', 'email', 'password', 'gender', 'birthday', 'level', 'xp');
+    protected $fillable = array(
+                         'fb_id',
+                         'google_id',
+                         'name',
+                         'email',
+                         'password',
+                         'gender',
+                         'birthday',
+                         'level',
+                         'experience');
     protected $attributes = [
-    'level' => 1,
-    'xp'    => 0,
+    'level'      => 1,
+    'experience' => 0,
     ];
     protected $hidden = array('password', 'remember_token', 'pivot');
+
+    public function achievements()
+    {
+        return $this->belongsToMany('Noox\Models\Achievement', 'user_achievements')->withPivot('earn_date');
+    }
 
     public function reports()
     {
