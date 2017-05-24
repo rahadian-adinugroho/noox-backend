@@ -42,7 +42,7 @@ class UserController extends BaseController
         $user = User::create([
             'fb_id'    => $fbid ?: null,
             'email'    => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
+            'password' => bcrypt($request->input('password'), ['rounds' => 12]),
             'name'     => $request->input('name'),
             'gender'   => $request->input('gender', null),
             'birthday' => $request->input('birthdat', null),
@@ -81,7 +81,7 @@ class UserController extends BaseController
             'comments.news' => function($query){
                 $query->select('id', 'title');
             }
-            ])->select('id', 'name', 'created_at as member_since', 'level', 'xp')->withCount([
+            ])->select('id', 'name', 'created_at as member_since', 'level')->withCount([
             'comments' => function($query){
                 $query->whereNull('parent_id');
             },
@@ -93,7 +93,66 @@ class UserController extends BaseController
             } else {
                 return $this->response->errorNotFound('User not found.');
             }
-        }
+    }
+
+    /**
+     * Get user's personal data.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function personalDetails()
+    {
+        $data = User::with([
+            'latestAchievement' => function($query){
+                $query->select(['title'])->first();
+            },
+            'comments' => function($query){
+                $query->select('user_id', 'news_id', 'created_at', 'content')->whereNull('parent_id')->orderBy('created_at', 'desc');
+            },
+            'comments.news' => function($query){
+                $query->select('id', 'title');
+            }
+            ])->select('id', 'name', 'created_at as member_since', 'level', 'experience')->withCount([
+            'comments' => function($query){
+                $query->whereNull('parent_id');
+            },
+            'newsLikes',
+            'achievements',
+            ])->find(JWTAuth::getPayload()->get('sub'));
+
+        return response()->json(compact('data'));
+    }
+
+    /**
+     * Get user's personal stats.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function personalStats()
+    {
+        $user = User::find(JWTAuth::getPayload()->get('sub'));
+
+        $data = $user->getStats();
+
+        return response()->json(compact('data'));
+    }
+
+    /**
+     * Get user's personal achievements.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function personalAchievements()
+    {
+        $user = User::find(JWTAuth::getPayload()->get('sub'));
+
+        $data = $user->achievements()
+        ->select(['id', 'key', 'title', 'description', 'earn_date'])
+        ->orderBy('pivot_earn_date', 'desc')
+        ->get();
+
+        return response()->json(compact('data'));
+    }
 
     /**
      * Submit new user preferences.
@@ -147,10 +206,10 @@ class UserController extends BaseController
             return $this->response->error('User not found.', 422);
         }
 
-        $report            = new \Noox\Models\Report;
-        $report->user_id   = JWTAuth::getPayload()->get('sub');
-        $report->content   = $request->input('content');
-        $report->status_id = \Noox\Models\ReportStatus::where('name', '=', 'open')->firstOrFail()->id;
+        $report              = new \Noox\Models\Report;
+        $report->reporter_id = JWTAuth::getPayload()->get('sub');
+        $report->content     = $request->input('content');
+        $report->status_id   = \Noox\Models\ReportStatus::where('name', '=', 'open')->firstOrFail()->id;
 
         if ($res = $user->reports()->save($report)) {
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);

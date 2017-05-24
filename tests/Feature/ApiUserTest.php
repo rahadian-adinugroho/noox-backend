@@ -113,17 +113,61 @@ class ApiUserTest extends TestCase
     {
         $this->seed('UserTableSeeder');
         $this->get('/api/user/1')
-        ->assertJson([
+        ->assertJsonStructure([
             'data' => [
-            'id'        => 1,
-            'name' => "Jalil Boy",
-            'level'      => 1,
-            'xp'     => "0",
-            'comments_count'    => 0,
-            'news_likes_count' => 0,
-            "comments" => []
+            'id'   ,
+            'name' ,
+            'level'   ,
+            'member_since',
+            'comments_count'  ,
+            'comments',
             ]
             ]);
+    }
+
+    /**
+     * @test
+     * 
+     * Test: GET /api/personal.
+     */
+    public function it_fetch_personal_details()
+    {
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->get('/api/personal', $this->headers($user))
+        ->assertJsonStructure([
+            'data' => [
+            'id',
+            'name',
+            'level',
+            'experience',
+            'member_since',
+            'comments_count',
+            'achievements_count',
+            'news_likes_count',
+            'latest_achievement',
+            'comments',
+            ]
+            ]);
+    }
+
+    /**
+     * @test
+     * 
+     * Test: GET /api/personal/achievements.
+     */
+    public function it_fetch_personal_achievements()
+    {
+        $this->seed('AchievementsTableSeeder');
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $user->achievements()->attach([1 => ['earn_date' => \Carbon\Carbon::now()]]);
+        $this->get('/api/personal/achievements', $this->headers($user))
+        ->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'id', 'key', 'title', 'description', 'earn_date'
+                ]
+            ]
+        ]);
     }
 
     /**

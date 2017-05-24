@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->char('gender', 1)->nullable();
             $table->date('birthday')->nullable();
             $table->integer('level')->unsigned();
-            $table->integer('xp');
+            $table->integer('experience')->unsigned();
             $table->timestamps();
             $table->rememberToken();
         });

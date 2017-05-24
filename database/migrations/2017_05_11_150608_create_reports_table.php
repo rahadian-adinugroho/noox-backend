@@ -15,7 +15,7 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
+            $table->integer('reporter_id')->unsigned();
             $table->text('content');
             $table->integer('status_id')->unsigned();
             $table->integer('reportable_id')->unsigned();
@@ -24,7 +24,7 @@ class CreateReportsTable extends Migration
 
             $table->index(['reportable_id', 'reportable_type']);
 
-            $table->foreign('user_id')
+            $table->foreign('reporter_id')
             ->references('id')->on('users')
             ->onDelete('cascade')
             ->onUpdate('cascade');
