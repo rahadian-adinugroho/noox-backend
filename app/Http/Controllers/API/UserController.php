@@ -42,7 +42,7 @@ class UserController extends BaseController
         $user = User::create([
             'fb_id'    => $fbid ?: null,
             'email'    => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
+            'password' => bcrypt($request->input('password'), ['rounds' => 12]),
             'name'     => $request->input('name'),
             'gender'   => $request->input('gender', null),
             'birthday' => $request->input('birthdat', null),
