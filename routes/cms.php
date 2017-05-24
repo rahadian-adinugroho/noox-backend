@@ -44,3 +44,5 @@ Route::get('/reports', 'CMS\ReportController@index')->name('cms.reports');
 Route::get('/reports/user', 'CMS\UserController@reported')->name('cms.reports.user');
 
 Route::get('/reports/news', 'CMS\NewsController@reported')->name('cms.reports.news');
+
+Route::get('/report/{id}', 'CMS\ReportController@view')->name('cms.report.details');

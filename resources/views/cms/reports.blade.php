@@ -51,6 +51,7 @@
                         <th>Status</th>
                         <th>Date</th>
                         <th>Reporter</th>
+                        <th>Content</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -61,6 +62,7 @@
                         <th>Status</th>
                         <th>Date</th>
                         <th>Reporter</th>
+                        <th>Content</th>
                         <th>Actions</th>
                     </tr>
                 </tfoot>

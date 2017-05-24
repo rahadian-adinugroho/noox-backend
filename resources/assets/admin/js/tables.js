@@ -38,6 +38,23 @@ function dtAttacher(target, url, additionalOptions) {
     }
 }
 
+function ucFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function getLabelType(status) {
+    switch (status) {
+        case 'open':
+            return 'danger';
+        case 'investigating':
+            return 'warning';
+        case 'closed':
+            return 'default';
+        default:
+            return 'success';
+    }
+}
+
 $(document).ready(function() {
     /**
      * All users table.
@@ -129,6 +146,36 @@ $(document).ready(function() {
                 { data: 'author' },
                 { data: 'source.source_name' },
                 { data: 'action', sortable: false, searchable: false }
+            ]
+        }
+    );
+
+    /**
+     * Deleted news table.
+     */
+    dtAttacher('#noox-reports', 'reports', 
+        {columns: [
+                { data: 'id' },
+                { data: 'reportable_type' },
+                { data: 'status.name' },
+                { data: 'created_at' },
+                { data: 'reporter.name' },
+                { data: 'content' },
+                { data: 'action', sortable: false, searchable: false }
+            ],
+        columnDefs: [ 
+                {
+                    targets: 1,
+                    render: function ( data, type, full, meta ) {
+                      return ucFirstLetter(data);
+                    }
+                },
+                {
+                    targets: 2,
+                    render: function ( data, type, full, meta ) {
+                      return '<span class="label label-'+ getLabelType(data) +'">'+ ucFirstLetter(data) +'</span>';
+                    }
+                }
             ]
         }
     );
