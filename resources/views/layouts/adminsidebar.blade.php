@@ -31,7 +31,12 @@
     <h3>Administrative</h3>
     <ul class="nav side-menu">
     @can('create', Noox\Models\Admin::class)
-      <li><a href="javascript:;"><i class="fa fa-rebel"></i> Administrators </a></li>
+      <li><a><i class="fa fa-rebel"></i> Administrators <span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu">
+          <li><a href="{{ route('cms.users') }}">Add new</a></li>
+          <li><a href="{{ route('cms.users.reported') }}">List</a></li>
+        </ul>
+      </li>
     @endcan
       <li><a href="javascript:;"><i class="fa fa-list-ul"></i> System Logs </a></li>
   </div>
