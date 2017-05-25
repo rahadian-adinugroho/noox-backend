@@ -14,7 +14,7 @@ class NewsController extends Controller
     }
 
     /**
-     * Return the all news
+     * Return all news
      * 
      * @return Illuminate\Http\Response
      */
@@ -24,7 +24,7 @@ class NewsController extends Controller
     }
 
     /**
-     * Return the all reported news
+     * Return all reported news
      * 
      * @return Illuminate\Http\Response
      */
@@ -34,13 +34,23 @@ class NewsController extends Controller
     }
 
     /**
-     * Return the all deleted news
+     * Return all deleted news
      * 
      * @return Illuminate\Http\Response
      */
     public function deleted()
     {
         return view('cms.news_deleted');
+    }
+
+    /**
+     * Return all reported comments
+     * 
+     * @return Illuminate\Http\Response
+     */
+    public function reportedComments()
+    {
+        return view('cms.comments_reported');
     }
 
     /**

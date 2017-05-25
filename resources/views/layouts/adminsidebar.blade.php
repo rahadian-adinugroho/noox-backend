@@ -22,7 +22,7 @@
           <li><a href="{{ route('cms.reports') }}">All</a></li>
           <li><a href="{{ route('cms.reports.news') }}">News</a></li>
           <li><a href="{{ route('cms.reports.user') }}">Users</a></li>
-          <li><a href="typography.html">Comments</a></li>
+          <li><a href="{{ route('cms.news.comments.reported') }}">Comments</a></li>
         </ul>
       </li>
     </ul>
@@ -33,8 +33,8 @@
     @can('create', Noox\Models\Admin::class)
       <li><a><i class="fa fa-rebel"></i> Administrators <span class="fa fa-chevron-down"></span></a>
         <ul class="nav child_menu">
-          <li><a href="{{ route('cms.users') }}">Add new</a></li>
-          <li><a href="{{ route('cms.users.reported') }}">List</a></li>
+          <li><a href="{{ route('admin.create') }}">Add new</a></li>
+          <li><a href="{{ route('admins') }}">List</a></li>
         </ul>
       </li>
     @endcan

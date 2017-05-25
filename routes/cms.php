@@ -17,7 +17,13 @@ Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.login.subm
 
 Route::post('/logout', 'Auth\AdminLoginController@logout')->name('admin.logout.submit');
 
-Route::get('/admin/profile/{id?}', 'CMS\AdminController@profile')->name('admin.profile');
+Route::get('/admin/{id?}', 'CMS\AdminController@profile')->name('admin.profile');
+
+Route::get('/admins', 'CMS\AdminController@index')->name('admins');
+
+Route::get('/admin/create', 'CMS\AdminController@viewCreate')->name('admin.create');
+
+Route::post('/admin/create', 'CMS\AdminController@create')->name('admin.create.submit');
 
 Route::get('/users', 'CMS\UserController@index')->name('cms.users');
 
@@ -38,6 +44,12 @@ Route::get('/news/deleted', 'CMS\NewsController@deleted')->name('cms.news.delete
 Route::get('/news/{id}', 'CMS\NewsController@view')->name('cms.news.details');
 
 Route::get('/news/{id}/reports', 'CMS\NewsController@newsReports')->name('cms.news.reports');
+
+Route::get('/news/comments/reported', 'CMS\NewsController@reportedComments')->name('cms.news.comments.reported');
+
+Route::get('/news/comment/{id}', 'CMS\NewsController@viewComment')->name('cms.news.comment.details');
+
+Route::get('/news/comment/{id}/reports', 'CMS\NewsController@viewCommentReports')->name('cms.news.comment.reports');
 
 Route::get('/reports', 'CMS\ReportController@index')->name('cms.reports');
 

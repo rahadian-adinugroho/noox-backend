@@ -151,6 +151,22 @@ $(document).ready(function() {
     );
 
     /**
+     * Reported news table.
+     */
+    dtAttacher('#noox-comment-reported', 'news/comments/reports', 
+        {columns: [
+                { data: 'id' },
+                { data: 'author.name' },
+                { data: 'reports_count', searchable: false },
+                { data: 'news.title' },
+                { data: 'content' },
+                { data: 'created_at' },
+                { data: 'action', sortable: false, searchable: false }
+            ]
+        }
+    );
+
+    /**
      * Deleted news table.
      */
     dtAttacher('#noox-reports', 'reports', 

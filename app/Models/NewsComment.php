@@ -40,4 +40,9 @@ class NewsComment extends Model
     {
         return $this->belongsToMany('Noox\Models\User', 'news_comment_likes', 'comment_id', 'user_id');
     }
+
+    public function reports()
+    {
+        return $this->morphMany('Noox\Models\Report', 'reportable');
+    }
 }
