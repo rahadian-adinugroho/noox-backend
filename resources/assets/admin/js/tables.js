@@ -96,7 +96,7 @@ $(document).ready(function() {
                     { data: 'id' },
                     { data: 'name' },
                     { data: 'level' },
-                    { data: 'xp', searchable: false },
+                    { data: 'experience', searchable: false },
                     { data: 'email' },
                     { data: 'action', sortable: false, searchable: false }
                 ],

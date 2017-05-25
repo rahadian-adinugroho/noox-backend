@@ -52,7 +52,7 @@ class UserController extends Controller
      */
     public function ranking()
     {
-        $users = User::select(['id', 'name', 'email', 'level', 'xp']);
+        $users = User::select(['id', 'name', 'email', 'level', 'experience']);
 
         return Datatables::of($users)->addColumn('action', function ($user) {
                 return '<a href="'.route('cms.user.profile', [$user->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
