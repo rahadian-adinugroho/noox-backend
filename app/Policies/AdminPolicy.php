@@ -24,6 +24,18 @@ class AdminPolicy
     }
 
     /**
+     * Determine whether the current admin can view the list admin.
+     *
+     * @param  \Noox\Models\Admin  $user
+     * @param  \Noox\Models\Admin  $admin
+     * @return mixed
+     */
+    public function view(Admin $user)
+    {
+        return $user->role === 2;
+    }
+
+    /**
      * Determine whether the current admin can view the admin.
      *
      * @param  \Noox\Models\Admin  $user

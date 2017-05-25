@@ -28,3 +28,5 @@ Route::get('/news/deleted', 'CMS\API\NewsController@deleted');
 Route::get('/news/comments/reports', 'CMS\API\NewsController@reportedComments');
 
 Route::get('/reports', 'CMS\API\ReportController@index');
+
+Route::get('/admins', 'CMS\API\AdminController@index');

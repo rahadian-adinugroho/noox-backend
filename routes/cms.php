@@ -19,7 +19,7 @@ Route::post('/logout', 'Auth\AdminLoginController@logout')->name('admin.logout.s
 
 Route::get('/admin/{id?}', 'CMS\AdminController@profile')->name('admin.profile');
 
-Route::get('/admins', 'CMS\AdminController@index')->name('admins');
+Route::get('/admins', 'CMS\AdminController@adminList')->name('admins');
 
 Route::get('/admin/create', 'CMS\AdminController@viewCreate')->name('admin.create');
 

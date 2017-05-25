@@ -25,6 +25,17 @@ class AdminController extends Controller
     }
 
     /**
+     * Return the dashboard
+     * 
+     * @return Illuminate\Http\Response
+     */
+    public function adminList()
+    {
+        $this->authorize('view', Admin::class);
+        return view('cms.admins');
+    }
+
+    /**
      * View the profile of the requested admin. Return current authenticated admin profile by default.
      * 
      * @param  integer $id

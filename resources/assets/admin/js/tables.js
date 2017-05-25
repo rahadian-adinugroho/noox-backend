@@ -195,4 +195,19 @@ $(document).ready(function() {
             ]
         }
     );
+
+    /**
+     * All admins table.
+     */
+    dtAttacher('#noox-admins', 'admins', 
+        {columns: [
+                { data: 'id' },
+                { data: 'name' },
+                { data: 'email' },
+                { data: 'created_at' },
+                { data: 'updated_at' },
+                { data: 'action', sortable: false, searchable: false }
+            ]
+        }
+    );
 } );
