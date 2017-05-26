@@ -44,6 +44,8 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 
     $api->get('personal/comments', 'Noox\Http\Controllers\API\UserController@personalComments');
 
+    $api->get('personal/liked_news', 'Noox\Http\Controllers\API\UserController@personalLikedNews');
+
     $api->get('personal/achievements', 'Noox\Http\Controllers\API\UserController@personalAchievements');
 
     $api->get('personal/news_preferences', 'Noox\Http\Controllers\API\UserController@viewPreferences');

@@ -54,7 +54,7 @@ class NewsTest extends TestCase
                 'pubtime',
                 'author',
                 'content',
-                'likes_count',
+                'likers_count',
                 'comments_count',
             ]
             ]);
@@ -127,7 +127,7 @@ class NewsTest extends TestCase
                 'pubtime',
                 'author',
                 'content',
-                'likes_count',
+                'likers_count',
                 'comments_count',
                 'comments' => []
             ]
@@ -160,7 +160,7 @@ class NewsTest extends TestCase
                             'created_at',
                             'content',
                             'replies_count',
-                            'likes_count',
+                            'likers_count',
                             'latest_replies',
                             'author' => ['id', 'fb_id', 'name']]
                     ]
@@ -187,7 +187,7 @@ class NewsTest extends TestCase
                 'id',
                 'author' => ['id', 'fb_id', 'name'],
                 'created_at',
-                'likes_count',
+                'likers_count',
                 'content'], 
             'replies' => [
                 'total',
@@ -200,7 +200,7 @@ class NewsTest extends TestCase
                         'id',
                         'author' => ['id', 'fb_id', 'name'],
                         'created_at',
-                        'likes_count',
+                        'likers_count',
                         'content',
                     ]
                 ],
@@ -229,7 +229,7 @@ class NewsTest extends TestCase
                 'author' => ['id', 'fb_id', 'name'],
                 'created_at',
                 'likes',
-                'likes_count',
+                'likers_count',
                 'content'], 
             'replies' => [
                 'total',
@@ -243,7 +243,7 @@ class NewsTest extends TestCase
                         'author' => ['id', 'fb_id', 'name'],
                         'created_at',
                         'likes',
-                        'likes_count',
+                        'likers_count',
                         'content',
                     ]
                 ],

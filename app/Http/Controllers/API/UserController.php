@@ -85,7 +85,7 @@ class UserController extends BaseController
             'comments' => function($query){
                 $query->whereNull('parent_id');
             },
-            'newsLikes'
+            'likedNews'
             ])->find($id);
 
             if ($data) {
@@ -110,7 +110,7 @@ class UserController extends BaseController
             'comments' => function($query){
                 $query->whereNull('parent_id');
             },
-            'newsLikes',
+            'likedNews',
             'achievements',
             ])->find(JWTAuth::getPayload()->get('sub'));
 
@@ -135,6 +135,24 @@ class UserController extends BaseController
         ->paginate(10);
 
         return response()->json(compact('data'));
+    }
+
+    /**
+     * Get user's news comments.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function personalLikedNews()
+    {
+        $user = User::find(JWTAuth::getPayload()->get('sub'));
+
+        $data = $user->likedNews()
+        ->select('news_id', 'source_id', 'title', 'pubtime')
+        ->with(['source'])
+        ->orderBy('pivot_liked_at', 'desc')
+        ->paginate(10);
+
+        return $this->response->paginator($data, new \Noox\Transformers\LikedNewsTransformer);
     }
 
     /**

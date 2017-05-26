@@ -40,8 +40,8 @@ class News extends Model
     	return $this->hasMany('Noox\Models\NewsComment')->where('parent_id', null)->orderBy('created_at', 'desc');
     }
 
-    public function likes()
+    public function likers()
     {
-        return $this->belongsToMany('Noox\Models\User', 'news_likes');
+        return $this->belongsToMany('Noox\Models\User', 'news_likes')->withPivot('liked_at');
     }
 }

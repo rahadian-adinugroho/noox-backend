@@ -143,7 +143,7 @@ class ApiUserTest extends TestCase
             'member_since',
             'comments_count',
             'achievements_count',
-            'news_likes_count',
+            'liked_news_count',
             'latest_achievement',
             ]
             ]);
@@ -195,6 +195,34 @@ class ApiUserTest extends TestCase
                     ]
                 ]
             ]
+        ]);
+    }
+
+    /**
+     * @test
+     * 
+     * Test: GET /api/personal/achievements.
+     */
+    public function it_fetch_users_liked_news()
+    {
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/1/like', [], $this->headers($user));
+
+        $this->get('/api/personal/liked_news', $this->headers($user))
+        ->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'news_id',
+                    'title',
+                    'pubtime',
+                    'source' => ['id', 'source_name', 'base_url']
+                ]
+            ],
+            'meta'
         ]);
     }
 

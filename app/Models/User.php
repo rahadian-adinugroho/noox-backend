@@ -63,12 +63,12 @@ class User extends Authenticatable
     	return $this->hasMany('Noox\Models\NewsComment');
     }
 
-    public function newsLikes()
+    public function likedNews()
     {
-        return $this->belongsToMany('Noox\Models\News', 'news_likes');
+        return $this->belongsToMany('Noox\Models\News', 'news_likes')->withPivot('liked_at');
     }
 
-    public function commentLikes()
+    public function likedComments()
     {
     	return $this->belongsToMany('Noox\Models\NewsComment', 'news_comment_likes', 'user_id', 'comment_id');
     }
@@ -100,13 +100,13 @@ class User extends Authenticatable
             return [$data->name => ($data->read_count) ?: 0];
         }, $news_read_count->toArray());
 
-        $news_likes_count = $this->newsLikes()->count();
+        $news_likes_count = $this->likedNews()->count();
 
         $comment_count = $this->comments()->count();
 
-        $liked_comments_count = $this->comments()->has('likes', '>=', 1)->count();
+        $liked_comments_count = $this->comments()->has('likers', '>=', 1)->count();
 
-        $comment_likes_count = $this->commentLikes()->count();
+        $comment_likes_count = $this->likedComments()->count();
 
         $report_count = $this->submittedReports()->count();
 

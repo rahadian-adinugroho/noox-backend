@@ -16,6 +16,7 @@ class CreateNewsLikesTable extends Migration
         Schema::create('news_likes', function (Blueprint $table) {
             $table->integer('news_id')->unsigned();
             $table->integer('user_id')->unsigned();
+            $table->dateTime('liked_at');
 
             $table->primary(['news_id', 'user_id']);
 

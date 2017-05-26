@@ -38,10 +38,10 @@ class NewsController extends BaseController
         }
         $query = News::
         with(['source', 'category'])
-        ->withCount(['likes', 'comments']);
+        ->withCount(['likers', 'comments']);
 
         if ($userId) {
-            $query->with(['likes' => function($q) use ($userId) 
+            $query->with(['likers' => function($q) use ($userId) 
             {
                 $q->select('user_id', 'name')->where('user_id', $userId);
             }]);
@@ -95,21 +95,21 @@ class NewsController extends BaseController
                     {
                         $query->select('id', 'name');
                     }])
-                    ->withCount('likes');
+                    ->withCount('likers');
 
                     if ($userId) {
-                        $query->with(['likes' => function($q) use ($userId) 
+                        $query->with(['likers' => function($q) use ($userId) 
                         {
                             $q->where('user_id', $userId);
                         }]);
                     }
 
                 },])
-                ->withCount(['replies', 'likes'])
+                ->withCount(['replies', 'likers'])
                 ->whereNull('parent_id');
 
                 if ($userId) {
-                    $query->with(['likes' => function($q) use ($userId) 
+                    $query->with(['likers' => function($q) use ($userId) 
                     {
                         $q->where('user_id', $userId);
                     }]);
@@ -122,10 +122,10 @@ class NewsController extends BaseController
                 $query->select('id', 'name');
             },
             'source', 'category'])
-        ->withCount(['likes', 'comments']);
+        ->withCount(['likers', 'comments']);
 
         if ($userId) {
-            $query->with(['likes' => function($q) use ($userId) 
+            $query->with(['likers' => function($q) use ($userId) 
             {
                 $q->where('user_id', $userId);
             }]);
@@ -164,7 +164,7 @@ class NewsController extends BaseController
         $user = auth()->getUser();
 
         try {
-            $news->likes()->attach($user->id);
+            $news->likers()->attach($user->id, ['liked_at' => Carbon::now()]);
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) {
                 $this->response->errorBadRequest('This user already liked this news.');
@@ -190,7 +190,7 @@ class NewsController extends BaseController
         $user = auth()->getUser();
 
         try {
-            $news->likes()->detach($user->id);
+            $news->likers()->detach($user->id);
         } catch (\Illuminate\Database\QueryException $e) {
             $this->response->errorInternal('Please try again later.');
         }
@@ -227,10 +227,10 @@ class NewsController extends BaseController
                     ->with(['author' => function($q) {
                         $q->select('id', 'fb_id', 'name');
                     }])
-                    ->withCount('likes');
+                    ->withCount('likers');
 
                     if ($userId) {
-                        $q->with(['likes' => function($q) use ($userId) 
+                        $q->with(['likers' => function($q) use ($userId) 
                         {
                             $q->select('user_id', 'name')->where('user_id', $userId);
                         }]);
@@ -238,10 +238,10 @@ class NewsController extends BaseController
                 },'author' => function($q) {
                     $q->select('id', 'fb_id', 'name');
                 }])
-            ->withCount(['replies', 'likes']);
+            ->withCount(['replies', 'likers']);
 
             if ($userId) {
-                $query->with(['likes' => function($q) use ($userId) 
+                $query->with(['likers' => function($q) use ($userId) 
                 {
                     $q->where('user_id', $userId);
                 }]);
@@ -277,10 +277,10 @@ class NewsController extends BaseController
             'author' => function($q) {
                 $q->select('id', 'fb_id', 'name');
             },])
-        ->withCount('likes');
+        ->withCount('likers');
         if ($userId) {
             $q->with([
-                'likes' => function($q) use ($userId) {
+                'likers' => function($q) use ($userId) {
                     $q->select('user_id', 'name')->where('user_id', $userId);
                 }]);
         }
@@ -293,11 +293,11 @@ class NewsController extends BaseController
                 ->with(['author' => function($q) {
                     $q->select('id', 'fb_id', 'name');
                 }])
-                ->withCount('likes');
+                ->withCount('likers');
 
                 if ($userId) {
                     $query->with([
-                        'likes' => function($q) use ($userId) {
+                        'likers' => function($q) use ($userId) {
                             $q->select('user_id', 'name')->where('user_id', $userId);
                         }]);
                 }
@@ -383,7 +383,7 @@ class NewsController extends BaseController
         $user = auth()->getUser();
 
         try {
-            $comment->likes()->attach($user->id);
+            $comment->likers()->attach($user->id);
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) {
                 $this->response->errorBadRequest('This user already liked this comment.');
@@ -412,7 +412,7 @@ class NewsController extends BaseController
         $user = auth()->getUser();
 
         try {
-            $comment->likes()->detach($user->id);
+            $comment->likers()->detach($user->id);
         } catch (\Illuminate\Database\QueryException $e) {
             $this->response->errorInternal('Please try again later.');
         }
