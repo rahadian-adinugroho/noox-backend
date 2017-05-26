@@ -225,7 +225,7 @@ class NewsController extends BaseController
                     $q
                     ->select('id', 'news_id', 'user_id', 'created_at', 'content', 'parent_id')
                     ->with(['author' => function($q) {
-                        $q->select('id', 'name');
+                        $q->select('id', 'fb_id', 'name');
                     }])
                     ->withCount('likes');
 
@@ -236,7 +236,7 @@ class NewsController extends BaseController
                         }]);
                     }
                 },'author' => function($q) {
-                    $q->select('id', 'name');
+                    $q->select('id', 'fb_id', 'name');
                 }])
             ->withCount(['replies', 'likes']);
 
@@ -264,7 +264,7 @@ class NewsController extends BaseController
      * 
      * @return [type]          [description]
      */
-    public function commentDetails(Request $r, $newsId)
+    public function commentDetails(Request $r, $commentId)
     {
         try {
             $userId = JWTAuth::parseToken()->getPayload()->get('sub');
@@ -275,7 +275,7 @@ class NewsController extends BaseController
         $q = NewsComment::select('id', 'user_id', 'created_at', 'content', 'parent_id')
         ->with([
             'author' => function($q) {
-                $q->select('id', 'name');
+                $q->select('id', 'fb_id', 'name');
             },])
         ->withCount('likes');
         if ($userId) {
@@ -284,14 +284,14 @@ class NewsController extends BaseController
                     $q->select('user_id', 'name')->where('user_id', $userId);
                 }]);
         }
-        $comment = $q->find($newsId);
+        $comment = $q->find($commentId);
 
         if ($comment) {
             if (is_null($comment->parent_id)) {
                 $query = $comment->replies()
                 ->select('id', 'user_id', 'created_at', 'content', 'parent_id')
                 ->with(['author' => function($q) {
-                    $q->select('id', 'name');
+                    $q->select('id', 'fb_id', 'name');
                 }])
                 ->withCount('likes');
 
@@ -302,7 +302,7 @@ class NewsController extends BaseController
                         }]);
                 }
 
-                $replies = $query->paginate();
+                $replies = $query->paginate(10);
             } else {
                 $replies = null;
             }

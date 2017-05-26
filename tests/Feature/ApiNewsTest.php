@@ -162,7 +162,7 @@ class NewsTest extends TestCase
                             'replies_count',
                             'likes_count',
                             'latest_replies',
-                            'author' => ['id', 'name']]
+                            'author' => ['id', 'fb_id', 'name']]
                     ]
             ]
             ]);
@@ -185,7 +185,7 @@ class NewsTest extends TestCase
         ->assertJsonStructure([
             'comment' => [
                 'id',
-                'author',
+                'author' => ['id', 'fb_id', 'name'],
                 'created_at',
                 'likes_count',
                 'content'], 
@@ -198,7 +198,7 @@ class NewsTest extends TestCase
                 'data' => [
                     '*' => [
                         'id',
-                        'author',
+                        'author' => ['id', 'fb_id', 'name'],
                         'created_at',
                         'likes_count',
                         'content',
@@ -226,7 +226,7 @@ class NewsTest extends TestCase
         ->assertJsonStructure([
             'comment' => [
                 'id',
-                'author',
+                'author' => ['id', 'fb_id', 'name'],
                 'created_at',
                 'likes',
                 'likes_count',
@@ -240,7 +240,7 @@ class NewsTest extends TestCase
                 'data' => [
                     '*' => [
                         'id',
-                        'author',
+                        'author' => ['id', 'fb_id', 'name'],
                         'created_at',
                         'likes',
                         'likes_count',

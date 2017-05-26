@@ -117,6 +117,11 @@ class UserController extends BaseController
         return response()->json(compact('data'));
     }
 
+    /**
+     * Get user's news comments.
+     * 
+     * @return \Illuminate\Http\Response
+     */
     public function personalComments()
     {
         $user = User::find(JWTAuth::getPayload()->get('sub'));
