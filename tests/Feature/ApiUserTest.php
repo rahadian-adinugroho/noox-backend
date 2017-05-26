@@ -145,7 +145,6 @@ class ApiUserTest extends TestCase
             'achievements_count',
             'news_likes_count',
             'latest_achievement',
-            'comments',
             ]
             ]);
     }
@@ -165,6 +164,35 @@ class ApiUserTest extends TestCase
             'data' => [
                 '*' => [
                     'id', 'key', 'title', 'description', 'earn_date'
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * @test
+     * 
+     * Test: GET /api/personal/achievements.
+     */
+    public function it_fetch_personal_news_comments()
+    {
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/1/comment', ['content' => 'Nice news.'], $this->headers($user));
+
+        $this->get('/api/personal/comments', $this->headers($user))
+        ->assertJsonStructure([
+            'data' => [
+                'data' => [
+                    '*' => [
+                        'news_id',
+                        'created_at',
+                        'content',
+                        'news' => ['id', 'title']
+                    ]
                 ]
             ]
         ]);

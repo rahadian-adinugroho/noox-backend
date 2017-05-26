@@ -106,12 +106,6 @@ class UserController extends BaseController
             'latestAchievement' => function($query){
                 $query->select(['title'])->first();
             },
-            'comments' => function($query){
-                $query->select('user_id', 'news_id', 'created_at', 'content')->whereNull('parent_id')->orderBy('created_at', 'desc');
-            },
-            'comments.news' => function($query){
-                $query->select('id', 'title');
-            }
             ])->select('id', 'name', 'created_at as member_since', 'level', 'experience')->withCount([
             'comments' => function($query){
                 $query->whereNull('parent_id');
@@ -119,6 +113,21 @@ class UserController extends BaseController
             'newsLikes',
             'achievements',
             ])->find(JWTAuth::getPayload()->get('sub'));
+
+        return response()->json(compact('data'));
+    }
+
+    public function personalComments()
+    {
+        $user = User::find(JWTAuth::getPayload()->get('sub'));
+
+        $data = $user->comments()
+        ->select('news_id', 'created_at', 'content')
+        ->with(['news' => function($q){
+            $q->select('id', 'title');
+        }])
+        ->whereNull('parent_id')
+        ->paginate(10);
 
         return response()->json(compact('data'));
     }
