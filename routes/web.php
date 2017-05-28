@@ -26,6 +26,31 @@ Route::get('fire', function(){
     return 'event fired!';
 });
 
+Route::get('socket-liked', function(){
+    $user = \Noox\Models\User::find(1);
+    $comment = $user->comments()->first();
+
+    $liker = \Noox\Models\User::find(2);
+
+    $user->notify(new \Noox\Notifications\NewsCommentLiked($comment, $liker));
+    echo "notified";
+});
+
+Route::get('socket-replied', function(){
+    $user = \Noox\Models\User::find(1);
+    $comment = $user->comments()->first();
+
+    $reply = new \Noox\Models\NewsComment;
+    $reply->user_id = 2;
+    $reply->news_id = 1;
+    $reply->content = 'test reply socket';
+
+    $res = $comment->replies()->save($reply);
+
+    $user->notify(new \Noox\Notifications\NewsCommentReplied($comment, $res));
+    echo "notified";
+});
+
 Route::get('private', function(){
     $parent = \Noox\Models\NewsComment::find(1);
     $reply = new \Noox\Models\NewsComment;

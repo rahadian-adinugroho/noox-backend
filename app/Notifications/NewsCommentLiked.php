@@ -2,6 +2,7 @@
 
 namespace Noox\Notifications;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -46,9 +47,27 @@ class NewsCommentLiked extends Notification
     public function toArray($notifiable)
     {
         return [
-        'comment_id' => $this->comment->id,
-        'liker_id'   => $this->liker->id,
-        'liker_name' => $this->liker->name,
+        'comment_id'      => $this->comment->id,
+        'comment_content' => $this->comment->content,
+        'liker_id'        => $this->liker->id,
+        'liker_name'      => $this->liker->name,
+        'time'            => Carbon::now(),
+        ];
+    }
+
+    /**
+     * Get the array representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toDatabase($notifiable)
+    {
+        return [
+        'comment_id'      => $this->comment->id,
+        'comment_content' => $this->comment->content,
+        'liker_id'        => $this->liker->id,
+        'liker_name'      => $this->liker->name,
         ];
     }
 }
