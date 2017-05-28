@@ -132,6 +132,7 @@ class UserController extends BaseController
             $q->select('id', 'title');
         }])
         ->whereNull('parent_id')
+        ->latest()
         ->paginate(10);
 
         return response()->json(compact('data'));
