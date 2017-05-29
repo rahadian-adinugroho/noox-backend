@@ -448,4 +448,23 @@ class NewsTest extends TestCase
         $this->post('/api/news/1/report', ['content' => ''], $this->headers($user))
         ->assertStatus(422);
     }
+
+    /**
+     * @test
+     *
+     * Test: POST /api/news/1/report.
+     */
+    public function it_accepts_comment_report_from_authenticated_user()
+    {
+        $this->seed('UserTableSeeder');
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+        $this->seed('ReportStatusesTableSeeder');
+        $this->seed('NewsCommentTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->post('/api/news/comment/1/report', ['content' => 'This comment is offensive.'], $this->headers($user))
+        ->assertStatus(201);
+    }
 }

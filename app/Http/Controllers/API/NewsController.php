@@ -492,6 +492,33 @@ class NewsController extends BaseController
     }
 
     /**
+     * Submit a report for news comment.
+     * Use this API to submit a report for news comment with id {id}. The submitter has to be authenticated before doing this.
+     * 
+     * @param  string $content
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function submitNewsCommentReport(\Noox\Http\Requests\SubmitReportRequest $request, $commentId)
+    {
+        if(! $comment = NewsComment::find($commentId)) {
+            return $this->response->error('Comment not found.', 422);
+        }
+
+        $reporter = $this->auth->user();
+
+        $report              = new \Noox\Models\Report;
+        $report->reporter_id = $reporter->id;
+        $report->content     = $request->input('content');
+        $report->status_id   = \Noox\Models\ReportStatus::where('name', '=', 'open')->firstOrFail()->id;
+
+        if ($res = $comment->reports()->save($report)) {
+            return $this->response->created();
+        }
+        return $this->response->errorInternal('Unable to save your report at this moment.');
+    }
+
+    /**
      * Submit a report for news.
      * Use this API to submit a report for news with is {id}. The submitter has to be authenticated before doing this.
      * 

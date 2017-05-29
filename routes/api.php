@@ -70,6 +70,8 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 
     $api->delete('news/comment/{id}/like', 'Noox\Http\Controllers\API\NewsController@deleteCommentLike');
 
+    $api->post('news/comment/{id}/report', 'Noox\Http\Controllers\API\NewsController@submitNewsCommentReport');
+
     $api->post('news/{id}/report', 'Noox\Http\Controllers\API\NewsController@submitReport');
 
     $api->get('auth/renew_token', 'Noox\Http\Controllers\API\AuthController@getToken');
