@@ -21,6 +21,47 @@ use Noox\Events\NewsReportedEvent;
 class NewsController extends BaseController
 {
     /**
+     * Get top news.
+     * Return the latest news sorted by readers count in an interval.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getTopNews()
+    {
+        $topNews = News::
+        select(['id', 'title', 'pubtime', 'cat_id'])
+        ->with('category')
+        ->withCount(['readers' => function($q){
+                    $q->where('first_read', '>=', Carbon::now()->subMinutes(config('noox.top_news_interval')));
+                }])
+        ->where('pubtime', '>', Carbon::now()->subMinutes(config('noox.top_news_interval')))
+        ->take(config('noox.max_top_news'))
+        ->orderBy(\DB::raw('`readers_count` desc, `pubtime`'), 'desc')
+        ->get();
+
+        $data = $topNews;
+        if (($total = $topNews->count()) < config('noox.max_top_news')) {
+            $toFill = config('noox.max_top_news') - $total;
+
+            $fill = News::
+            select(['id', 'title', 'pubtime', 'cat_id'])
+            ->with('category')
+            ->whereNotIn('id', $topNews->map(function($data){
+                return $data->id;
+            }))
+            ->withCount(['readers' => function($q){
+                $q->where('first_read', '>=', Carbon::now()->subMinutes(config('noox.top_news_interval')));
+            }])
+            ->orderBy(\DB::raw('`pubtime` desc, `readers_count`'), 'desc')
+            ->take($toFill)->get();
+
+            $data = $topNews->merge($fill);
+        }
+
+        return response()->json(compact('data'));
+    }
+
+    /**
      * News details.
      * Return the details of the news with 'likes' status if the requester supplied a valid token.
      * 
@@ -331,7 +372,7 @@ class NewsController extends BaseController
         $comment->content = $request->input('content');
 
         if ($res = $news->comments()->save($comment)) {
-            return $this->response->created(url('/api/news_comment/'.$res->id), ['status' => true, 'message' => 'Comment saved.']);
+            return $this->response->created(url('/api/news_comment/'.$res->id), ['id' => $res->id]);
         }
         return $this->response->errorInternal('Unable to save comment at this moment.');
     }

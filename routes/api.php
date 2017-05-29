@@ -29,6 +29,8 @@ $api->version('v1', function ($api)
 
     $api->get('user/{id}', 'Noox\Http\Controllers\API\UserController@details');
 
+    $api->get('news/fafs', 'Noox\Http\Controllers\API\NewsController@getTopNews');
+
     $api->get('news/{id}', 'Noox\Http\Controllers\API\NewsController@details');
 
     $api->get('news/{id}/comments', 'Noox\Http\Controllers\API\NewsController@getComments');
