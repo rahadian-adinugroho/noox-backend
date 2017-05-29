@@ -29,9 +29,9 @@ $api->version('v1', function ($api)
 
     $api->get('user/{id}', 'Noox\Http\Controllers\API\UserController@details');
 
-    $api->get('news/fafs', 'Noox\Http\Controllers\API\NewsController@getTopNews');
+    $api->get('news/top_news', 'Noox\Http\Controllers\API\NewsController@getTopNews');
 
-    $api->get('news/{id}', 'Noox\Http\Controllers\API\NewsController@details');
+    $api->get('news/{id}', 'Noox\Http\Controllers\API\NewsController@details')->where('id', '[0-9]+');
 
     $api->get('news/{id}/comments', 'Noox\Http\Controllers\API\NewsController@getComments');
 
@@ -55,6 +55,8 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
     $api->post('personal/news_preferences', 'Noox\Http\Controllers\API\UserController@updatePreferences');
 
     $api->get('personal/stats', 'Noox\Http\Controllers\API\UserController@personalStats');
+
+    $api->get('news/personalised', 'Noox\Http\Controllers\API\NewsController@getPersonalisedNews');
 
     $api->post('news/{id}/like', 'Noox\Http\Controllers\API\NewsController@submitLike');
 

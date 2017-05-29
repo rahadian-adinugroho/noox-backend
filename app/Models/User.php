@@ -73,6 +73,16 @@ class User extends Authenticatable
     	return $this->belongsToMany('Noox\Models\NewsComment', 'news_comment_likes', 'user_id', 'comment_id');
     }
 
+    public function getRecentNewsPreferences()
+    {
+        return $this->newsReadHistory()
+                ->select('cat_id', \DB::raw("COUNT(*) as 'read_count'"))
+                ->where('last_read', '>', \Carbon\Carbon::now()->subWeeks(2))
+                ->groupBy('cat_id')
+                ->orderBy('read_count', 'desc')
+                ->get();
+    }
+
     public function getStats()
     {
         $user_data = [

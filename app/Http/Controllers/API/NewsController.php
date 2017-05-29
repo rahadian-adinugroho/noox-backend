@@ -62,6 +62,34 @@ class NewsController extends BaseController
     }
 
     /**
+     * Get personalized news (for you).
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getPersonalisedNews()
+    {
+        $user = $this->auth->user();
+
+        $preferences = $user->newsPreferences->map(function($data){
+            return $data['id'];
+        });
+
+        $filter = $user->getRecentNewsPreferences();
+        return $filter;
+        if (count($preferences) < 1) {
+            $filter = $user->getRecentNewsPreferences();
+        }
+
+        $data = News::select(['id', 'title', 'pubtime', 'source_id'])
+        ->with('source')
+        ->withCount(['readers', 'comments'])
+        ->whereIn('cat_id', $filter)
+        ->orderBy('pubtime', 'desc')
+        ->paginate(10);
+        return $data;
+    }
+
+    /**
      * News details.
      * Return the details of the news with 'likes' status if the requester supplied a valid token.
      * 
@@ -279,6 +307,7 @@ class NewsController extends BaseController
                 },'author' => function($q) {
                     $q->select('id', 'fb_id', 'name');
                 }])
+            ->whereNull('parent_id')
             ->withCount(['replies', 'likers']);
 
             if ($userId) {

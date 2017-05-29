@@ -37,7 +37,7 @@ class News extends Model
 
     public function comments()
     {
-    	return $this->hasMany('Noox\Models\NewsComment')->where('parent_id', null)->orderBy('created_at', 'desc');
+    	return $this->hasMany('Noox\Models\NewsComment')->orderBy('created_at', 'desc');
     }
 
     public function likers()
