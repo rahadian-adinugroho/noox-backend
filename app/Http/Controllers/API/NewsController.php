@@ -202,7 +202,7 @@ class NewsController extends BaseController
             $this->response->errorNotFound('News does not exist.');
         }
 
-        $user = auth()->getUser();
+        $user = $this->auth->user();
 
         try {
             $news->likers()->attach($user->id, ['liked_at' => Carbon::now()]);
@@ -228,7 +228,7 @@ class NewsController extends BaseController
             $this->response->errorNotFound('News does not exist.');
         }
 
-        $user = auth()->getUser();
+        $user = $this->auth->user();
 
         try {
             $news->likers()->detach($user->id);
@@ -368,7 +368,7 @@ class NewsController extends BaseController
         }
 
         $comment          = new NewsComment;
-        $comment->user_id = auth()->getUser()->id;
+        $comment->user_id = $this->auth->user()->id;
         $comment->content = $request->input('content');
 
         if ($res = $news->comments()->save($comment)) {
@@ -395,14 +395,14 @@ class NewsController extends BaseController
         }
 
         $comment          = new NewsComment;
-        $comment->user_id = auth()->getUser()->id;
+        $comment->user_id = $this->auth->user()->id;
         $comment->news_id = $parent->news_id;
         $comment->content = $request->input('content');
 
         if ($res = $parent->replies()->save($comment)) {
             $parentAuthor = $parent->author;
-            if (auth()->getUser()->id != $parentAuthor->id) {
-                $res->author = auth()->getUser();
+            if ($this->auth->user()->id != $parentAuthor->id) {
+                $res->author = $this->auth->user();
                 $parentAuthor->notify(new NewsCommentReplied($parent, $res));
             }
             return $this->response->created(url('/api/news_comment/'.$res->id), ['status' => true, 'message' => 'Comment saved.']);
@@ -421,7 +421,7 @@ class NewsController extends BaseController
             return $this->response->error('Comment not found.', 422);
         }
 
-        $user = auth()->getUser();
+        $user = $this->auth->user();
 
         try {
             $comment->likers()->attach($user->id);
@@ -450,7 +450,7 @@ class NewsController extends BaseController
             return $this->response->error('Comment not found.', 422);
         }
 
-        $user = auth()->getUser();
+        $user = $this->auth->user();
 
         try {
             $comment->likers()->detach($user->id);
@@ -475,7 +475,7 @@ class NewsController extends BaseController
             return $this->response->error('News not found.', 422);
         }
 
-        $reporter = auth()->getUser();
+        $reporter = $this->auth->user();
 
         $report              = new \Noox\Models\Report;
         $report->reporter_id = $reporter->id;

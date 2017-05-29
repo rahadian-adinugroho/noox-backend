@@ -112,7 +112,7 @@ class UserController extends BaseController
             },
             'likedNews',
             'achievements',
-            ])->find(JWTAuth::getPayload()->get('sub'));
+            ])->find($this->auth->user()->id);
 
         return response()->json(compact('data'));
     }
@@ -124,7 +124,7 @@ class UserController extends BaseController
      */
     public function personalComments()
     {
-        $user = User::find(JWTAuth::getPayload()->get('sub'));
+        $user = $this->auth->user();
 
         $data = $user->comments()
         ->select('news_id', 'created_at', 'content')
@@ -145,7 +145,7 @@ class UserController extends BaseController
      */
     public function personalLikedNews()
     {
-        $user = User::find(JWTAuth::getPayload()->get('sub'));
+        $user = $this->auth->user();
 
         $data = $user->likedNews()
         ->select('news_id', 'source_id', 'title', 'pubtime')
@@ -163,7 +163,7 @@ class UserController extends BaseController
      */
     public function personalStats()
     {
-        $user = User::find(JWTAuth::getPayload()->get('sub'));
+        $user = $this->auth->user();
 
         $data = $user->getStats();
 
@@ -177,7 +177,7 @@ class UserController extends BaseController
      */
     public function personalAchievements()
     {
-        $user = User::find(JWTAuth::getPayload()->get('sub'));
+        $user = $this->auth->user();
 
         $data = $user->achievements()
         ->select(['id', 'key', 'title', 'description', 'earn_date'])
@@ -199,7 +199,7 @@ class UserController extends BaseController
         if (! $request->has('categories')) {
             $this->response->errorBadRequest('Categories not supplied.');
         }
-        $user = User::find(JWTAuth::getPayload()->get('sub'));
+        $user = $this->auth->user();
 
         $categories = $request->input('categories');
         $catIds = $this->getCategoriesId($categories);
@@ -216,7 +216,7 @@ class UserController extends BaseController
      */
     public function viewPreferences()
     {
-        $user = User::find(JWTAuth::getPayload()->get('sub'));
+        $user = $this->auth->user();
 
         $categories = $user->newsPreferences()->get()->map(function($category){
             return $category->name;
