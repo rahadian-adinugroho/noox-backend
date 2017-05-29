@@ -2,10 +2,11 @@
 
 namespace Noox\Http\Controllers\API;
 
+use JWTAuth;
+use Auth;
 use Noox\Models\User;
 use Noox\Models\NewsCategory;
 use Noox\Http\Controllers\Traits\FacebookAuthentication;
-use JWTAuth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -61,6 +62,33 @@ class UserController extends BaseController
                 ['status' => true, 'message' => 'User created.', 'token' => $tokenPack]);
         } else {
             return $this->response->errorBadRequest();
+        }
+    }
+
+    /**
+     * Update user's password.
+     * Please put this in the header: {"Content-Type":"application/x-www-form-urlencoded"}, if the default is different from that.
+     * 
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePassword(\Noox\Http\Requests\UpdatePasswordRequest $request)
+    {
+        $user     = $this->auth->user();
+
+        $email       = $user->email;
+        $oldPassword = $request->input('oldpassword');
+
+        if (! Auth::attempt(['email' => $email, 'password' => $oldPassword])) {
+            $this->response->errorBadRequest('Old password is invalid.');
+        }
+
+        $user->password = bcrypt($request->input('newpassword'), ['rounds' => 12]);
+
+        if ($res = $user->save()) {
+            return response('');
+        } else {
+            return $this->response->errorInternal();
         }
     }
 
