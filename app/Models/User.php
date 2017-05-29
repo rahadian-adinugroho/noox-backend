@@ -78,6 +78,7 @@ class User extends Authenticatable
         return $this->newsReadHistory()
                 ->select('cat_id', \DB::raw("COUNT(*) as 'read_count'"))
                 ->where('last_read', '>', \Carbon\Carbon::now()->subWeeks(2))
+                ->having('read_count', '>', 5)
                 ->groupBy('cat_id')
                 ->orderBy('read_count', 'desc')
                 ->get();

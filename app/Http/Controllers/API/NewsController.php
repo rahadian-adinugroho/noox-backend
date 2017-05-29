@@ -63,6 +63,8 @@ class NewsController extends BaseController
 
     /**
      * Get personalized news (for you).
+     * It is possible that this API will return nothing if the user has not read certain category of news within a specified period. In that case, tell the user
+     * that the list will be populated after they read some news or set their news preferences.
      *
      * @return \Illuminate\Http\Response
      */
@@ -74,8 +76,7 @@ class NewsController extends BaseController
             return $data['id'];
         });
 
-        $filter = $user->getRecentNewsPreferences();
-        return $filter;
+        $filter = $preferences;
         if (count($preferences) < 1) {
             $filter = $user->getRecentNewsPreferences();
         }
