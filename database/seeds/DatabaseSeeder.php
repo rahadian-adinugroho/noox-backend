@@ -15,13 +15,14 @@ class DatabaseSeeder extends Seeder
         $this->call(NewsSourceTableSeeder::class);
         $this->call(NewsCategoryTableSeeder::class);
         $this->call(ReportStatusesTableSeeder::class);
+        $this->call(SettingsTableSeeder::class);
+        $this->call(AchievementsTableSeeder::class);
         $this->call(NewsTableSeeder::class);
         $this->call(UserReadHistoryTableSeeder::class);
         $this->call(NewsCommentTableSeeder::class);
         $this->call(NewsLikeTableSeeder::class);
         $this->call(NewsCommentLikeTableSeeder::class);
         $this->call(ReportsTableSeeder::class);
-        $this->call(AchievementsTableSeeder::class);
         $this->call(UserAchievementsTableSeeder::class);
     }
 }

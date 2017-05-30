@@ -15,5 +15,6 @@ class InitSeeder extends Seeder
         $this->call(NewsCategoryTableSeeder::class);
         // $this->call(NewsSourceTableSeeder::class);
         $this->call(ReportStatusesTableSeeder::class);
+        $this->call(SettingsTableSeeder::class);
     }
 }
