@@ -77,6 +77,58 @@ class ApiUserTest extends TestCase
     /**
      * @test
      * 
+     * Test: PUT /api/personal
+     */
+    public function it_accepts_valid_profile_update()
+    {
+        $data = ['email' => 'username@email.org', 'name' => 'Test User', 'gender' => 'f'];
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->put('/api/personal', $data, $this->headers($user))
+        ->assertStatus(200);
+    }
+
+    /**
+     * @test
+     * 
+     * Test: PUT /api/personal
+     */
+    public function it_rejects_invalid_profile_update()
+    {
+        $data = ['email' => 'aaaa', 'name' => 'Test User@', 'gender' => 'f'];
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->put('/api/personal', $data, $this->headers($user))
+        ->assertStatus(422);
+    }
+
+    /**
+     * @test
+     * 
+     * Test: PUT /api/personal
+     */
+    public function it_accepts_password_update()
+    {
+        $data = ['oldpassword' => 'foo', 'newpassword' => 'mypass'];
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->put('/api/personal/password', $data, $this->headers($user))
+        ->assertStatus(200);
+    }
+
+    /**
+     * @test
+     * 
+     * Test: PUT /api/personal
+     */
+    public function it_rejects_invalid_password_update()
+    {
+        $data = ['oldpassword' => 'bar', 'newpassword' => 'mypass'];
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->put('/api/personal/password', $data, $this->headers($user))
+        ->assertStatus(400);
+    }
+
+    /**
+     * @test
+     * 
      * Test: POST /api/personal/news_preferences
      */
     public function it_accepts_valid_user_preferences()
