@@ -150,6 +150,30 @@ class UserController extends BaseController
     }
 
     /**
+     * Get user comments.
+     * 
+     * @param  integer $id
+     * @return \Illuminate\Http\Response
+     */
+    public function comments($id)
+    {
+        if (! $user = User::find($id)) {
+            $this->response->errorNotFound('User not found.');
+        }
+
+        $data = $user->comments()
+        ->select(['id', 'news_id', 'created_at', 'content'])
+        ->with(['news' => function($q){
+            $q->select('id', 'cat_id', 'title');
+        }, 'news.category'])
+        ->whereNull('parent_id')
+        ->latest()
+        ->paginate(10);
+
+        return response()->json(compact('data'));
+    }
+
+    /**
      * Get user's personal data.
      * 
      * @return \Illuminate\Http\Response
@@ -183,7 +207,7 @@ class UserController extends BaseController
         $data = $user->comments()
         ->select(['id', 'news_id', 'created_at', 'content'])
         ->with(['news' => function($q){
-            $q->select('id', 'title');
+            $q->select('id', 'cat_id', 'title');
         }, 'news.category'])
         ->whereNull('parent_id')
         ->latest()

@@ -29,6 +29,8 @@ $api->version('v1', function ($api)
 
     $api->get('user/{id}', 'Noox\Http\Controllers\API\UserController@details');
 
+    $api->get('user/{id}/comments', 'Noox\Http\Controllers\API\UserController@comments');
+
     $api->get('news/top_news', 'Noox\Http\Controllers\API\NewsController@getTopNews');
 
     $api->get('news/{id}', 'Noox\Http\Controllers\API\NewsController@details')->where('id', '[0-9]+');
