@@ -327,13 +327,12 @@ class NewsController extends BaseController
 
     /**
      * Get comment details.
-     * Will return the comment and its replies. The replies are paginated. Refer to 'next_page_url' in the response to retrieve next page url.
-     * The 'likes' variable will exist if the client supplied a valid JWT token. The 'likes' variable determines whether the user already liked the comment or not. If it is not an empty array, it means the user already liked the comment with that particular 'likes' attribute.
+     * The 'likers' variable will exist if the client supplied a valid JWT token. The 'likers' variable determines whether the user already liked the comment or not. If it is not an empty array, it means the user already liked the comment with that particular 'likers' attribute.
      * 
      * @param  integer $perPage
      * @param  integer $page
      * 
-     * @return [type]          [description]
+     * @return \Illuminate\Http\Response
      */
     public function commentDetails(Request $r, $commentId)
     {
@@ -355,32 +354,53 @@ class NewsController extends BaseController
                     $q->select('user_id', 'name')->where('user_id', $userId);
                 }]);
         }
-        $comment = $q->find($commentId);
-
-        if ($comment) {
-            if (is_null($comment->parent_id)) {
-                $query = $comment->replies()
-                ->select('id', 'user_id', 'created_at', 'content', 'parent_id')
-                ->with(['author' => function($q) {
-                    $q->select('id', 'fb_id', 'name');
-                }])
-                ->withCount('likers');
-
-                if ($userId) {
-                    $query->with([
-                        'likers' => function($q) use ($userId) {
-                            $q->select('user_id', 'name')->where('user_id', $userId);
-                        }]);
-                }
-
-                $replies = $query->paginate(10);
-            } else {
-                $replies = null;
-            }
-            return response()->json(compact('comment', 'replies'));
+        
+        if ($data = $q->find($commentId)) {
+            return response()->json(compact('data'));
         } else {
             return $this->response->errorNotFound('Comment not found.');
         }
+    }
+
+    /**
+     * Get comment replies.
+     * The 'likers' variable will exist if the client supplied a valid JWT token. The 'likers' variable determines whether the user already liked the comment or not. If it is not an empty array, it means the user already liked the comment with that particular 'likers' attribute.
+     * 
+     * @param  [integer] $commentId
+     * @return [type]            [description]
+     */
+    public function commentReplies($commentId)
+    {
+        try {
+            $userId = JWTAuth::parseToken()->getPayload()->get('sub');
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            $userId = null;
+        }
+
+        if (! $comment = NewsComment::find($commentId)) {
+            return $this->response->errorNotFound('Comment not found.');
+        }
+
+        if (is_null($comment->parent_id)) {
+            $query = $comment->replies()
+            ->select('id', 'user_id', 'created_at', 'content', 'parent_id')
+            ->with(['author' => function($q) {
+                $q->select('id', 'fb_id', 'name');
+            }])
+            ->withCount('likers')
+            ->latest();
+
+            if ($userId) {
+                $query->with([
+                    'likers' => function($q) use ($userId) {
+                        $q->select('user_id', 'name')->where('user_id', $userId);
+                    }]);
+            }
+            $data = $query->paginate(10);
+        } else {
+            return $this->response->errorBadRequest('Comment replies cannot have any replies.');
+        }
+        return response()->json(compact('data'));
     }
 
     /**

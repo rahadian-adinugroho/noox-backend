@@ -217,7 +217,7 @@ class UserController extends BaseController
     }
 
     /**
-     * Get user's news comments.
+     * Get user's liked news.
      * 
      * @return \Illuminate\Http\Response
      */

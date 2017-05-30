@@ -173,7 +173,7 @@ class NewsTest extends TestCase
      *
      * Test: GET /api/news_comment/1.
      */
-    public function it_fetch_a_comment_with_replies()
+    public function it_fetch_a_comment_details()
     {
         $this->seed('NewsSourceTableSeeder');
         $this->seed('NewsCategoryTableSeeder');
@@ -183,13 +183,31 @@ class NewsTest extends TestCase
 
         $this->get('/api/news/comment/1')
         ->assertJsonStructure([
-            'comment' => [
+            'data' => [
                 'id',
                 'author' => ['id', 'fb_id', 'name'],
                 'created_at',
                 'likers_count',
                 'content'], 
-            'replies' => [
+        ]);
+    }
+
+    /**
+     * @test
+     *
+     * Test: GET /api/news_comment/1.
+     */
+    public function it_fetch_comment_replies()
+    {
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsTableSeeder');
+        $this->seed('UserTableSeeder');
+        $this->seed('NewsCommentTableSeeder');
+
+        $this->get('/api/news/comment/1/replies')
+        ->assertJsonStructure([
+            'data' => [
                 'total',
                 'current_page',
                 'next_page_url',
@@ -222,32 +240,15 @@ class NewsTest extends TestCase
         $this->seed('NewsCommentTableSeeder');
 
         $user = factory(User::class)->create(['password' => bcrypt('foo')]);
-        $this->get('/api/news_comment/1', $this->headers($user))
+        $this->get('/api/news/comment/1', $this->headers($user))
         ->assertJsonStructure([
-            'comment' => [
+            'data' => [
                 'id',
                 'author' => ['id', 'fb_id', 'name'],
                 'created_at',
-                'likes',
+                'likers',
                 'likers_count',
                 'content'], 
-            'replies' => [
-                'total',
-                'current_page',
-                'next_page_url',
-                'prev_page_url',
-                'per_page',
-                'data' => [
-                    '*' => [
-                        'id',
-                        'author' => ['id', 'fb_id', 'name'],
-                        'created_at',
-                        'likes',
-                        'likers_count',
-                        'content',
-                    ]
-                ],
-            ]
         ]);
     }
 
