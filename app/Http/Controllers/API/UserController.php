@@ -124,6 +124,9 @@ class UserController extends BaseController
     public function details($id)
     {
         $data = User::with([
+            'latestAchievement' => function($query){
+                $query->select(['title'])->first();
+            },
             'comments' => function($query){
                 $query->select('user_id', 'news_id', 'created_at', 'content')->whereNull('parent_id')->orderBy('created_at', 'desc');
             },

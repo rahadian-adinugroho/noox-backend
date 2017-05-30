@@ -35,7 +35,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('Noox\Models\Achievement', 'user_achievements')
         ->withPivot('earn_date')
-        ->orderBy('pivot_earn_date');
+        ->orderBy('pivot_earn_date', 'desc');
     }
 
     public function reports()
