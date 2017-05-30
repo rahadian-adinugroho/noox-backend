@@ -172,7 +172,6 @@ class ApiUserTest extends TestCase
             'level'   ,
             'member_since',
             'comments_count'  ,
-            'comments',
             ]
             ]);
     }

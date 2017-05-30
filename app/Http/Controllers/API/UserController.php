@@ -128,12 +128,6 @@ class UserController extends BaseController
         $data = User::with([
             'latestAchievement' => function($query){
                 $query->select(['title'])->first();
-            },
-            'comments' => function($query){
-                $query->select('id', 'user_id', 'news_id', 'created_at', 'content')->whereNull('parent_id')->orderBy('created_at', 'desc');
-            },
-            'comments.news' => function($query){
-                $query->select('id', 'title');
             }
             ])->select('id', 'name', 'created_at as member_since', 'level')->withCount([
             'comments' => function($query){
