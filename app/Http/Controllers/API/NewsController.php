@@ -347,7 +347,7 @@ class NewsController extends BaseController
             'author' => function($q) {
                 $q->select('id', 'fb_id', 'name');
             },])
-        ->withCount('likers');
+        ->withCount(['replies', 'likers']);
         if ($userId) {
             $q->with([
                 'likers' => function($q) use ($userId) {

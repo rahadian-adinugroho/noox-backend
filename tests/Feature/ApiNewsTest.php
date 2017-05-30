@@ -187,6 +187,7 @@ class NewsTest extends TestCase
                 'id',
                 'author' => ['id', 'fb_id', 'name'],
                 'created_at',
+                'replies_count',
                 'likers_count',
                 'content'], 
         ]);
