@@ -6,6 +6,7 @@ use JWTAuth;
 use Auth;
 use Noox\Models\User;
 use Noox\Models\NewsCategory;
+use \Noox\Models\Setting;
 use Noox\Http\Controllers\Traits\FacebookAuthentication;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -57,6 +58,7 @@ class UserController extends BaseController
             'token'        => $token,
             ];
 
+            $user->settings()->attach($this->getInitialSettings());
             return $this->response->created(
                 url('/api/user/'.$user->id),
                 ['status' => true, 'message' => 'User created.', 'token' => $tokenPack]);
@@ -332,5 +334,22 @@ class UserController extends BaseController
         ->map(function($data){
             return $data->id;
         });
+    }
+
+    /**
+     * Get initial settings id and its default value to attach it to the user.
+     * 
+     * @return array
+     */
+    protected function getInitialSettings()
+    {
+        $settings = Setting::get();
+
+        $initSettings = [];
+        foreach ($settings as $key => $setting) {
+            $initSettings[$setting->id]['value'] =  $setting->default_value;
+        }
+
+        return $initSettings;
     }
 }
