@@ -240,6 +240,22 @@ class UserController extends BaseController
     }
 
     /**
+     * Get user's settings.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function viewSettings()
+    {
+        $user = $this->auth->user();
+
+        $data = $user->settings()
+        ->select(['id', 'key', 'value'])
+        ->get();
+
+        return response()->json(compact('data'));
+    }
+
+    /**
      * Submit new user preferences.
      * In JSON: {"categories" : ["national", "crime"]}
      * 
