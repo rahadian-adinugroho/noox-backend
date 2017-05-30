@@ -46,7 +46,7 @@ class UserController extends BaseController
             'password' => bcrypt($request->input('password'), ['rounds' => 12]),
             'name'     => $request->input('name'),
             'gender'   => $request->input('gender', null),
-            'birthday' => $request->input('birthdat', null),
+            'birthday' => $request->input('birthday', null),
             ]);
 
         if ($user) {
@@ -62,6 +62,27 @@ class UserController extends BaseController
                 ['status' => true, 'message' => 'User created.', 'token' => $tokenPack]);
         } else {
             return $this->response->errorBadRequest();
+        }
+    }
+
+    /**
+     * Update user's profile.
+     * 
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateProfile(\Noox\Http\Requests\UpdateProfileRequest $request)
+    {
+        $user = $this->auth->user();
+
+        $user->email  = $request->input('email');
+        $user->name   = $request->input('name');
+        $user->gender = $request->input('gender');
+
+        if ($user->save()) {
+            return response('');
+        } else {
+            return $this->response->errorInternal();
         }
     }
 
@@ -85,7 +106,7 @@ class UserController extends BaseController
 
         $user->password = bcrypt($request->input('newpassword'), ['rounds' => 12]);
 
-        if ($res = $user->save()) {
+        if ($user->save()) {
             return response('');
         } else {
             return $this->response->errorInternal();

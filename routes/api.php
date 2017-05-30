@@ -44,6 +44,8 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 
     $api->get('personal', 'Noox\Http\Controllers\API\UserController@personalDetails');
 
+    $api->put('personal', 'Noox\Http\Controllers\API\UserController@updateProfile');
+
     $api->put('personal/password', 'Noox\Http\Controllers\API\UserController@updatePassword');
 
     $api->get('personal/comments', 'Noox\Http\Controllers\API\UserController@personalComments');
