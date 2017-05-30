@@ -130,7 +130,7 @@ class UserController extends BaseController
                 $query->select(['title'])->first();
             },
             'comments' => function($query){
-                $query->select('user_id', 'news_id', 'created_at', 'content')->whereNull('parent_id')->orderBy('created_at', 'desc');
+                $query->select('id', 'user_id', 'news_id', 'created_at', 'content')->whereNull('parent_id')->orderBy('created_at', 'desc');
             },
             'comments.news' => function($query){
                 $query->select('id', 'title');
@@ -181,10 +181,10 @@ class UserController extends BaseController
         $user = $this->auth->user();
 
         $data = $user->comments()
-        ->select('news_id', 'created_at', 'content')
+        ->select(['id', 'news_id', 'created_at', 'content'])
         ->with(['news' => function($q){
             $q->select('id', 'title');
-        }])
+        }, 'news.category'])
         ->whereNull('parent_id')
         ->latest()
         ->paginate(10);
