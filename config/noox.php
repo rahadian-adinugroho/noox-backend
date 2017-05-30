@@ -4,6 +4,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | News Analyzer Base URL
+    |--------------------------------------------------------------------------
+    |
+    | The location of news analyzer AI in the network. 
+    | Format: http://10.10.10.10:10000
+    */
+    
+    'analyzer_base_url' => env('ANALYZER_BASE_URL', 'null'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Number of Top News
     |--------------------------------------------------------------------------
     |
@@ -17,7 +28,7 @@ return [
     | Top News Interval
     |--------------------------------------------------------------------------
     |
-    | Set the interval of time to count number of readers.
+    | Set the interval of time (in minutes) to count number of readers.
     */
     
     'top_news_interval' => 60,

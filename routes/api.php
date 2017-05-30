@@ -38,6 +38,8 @@ $api->version('v1', function ($api)
     $api->get('news/{id}/comments', 'Noox\Http\Controllers\API\NewsController@getComments');
 
     $api->get('news/comment/{id}', 'Noox\Http\Controllers\API\NewsController@commentDetails');
+
+    $api->post('news/analyze', 'Noox\Http\Controllers\API\NewsAnalyzerController@analyze');
 });
 
 $api->version('v1', ['middleware' => 'api.auth'], function ($api)
