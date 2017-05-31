@@ -168,10 +168,11 @@ class ApiUserTest extends TestCase
         ->assertJsonStructure([
             'data' => [
             'id'   ,
+            'fb_id',
             'name' ,
             'level'   ,
             'member_since',
-            'comments_count'  ,
+            'comments_count',
             ]
             ]);
     }
@@ -189,6 +190,7 @@ class ApiUserTest extends TestCase
             'data' => [
             'id',
             'name',
+            'gender',
             'level',
             'experience',
             'member_since',

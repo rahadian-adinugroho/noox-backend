@@ -129,7 +129,7 @@ class UserController extends BaseController
             'latestAchievement' => function($query){
                 $query->select(['title'])->first();
             }
-            ])->select('id', 'name', 'created_at as member_since', 'level')->withCount([
+            ])->select('id', 'fb_id', 'name', 'created_at as member_since', 'level')->withCount([
             'comments' => function($query){
                 $query->whereNull('parent_id');
             },
@@ -178,7 +178,7 @@ class UserController extends BaseController
             'latestAchievement' => function($query){
                 $query->select(['title'])->first();
             },
-            ])->select('id', 'name', 'created_at as member_since', 'level', 'experience')->withCount([
+            ])->select('id', 'name', 'gender', 'created_at as member_since', 'level', 'experience')->withCount([
             'comments' => function($query){
                 $query->whereNull('parent_id');
             },
