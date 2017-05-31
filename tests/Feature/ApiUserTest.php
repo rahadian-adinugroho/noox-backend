@@ -81,7 +81,7 @@ class ApiUserTest extends TestCase
      */
     public function it_accepts_valid_profile_update()
     {
-        $data = ['email' => 'username@email.org', 'name' => 'Test User', 'gender' => 'f'];
+        $data = ['birthday' => '2016-05-24', 'name' => 'Test User', 'gender' => 'f'];
         $user = factory(User::class)->create(['password' => bcrypt('foo')]);
         $this->put('/api/personal', $data, $this->headers($user))
         ->assertStatus(200);

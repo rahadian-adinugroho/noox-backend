@@ -77,9 +77,9 @@ class UserController extends BaseController
     {
         $user = $this->auth->user();
 
-        $user->email  = $request->input('email');
-        $user->name   = $request->input('name');
-        $user->gender = $request->input('gender');
+        $user->birthday = $request->input('birthday');
+        $user->name     = $request->input('name');
+        $user->gender   = $request->input('gender');
 
         if ($user->save()) {
             return response('');
@@ -178,7 +178,7 @@ class UserController extends BaseController
             'latestAchievement' => function($query){
                 $query->select(['title'])->first();
             },
-            ])->select('id', 'name', 'gender', 'created_at as member_since', 'level', 'experience')->withCount([
+            ])->select('id', 'name', 'gender', 'birthday', 'created_at as member_since', 'level', 'experience')->withCount([
             'comments' => function($query){
                 $query->whereNull('parent_id');
             },

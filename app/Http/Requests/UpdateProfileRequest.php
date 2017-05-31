@@ -23,7 +23,7 @@ class UpdateProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'    => 'required|email|unique:users',
+            'birthday' => 'required|date',
             'name'     => 'required|regex:/^[A-Za-z\s]+$/u',
             'gender'   => 'nullable|size:1',
         ];
