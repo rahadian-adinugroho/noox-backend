@@ -34,6 +34,30 @@ class NewsTest extends TestCase
     /**
      * @test
      *
+     * Test: get /api/news/top_news
+     */
+    public function it_fetch_the_list_of_top_news()
+    {
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+        $this->get('/api/news/top_news')->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'id',
+                    'title',
+                    'pubtime',
+                    'readers_count',
+                    'category',
+                    'source'
+                ]
+            ]
+            ]);
+    }
+
+    /**
+     * @test
+     *
      * Test: get /api/news/1.
      */
     public function it_fetch_news_details()

@@ -30,7 +30,7 @@ class NewsController extends BaseController
     {
         $topNews = News::
         select(['id', 'title', 'pubtime', 'cat_id'])
-        ->with('category')
+        ->with(['category', 'source'])
         ->withCount(['readers' => function($q){
                     $q->where('first_read', '>=', Carbon::now()->subMinutes(config('noox.top_news_interval')));
                 }])
@@ -45,7 +45,7 @@ class NewsController extends BaseController
 
             $fill = News::
             select(['id', 'title', 'pubtime', 'cat_id'])
-            ->with('category')
+            ->with(['category', 'source'])
             ->whereNotIn('id', $topNews->map(function($data){
                 return $data->id;
             }))
