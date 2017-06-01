@@ -24,7 +24,7 @@
     <div class="news-author">Author : <span class="author">{{ ucwords(strtolower($news->author)) }}</span></div>
     <div class="news-separator"></div>
     <div class="news-text">
-        {{ $news->content }}
+        {!! $news->content !!}
     </div>
     <div class="news-others-heading">Other Top Stories</div>
     <div class="news-others">
