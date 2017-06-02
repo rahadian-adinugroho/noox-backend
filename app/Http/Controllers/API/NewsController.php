@@ -2,6 +2,7 @@
 
 namespace Noox\Http\Controllers\API;
 
+use Cache;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use JWTAuth;
@@ -88,6 +89,39 @@ class NewsController extends BaseController
         ->orderBy('pubtime', 'desc')
         ->paginate(10);
         return $data;
+    }
+
+    /**
+     * Search news.
+     * Example params: /api/news/search?q=jokowi&category[0]=national&category[1]=business
+     * 
+     * @param  \Noox\Http\Requests\NewsSearchRequest $r
+     * @return \Illuminate\Http\Response
+     */
+    public function search(\Noox\Http\Requests\NewsSearchRequest $r)
+    {
+        $search = $r->input('q');
+
+        $query = News::
+        select(['id', 'title', 'pubtime', 'source_id', 'cat_id'])
+        ->with('source', 'category')
+        ->withCount(['readers', 'comments'])
+        ->where('title', 'like', '%' . $search . '%');
+
+        $categories = $r->input('category');
+        if (count($categories)) {
+            if (! is_array($categories)) {
+                $keys[0] = $categories;
+            } else {
+                $keys = $categories;
+            }
+            $ids = $this->getCategoriesId($keys);
+            $query->whereIn('cat_id', $ids);
+        }
+
+        $data = $query->orderBy('pubtime', 'desc')->get();
+
+        return response()->json(compact('data'));
     }
 
     /**
@@ -564,5 +598,33 @@ class NewsController extends BaseController
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);
         }
         return $this->response->errorInternal('Unable to save your report at this moment.');
+    }
+
+    /**
+     * Convert given category name into its respective ids.
+     * 
+     * @param  array  $keys
+     * @return array
+     */
+    protected function getCategoriesId(array $keys)
+    {
+        if (Cache::has('newsCategories')) {
+            $categories = Cache::get('newsCategories');
+        } else {
+            $res = \Noox\Models\NewsCategory::get();
+            $categories = array();
+            foreach ($res as $key => $data) {
+                $categories[$data->name] = $data->id;
+            }
+            Cache::put('newsCategories', $categories, Carbon::now()->addDay());
+        }
+        
+        $ids = array();
+        foreach ($keys as $key) {
+            if (isset($categories[$key])) {
+                $ids[] = $categories[$key];
+            }
+        }
+        return $ids;
     }
 }

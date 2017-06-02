@@ -41,6 +41,8 @@ $api->version('v1', function ($api)
 
     $api->get('news/comment/{id}/replies', 'Noox\Http\Controllers\API\NewsController@commentReplies');
 
+    $api->get('news/search', 'Noox\Http\Controllers\API\NewsController@search');
+
     $api->post('news/analyze', 'Noox\Http\Controllers\API\NewsAnalyzerController@analyze');
 });
 
