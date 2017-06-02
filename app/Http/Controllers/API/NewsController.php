@@ -137,7 +137,7 @@ class NewsController extends BaseController
             $query->whereIn('cat_id', (is_array($ids) ? $ids : array($ids)));
         }
 
-        $data = $query->orderBy('pubtime', 'desc')->get();
+        $data = $query->orderBy('pubtime', 'desc')->paginate(10);
 
         return response()->json(compact('data'));
     }
