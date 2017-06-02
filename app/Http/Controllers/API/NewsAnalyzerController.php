@@ -5,6 +5,11 @@ namespace Noox\Http\Controllers\API;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
+/**
+ * @resource News Analyzer
+ *
+ * Analyze news article.
+ */
 class NewsAnalyzerController extends BaseController
 {
     /**
@@ -34,8 +39,8 @@ class NewsAnalyzerController extends BaseController
             $response = $this->client
             ->post('analyze', [
             'form_params' => [
-            'src'     => parse_url( $request->input('src') , PHP_URL_HOST ),
-            'title'   => $request->input('title'),
+            'src'     => $request->input('src') ? parse_url( $request->input('src') , PHP_URL_HOST ) : ' ',
+            'title'   => $request->input('title') ?: ' ',
             'article' => $request->input('article'),
             ]
             ]);
@@ -43,6 +48,8 @@ class NewsAnalyzerController extends BaseController
             $response = json_decode($response->getBody());
             return response()->json($response);
         } catch (\GuzzleHttp\Exception\ConnectException $e) {
+            $this->response->errorInternal('Article analysis service unavailable.');
+        } catch (\GuzzleHttp\Exception\ServerException $e) {
             $this->response->errorInternal('Article analysis service unavailable.');
         }
     }
