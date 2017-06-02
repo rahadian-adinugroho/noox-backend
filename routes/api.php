@@ -33,9 +33,11 @@ $api->version('v1', function ($api)
 
     $api->get('news/top_news', 'Noox\Http\Controllers\API\NewsController@getTopNews');
 
+    $api->get('news/category/{category}', 'Noox\Http\Controllers\API\NewsController@getByCategory');
+
     $api->get('news/{id}', 'Noox\Http\Controllers\API\NewsController@details')->where('id', '[0-9]+');
 
-    $api->get('news/{id}/comments', 'Noox\Http\Controllers\API\NewsController@getComments');
+    $api->get('news/{id}/comments', 'Noox\Http\Controllers\API\NewsController@getComments')->where('id', '[0-9]+');
 
     $api->get('news/comment/{id}', 'Noox\Http\Controllers\API\NewsController@commentDetails');
 
