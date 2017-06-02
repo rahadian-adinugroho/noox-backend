@@ -7,7 +7,7 @@
     <div class="news-asset">
         <div class="news-source">
             <div class="news-source-icon">
-                <img src="{{ asset( 'images/news_sources/' . $news->source->source_name . '.png' ) }}">
+                <img src="https://s2.googleusercontent.com/s2/favicons?domain_url={{ $news->source->base_url }}">
             </div>
             <div class="news-source-text">
                 {{ $news->source->source_name }}
