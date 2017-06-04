@@ -2,6 +2,7 @@
 
 namespace Noox\Http\Controllers\API;
 
+use Cache;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use JWTAuth;
@@ -62,6 +63,29 @@ class NewsController extends BaseController
     }
 
     /**
+     * Get news by category.
+     * 
+     * @param  string $category
+     * @return \Illuminate\Http\Response
+     */
+    public function getByCategory($category)
+    {
+        if (! $id = $this->getCategoriesId($category)) {
+            $this->response->errorBadRequest('This category does not exist.');
+        }
+
+       $data = News::
+        select(['id', 'title', 'pubtime', 'source_id', 'cat_id'])
+        ->with('source', 'category')
+        ->withCount(['readers', 'comments'])
+        ->where('cat_id', $id)
+        ->orderBy('pubtime', 'desc')
+        ->paginate(10);
+
+        return response()->json(compact('data'));
+    }
+
+    /**
      * Get personalized news (for you).
      * It is possible that this API will return nothing if the user has not read certain category of news within a specified period. In that case, tell the user
      * that the list will be populated after they read some news or set their news preferences.
@@ -88,6 +112,34 @@ class NewsController extends BaseController
         ->orderBy('pubtime', 'desc')
         ->paginate(10);
         return $data;
+    }
+
+    /**
+     * Search news.
+     * Example params: /api/news/search?q=jokowi&category[0]=national&category[1]=business
+     * 
+     * @param  \Noox\Http\Requests\NewsSearchRequest $r
+     * @return \Illuminate\Http\Response
+     */
+    public function search(\Noox\Http\Requests\NewsSearchRequest $r)
+    {
+        $search = $r->input('q');
+
+        $query = News::
+        select(['id', 'title', 'pubtime', 'source_id', 'cat_id'])
+        ->with('source', 'category')
+        ->withCount(['readers', 'comments'])
+        ->where('title', 'like', '%' . $search . '%');
+
+        $categories = $r->input('category');
+        if (count($categories)) {
+            $ids = $this->getCategoriesId($categories);
+            $query->whereIn('cat_id', (is_array($ids) ? $ids : array($ids)));
+        }
+
+        $data = $query->orderBy('pubtime', 'desc')->paginate(10);
+
+        return response()->json(compact('data'));
     }
 
     /**
@@ -564,5 +616,37 @@ class NewsController extends BaseController
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);
         }
         return $this->response->errorInternal('Unable to save your report at this moment.');
+    }
+
+    /**
+     * Convert given category name into its respective ids.
+     * 
+     * @param  array  $keys
+     * @return array
+     */
+    protected function getCategoriesId($keys)
+    {
+        if (Cache::has('newsCategories')) {
+            $categories = Cache::get('newsCategories');
+        } else {
+            $res = \Noox\Models\NewsCategory::get();
+            $categories = array();
+            foreach ($res as $key => $data) {
+                $categories[$data->name] = $data->id;
+            }
+            Cache::put('newsCategories', $categories, Carbon::now()->addDay());
+        }
+        
+        if (is_array($keys)) {
+             $ids = array();
+            foreach ($keys as $key) {
+                if (isset($categories[$key])) {
+                    $ids[] = $categories[$key];
+                }
+            }
+            return $ids;
+        } else {
+            return (isset($categories[$keys])) ? $categories[$keys] : null;
+        }
     }
 }

@@ -58,6 +58,94 @@ class NewsTest extends TestCase
     /**
      * @test
      *
+     * GET /api/news/search
+     */
+    public function it_search_news_by_query()
+    {
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+
+        $this->get('/api/news/search?q=a&category=national')->assertJsonStructure([
+            'data' => [
+                'total',
+                'current_page',
+                'next_page_url',
+                'prev_page_url',
+                'per_page',
+                'data' => [
+                    '*' => [
+                        'id',
+                        'title',
+                        'pubtime',
+                        'readers_count',
+                        'comments_count',
+                        'category',
+                        'source'
+                    ]
+                ]
+            ]
+            ]);
+    }
+
+    /**
+     * @test
+     *
+     * GET /api/news/search
+     */
+    public function it_422_when_no_query_supplied()
+    {
+        $this->get('/api/news/search?q=&category=national')
+        ->assertStatus(422);
+    }
+
+    /**
+     * @test
+     *
+     * GET /api/news/category/{cateory}
+     */
+    public function it_fetch_news_by_category()
+    {
+        $this->seed('NewsCategoryTableSeeder');
+        $this->seed('NewsSourceTableSeeder');
+        $this->seed('NewsTableSeeder');
+
+        $this->get('/api/news/category/national')->assertJsonStructure([
+            'data' => [
+                'total',
+                'current_page',
+                'next_page_url',
+                'prev_page_url',
+                'per_page',
+                'data' => [
+                    '*' => [
+                        'id',
+                        'title',
+                        'pubtime',
+                        'readers_count',
+                        'comments_count',
+                        'category',
+                        'source'
+                    ]
+                ]
+            ]
+            ]);
+    }
+
+    /**
+     * @test
+     *
+     * GET /api/news/search
+     */
+    public function it_400_when_no_category_not_exist()
+    {
+        $this->get('/api/news/category/notexist')
+        ->assertStatus(400);
+    }
+
+    /**
+     * @test
+     *
      * Test: get /api/news/1.
      */
     public function it_fetch_news_details()
