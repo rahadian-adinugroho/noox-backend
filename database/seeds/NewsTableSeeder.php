@@ -241,6 +241,10 @@ Dalam kasus ini, Syafruddin Arsyad Temenggung ditetapkan sebagai tersangka selak
 SKL itu dikeluarkan mengacu pada Inpres nomor 8 tahun 2002 yang dikeluarkan pada 30 Desember 2002 oleh Megawati Soekarnoputri yang saat itu menjabat sebagai Presiden RI. KPK menyebut perbuatan Syafruddin menyebabkan kerugian keuangan negara sebesar Rp 3,7 triliun.'],
         ];
 
+        foreach ($entries as $key => $entry) {
+            $entries[$key]['url_hash'] = md5($entry['url']);
+        }
+
         News::insert($entries);
         Model::reguard();
     }
