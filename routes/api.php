@@ -66,6 +66,8 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 
     $api->get('personal/settings', 'Noox\Http\Controllers\API\UserController@viewSettings');
 
+    $api->put('personal/settings', 'Noox\Http\Controllers\API\UserController@updateSettings');
+
     $api->get('personal/news_preferences', 'Noox\Http\Controllers\API\UserController@viewPreferences');
 
     $api->post('personal/news_preferences', 'Noox\Http\Controllers\API\UserController@updatePreferences');

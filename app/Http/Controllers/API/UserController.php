@@ -276,6 +276,30 @@ class UserController extends BaseController
     }
 
     /**
+     * Update user's settings.
+     * Format:
+     * {
+     *    "settings" : {"top_news_notif": 0, "comment_liked_notif": 1, "comment_replied_notif": 0, "report_approved_notif": 1}
+     * }
+     * 
+     * @param  \Illuminate\Http\Request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateSettings(Request $request)
+    {
+        if (! $request->has('settings')) {
+            $this->response->errorBadRequest('Settings is not supplied.');
+        }
+        $user = $this->auth->user();
+
+        $settings = $request->input('settings');
+
+        if ($user->settings()->sync($this->formatNewSettings($settings))) {
+            return response()->json(['message' => 'Settings saved.']);
+        }
+    }
+
+    /**
      * Submit new user preferences.
      * In JSON: {"categories" : ["national", "crime"]}
      * 
@@ -336,6 +360,32 @@ class UserController extends BaseController
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);
         }
         return $this->response->errorInternal('Unable to save your report at this moment.');
+    }
+
+    /**
+     * Format the supplied settings to its ids with values.
+     * 
+     * @param  array  $newSettings
+     * @return array
+     */
+    protected function formatNewSettings(array $newSettings)
+    {
+        // get all available settings
+        $settings = Setting::get();
+
+        // match the submitted settings with id from database & update with submitted value.
+        $formattedSettings = [];
+        foreach ($settings as $key => $setting) {
+            if (isset($newSettings[$setting->key])) {
+                // if the setting is supplied, update with the new value.
+                $formattedSettings[$setting->id]['value'] = $newSettings[$setting->key];
+            } else {
+                // else update with the default value.
+                $formattedSettings[$setting->id]['value'] = $setting->default_value;
+            }
+        }
+
+        return $formattedSettings;
     }
 
     /**

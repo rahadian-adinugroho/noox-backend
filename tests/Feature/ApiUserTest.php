@@ -128,6 +128,79 @@ class ApiUserTest extends TestCase
 
     /**
      * @test
+     *
+     * Test: get /api/personal/settings
+     */
+    public function it_fetch_user_settings()
+    {
+        $this->seed('SettingsTableSeeder');
+        $this->seed('UserTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $this->get('/api/personal/settings', $this->headers($user))
+        ->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'id' => 1,
+                    'key' => 'top_news_notif',
+                    'value' => 1
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * @test
+     * 
+     * Test: PUT /api/personal/settings
+     */
+    public function it_accepts_valid_user_settings()
+    {
+        $this->seed('SettingsTableSeeder');
+        $this->seed('UserTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+
+        $payload = [
+            'settings' => [
+                'top_news_notif'        => 1,
+                'comment_liked_notif'   => 0,
+                'comment_replied_notif' => 1,
+                'report_approved_notif' => 0,
+            ]
+        ];
+
+        $this->put('/api/personal/settings', $payload, $this->headers($user))
+        ->assertStatus(200);
+    }
+
+    /**
+     * @test
+     * 
+     * Test: PUT /api/personal/settings
+     */
+    public function it_rejects_invalid_user_settings()
+    {
+        $this->seed('SettingsTableSeeder');
+        $this->seed('UserTableSeeder');
+
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+
+        $payload = [
+            'invalid' => [
+                'top_news_notif'        => 1,
+                'comment_liked_notif'   => 0,
+                'comment_replied_notif' => 1,
+                'report_approved_notif' => 0,
+            ]
+        ];
+
+        $this->put('/api/personal/settings', $payload, $this->headers($user))
+        ->assertStatus(400);
+    }
+
+    /**
+     * @test
      * 
      * Test: POST /api/personal/news_preferences
      */
