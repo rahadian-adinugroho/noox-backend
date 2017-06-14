@@ -31,7 +31,7 @@ class NewsAnalyzerController extends BaseController
      * Submit a news article to be analyzed. The timeout is 10 seconds.
      *
      * @param  \Noox\Http\Requests\ArticleAnalysisRequest $request [description]
-     * @return [type]                                              [description]
+     * @return \Illuminate\Http\Response
      */
     public function analyze(\Noox\Http\Requests\ArticleAnalysisRequest $request)
     {
@@ -48,9 +48,9 @@ class NewsAnalyzerController extends BaseController
             $response = json_decode($response->getBody());
             return response()->json($response);
         } catch (\GuzzleHttp\Exception\ConnectException $e) {
-            $this->response->errorInternal('Article analysis service unavailable.');
+            $this->response->error('Article analysis service unavailable.', 503);
         } catch (\GuzzleHttp\Exception\ServerException $e) {
-            $this->response->errorInternal('Article analysis service unavailable.');
+            $this->response->error('Article analysis service unavailable.', 503);
         }
     }
 }
