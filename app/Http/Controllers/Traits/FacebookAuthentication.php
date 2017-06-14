@@ -4,6 +4,7 @@ namespace Noox\Http\Controllers\Traits;
 
 use Noox\Models\User;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 /**
  * An ugly trait used to authenticate with Facebook. Should be using Guzzle instead of CURL.
@@ -61,26 +62,21 @@ trait FacebookAuthentication
    */
   protected function exec_auth($fbToken)
   {
-    $url = 'https://graph.facebook.com/debug_token?input_token='.$fbToken.'&access_token='.config('noox.fb_app_id').'|'.config('noox.fb_app_secret');
-    $ch = curl_init();
+    $client = new Client([
+            'base_uri' => 'https://graph.facebook.com',
+            'timeout'  => 10,
+            ]);
 
-    curl_setopt($ch, CURLOPT_URL, $url);
+    $uri = 'debug_token?input_token='.$fbToken.'&access_token='.config('noox.fb_app_id').'|'.config('noox.fb_app_secret');
 
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // our server
-
-    // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true); // facebook's server
-
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    $result = curl_exec($ch);
-
-    if (curl_errno($ch))
-    {
-      echo 'error: ' . curl_error($ch);
+    try {
+      $response = $client->get($uri);
+    } catch (\GuzzleHttp\Exception\ConnectException $e) {
+      $this->response->errorInternal('Unable to connect to Facebook server.');
+    } catch (\GuzzleHttp\Exception\ServerException $e) {
+      $this->response->error('Article analysis service unavailable.', 503);
     }
 
-    curl_close($ch);
-
-    return json_decode($result);
+    return json_decode($response->getBody());
   }
 }
