@@ -269,7 +269,7 @@ class UserController extends BaseController
         $user = $this->auth->user();
 
         $data = $user->settings()
-        ->select(['id', 'key', 'value'])
+        ->select(['key', 'value'])
         ->get();
 
         return response()->json(compact('data'));

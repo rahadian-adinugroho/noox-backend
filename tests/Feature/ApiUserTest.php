@@ -141,7 +141,6 @@ class ApiUserTest extends TestCase
         ->assertJsonStructure([
             'data' => [
                 '*' => [
-                    'id' => 1,
                     'key' => 'top_news_notif',
                     'value' => 1
                 ]
