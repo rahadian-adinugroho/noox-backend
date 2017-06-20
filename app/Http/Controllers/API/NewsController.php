@@ -69,7 +69,7 @@ class NewsController extends BaseController
 
     /**
      * Get news by category.
-     * 
+     *
      * @param  string $category
      * @return \Illuminate\Http\Response
      */
@@ -122,7 +122,7 @@ class NewsController extends BaseController
     /**
      * Search news.
      * Example params: /api/news/search?q=jokowi&category[0]=national&category[1]=business
-     * 
+     *
      * @param  \Noox\Http\Requests\NewsSearchRequest $r
      * @return \Illuminate\Http\Response
      */
@@ -150,9 +150,9 @@ class NewsController extends BaseController
     /**
      * News details.
      * Return the details of the news with 'likes' status if the requester supplied a valid token.
-     * 
+     *
      * @param  integer $id
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function details($id)
@@ -160,33 +160,37 @@ class NewsController extends BaseController
         // try to get the user id if token exist
         try {
             $userId = JWTAuth::parseToken()->getPayload()->get('sub');
+            $user   = \Noox\Models\User::find($userId);
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-            $userId = null;
+            $user = null;
         }
         $query = News::
         with(['source', 'category'])
         ->withCount(['likers', 'comments']);
 
-        if ($userId) {
+        if ($user) {
             $query->with([
-            'likers' => function($q) use ($userId) 
+            'likers' => function($q) use ($user)
             {
-                $q->select('user_id', 'name')->where('user_id', $userId);
+                $q->select('user_id', 'name')->where('user_id', $user->id);
             },
-            'readers' => function($q) use ($userId)
+            'readers' => function($q) use ($user)
             {
-                $q->select('user_id', 'first_read', 'last_read')->where('user_id', $userId);
+                $q->select('user_id', 'first_read')->where('user_id', $user->id);
             }]);
         }
         $data = $query->find($id);
 
         if(!is_null($data))
         {
-            if ($userId) {
-                if ($data->readers()->where('user_id', $userId)->exists()) {
-                    $data->readers()->updateExistingPivot($userId, ['last_read' => Carbon::now()]);
+            if ($user) {
+                if ($data->readers()->where('user_id', $user->id)->exists()) {
+                    $data->readers()->updateExistingPivot($user->id, ['last_read' => Carbon::now()]);
                 } else {
-                    $data->readers()->attach($userId);
+                    $data->readers()->attach($user->id);
+
+                    $user->experience += 2;
+                    $user->save();
                 }
             }
             return response()->json(compact('data'));
@@ -200,9 +204,9 @@ class NewsController extends BaseController
     /**
      * News details.
      * Return the details of the news along with some comments.
-     * 
+     *
      * @param  integer $id
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function detailsWithComments($id)
@@ -223,14 +227,14 @@ class NewsController extends BaseController
                 {
                     $query
                     ->select('id', 'user_id', 'news_id', 'created_at', 'content', 'parent_id')
-                    ->with(['author' => function ($query) 
+                    ->with(['author' => function ($query)
                     {
                         $query->select('id', 'name');
                     }])
                     ->withCount('likers');
 
                     if ($userId) {
-                        $query->with(['likers' => function($q) use ($userId) 
+                        $query->with(['likers' => function($q) use ($userId)
                         {
                             $q->where('user_id', $userId);
                         }]);
@@ -241,7 +245,7 @@ class NewsController extends BaseController
                 ->whereNull('parent_id');
 
                 if ($userId) {
-                    $query->with(['likers' => function($q) use ($userId) 
+                    $query->with(['likers' => function($q) use ($userId)
                     {
                         $q->where('user_id', $userId);
                     }]);
@@ -249,7 +253,7 @@ class NewsController extends BaseController
 
                 $query->take(10);
             },
-            'comments.author' => function ($query) 
+            'comments.author' => function ($query)
             {
                 $query->select('id', 'name');
             },
@@ -257,7 +261,7 @@ class NewsController extends BaseController
         ->withCount(['likers', 'comments']);
 
         if ($userId) {
-            $query->with(['likers' => function($q) use ($userId) 
+            $query->with(['likers' => function($q) use ($userId)
             {
                 $q->where('user_id', $userId);
             }]);
@@ -284,7 +288,7 @@ class NewsController extends BaseController
 
     /**
      * Submit a like for news.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function submitLike($newsId)
@@ -304,13 +308,13 @@ class NewsController extends BaseController
                 $this->response->errorInternal('Please try again later.');
             }
         }
-        
+
         return response()->json(['message' => 'User like has been saved.']);
     }
 
     /**
      * Unlike a news.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function deleteLike($newsId)
@@ -333,10 +337,10 @@ class NewsController extends BaseController
     /**
      * Get news comments.
      * Retrieve comments for the news. Refer to 'next_page_url' in the response to retrieve next page url.
-     * 
+     *
      * @param  integer $perPage
      * @param  integer $page
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function getComments(Request $r, $newsId)
@@ -349,7 +353,7 @@ class NewsController extends BaseController
         }
         $news = News::find($newsId);
         if ($news) {
-            $query =  
+            $query =
             $news->comments()
             ->select('id', 'news_id', 'user_id', 'created_at', 'content')
             ->with([
@@ -362,7 +366,7 @@ class NewsController extends BaseController
                     ->withCount('likers');
 
                     if ($userId) {
-                        $q->with(['likers' => function($q) use ($userId) 
+                        $q->with(['likers' => function($q) use ($userId)
                         {
                             $q->select('user_id', 'name')->where('user_id', $userId);
                         }]);
@@ -374,7 +378,7 @@ class NewsController extends BaseController
             ->withCount(['replies', 'likers']);
 
             if ($userId) {
-                $query->with(['likers' => function($q) use ($userId) 
+                $query->with(['likers' => function($q) use ($userId)
                 {
                     $q->where('user_id', $userId);
                 }]);
@@ -390,10 +394,10 @@ class NewsController extends BaseController
     /**
      * Get comment details.
      * The 'likers' variable will exist if the client supplied a valid JWT token. The 'likers' variable determines whether the user already liked the comment or not. If it is not an empty array, it means the user already liked the comment with that particular 'likers' attribute.
-     * 
+     *
      * @param  integer $perPage
      * @param  integer $page
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function commentDetails(Request $r, $commentId)
@@ -416,7 +420,7 @@ class NewsController extends BaseController
                     $q->select('user_id', 'name')->where('user_id', $userId);
                 }]);
         }
-        
+
         if ($data = $q->find($commentId)) {
             return response()->json(compact('data'));
         } else {
@@ -427,7 +431,7 @@ class NewsController extends BaseController
     /**
      * Get comment replies.
      * The 'likers' variable will exist if the client supplied a valid JWT token. The 'likers' variable determines whether the user already liked the comment or not. If it is not an empty array, it means the user already liked the comment with that particular 'likers' attribute.
-     * 
+     *
      * @param  [integer] $commentId
      * @return [type]            [description]
      */
@@ -468,9 +472,9 @@ class NewsController extends BaseController
     /**
      * Submit comment.
      * Submit a comment for a particular news.
-     * 
+     *
      * @param  string $content
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function submitComment(\Noox\Http\Requests\SubmitNewsCommentRequest $request, $newsId)
@@ -492,9 +496,9 @@ class NewsController extends BaseController
     /**
      * Submit reply to a comment.
      * Use this API to submit a reply to comment with id {id}.
-     * 
-     * @param string $content   
-     * 
+     *
+     * @param string $content
+     *
      * @return \Illuminate\Http\Response
      */
     public function submitCommentReply(\Noox\Http\Requests\SubmitNewsCommentRequest $request, $commentId)
@@ -524,7 +528,7 @@ class NewsController extends BaseController
 
     /**
      * Submit a like for comment.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function submitCommentLike($commentId)
@@ -553,7 +557,7 @@ class NewsController extends BaseController
 
     /**
      * Unlike a comment.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function deleteCommentLike($commentId)
@@ -569,16 +573,16 @@ class NewsController extends BaseController
         } catch (\Illuminate\Database\QueryException $e) {
             $this->response->errorInternal('Please try again later.');
         }
-        
+
         return $this->response->noContent();
     }
 
     /**
      * Submit a report for news comment.
      * Use this API to submit a report for news comment with id {id}. The submitter has to be authenticated before doing this.
-     * 
+     *
      * @param  string $content
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function submitNewsCommentReport(\Noox\Http\Requests\SubmitReportRequest $request, $commentId)
@@ -603,9 +607,9 @@ class NewsController extends BaseController
     /**
      * Submit a report for news.
      * Use this API to submit a report for news with is {id}. The submitter has to be authenticated before doing this.
-     * 
+     *
      * @param  string $content
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function submitReport(\Noox\Http\Requests\SubmitReportRequest $request, $newsId)
@@ -623,6 +627,10 @@ class NewsController extends BaseController
 
         if ($res = $news->reports()->save($report)) {
             event(new NewsReportedEvent($res, $reporter));
+
+            $reporter->experience += $reporter->getLevel() * 2;
+            $reporter->save();
+
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);
         }
         return $this->response->errorInternal('Unable to save your report at this moment.');
@@ -630,7 +638,7 @@ class NewsController extends BaseController
 
     /**
      * Convert given category name into its respective ids.
-     * 
+     *
      * @param  array  $keys
      * @return array
      */
@@ -646,7 +654,7 @@ class NewsController extends BaseController
             }
             Cache::put('newsCategories', $categories, Carbon::now()->addDay());
         }
-        
+
         if (is_array($keys)) {
              $ids = array();
             foreach ($keys as $key) {
