@@ -87,6 +87,13 @@ class User extends Authenticatable
                 ->get();
     }
 
+    public function getLevel()
+    {
+        $exp = $this->experience;
+        for ($level = 1; (pow($level, 3) + $level - 2) <= $exp ; $level++){}
+        return $level-1;
+    }
+
     public function getStats()
     {
         $user_data = [
