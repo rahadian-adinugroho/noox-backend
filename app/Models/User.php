@@ -18,10 +18,8 @@ class User extends Authenticatable
                          'password',
                          'gender',
                          'birthday',
-                         'level',
                          'experience');
     protected $attributes = [
-    'level'      => 1,
     'experience' => 0,
     ];
     protected $hidden = array('password', 'remember_token', 'pivot');
@@ -95,7 +93,6 @@ class User extends Authenticatable
         'id'         => $this->id,
         'name'       => $this->name,
         'created'    => $this->created_at->format('Y-m-d H:i:s'),
-        'level'      => $this->level,
         'experience' => $this->experience,
         ];
 

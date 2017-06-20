@@ -242,7 +242,6 @@ class ApiUserTest extends TestCase
             'id'   ,
             'fb_id',
             'name' ,
-            'level'   ,
             'member_since',
             'comments_count',
             ]
@@ -264,7 +263,6 @@ class ApiUserTest extends TestCase
             'fb_id',
             'name',
             'gender',
-            'level',
             'experience',
             'member_since',
             'comments_count',

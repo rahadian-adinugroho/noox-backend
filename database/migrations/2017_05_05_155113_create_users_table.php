@@ -22,7 +22,6 @@ class CreateUsersTable extends Migration
             $table->string('password', 128);
             $table->char('gender', 1)->nullable();
             $table->date('birthday')->nullable();
-            $table->integer('level')->unsigned();
             $table->integer('experience')->unsigned();
             $table->timestamps();
             $table->rememberToken();
