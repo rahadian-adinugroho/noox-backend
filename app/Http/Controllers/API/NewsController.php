@@ -29,34 +29,39 @@ class NewsController extends BaseController
      */
     public function getTopNews()
     {
-        $topNews = News::
-        select(['id', 'title', 'pubtime', 'cat_id', 'source_id'])
-        ->with(['category', 'source'])
-        ->withCount(['readers' => function($q){
-                    $q->where('first_read', '>=', Carbon::now()->subMinutes(config('noox.top_news_interval')));
-                }])
-        ->where('pubtime', '>', Carbon::now()->subMinutes(config('noox.top_news_interval')))
-        ->take(config('noox.max_top_news'))
-        ->orderBy(\DB::raw('`readers_count` desc, `pubtime`'), 'desc')
-        ->get();
-
-        $data = $topNews;
-        if (($total = $topNews->count()) < config('noox.max_top_news')) {
-            $toFill = config('noox.max_top_news') - $total;
-
-            $fill = News::
+        if (Cache::has('topNews')) {
+            $data = Cache::get('topNews');
+        } else {
+            $topNews = News::
             select(['id', 'title', 'pubtime', 'cat_id', 'source_id'])
             ->with(['category', 'source'])
-            ->whereNotIn('id', $topNews->map(function($data){
-                return $data->id;
-            }))
             ->withCount(['readers' => function($q){
-                $q->where('first_read', '>=', Carbon::now()->subMinutes(config('noox.top_news_interval')));
-            }])
-            ->orderBy(\DB::raw('`pubtime` desc, `readers_count`'), 'desc')
-            ->take($toFill)->get();
+                        $q->where('first_read', '>=', Carbon::now()->subMinutes(config('noox.top_news_interval')));
+                    }])
+            ->where('pubtime', '>', Carbon::now()->subMinutes(config('noox.top_news_interval')))
+            ->take(config('noox.max_top_news'))
+            ->orderBy(\DB::raw('`readers_count` desc, `pubtime`'), 'desc')
+            ->get();
 
-            $data = $topNews->merge($fill);
+            $data = $topNews;
+            if (($total = $topNews->count()) < config('noox.max_top_news')) {
+                $toFill = config('noox.max_top_news') - $total;
+
+                $fill = News::
+                select(['id', 'title', 'pubtime', 'cat_id', 'source_id'])
+                ->with(['category', 'source'])
+                ->whereNotIn('id', $topNews->map(function($data){
+                    return $data->id;
+                }))
+                ->withCount(['readers' => function($q){
+                    $q->where('first_read', '>=', Carbon::now()->subMinutes(config('noox.top_news_interval')));
+                }])
+                ->orderBy(\DB::raw('`pubtime` desc, `readers_count`'), 'desc')
+                ->take($toFill)->get();
+
+                $data = $topNews->merge($fill);
+            }
+            Cache::put('topNews', $data, Carbon::now()->addMinutes(10));
         }
 
         return response()->json(compact('data'));
