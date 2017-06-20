@@ -163,9 +163,14 @@ class NewsController extends BaseController
         ->withCount(['likers', 'comments']);
 
         if ($userId) {
-            $query->with(['likers' => function($q) use ($userId) 
+            $query->with([
+            'likers' => function($q) use ($userId) 
             {
                 $q->select('user_id', 'name')->where('user_id', $userId);
+            },
+            'readers' => function($q) use ($userId)
+            {
+                $q->select('user_id', 'first_read', 'last_read')->where('user_id', $userId);
             }]);
         }
         $data = $query->find($id);
