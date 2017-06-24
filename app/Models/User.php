@@ -131,9 +131,13 @@ class User extends Authenticatable
 
         $report_count = $this->submittedReports()->count();
 
+        $news_report_count = $this->submittedReports()->where('reportable_type', 'news')->count();
+
         //check db seed to get an idea about where this value came from
         $approved_report_count = $this->submittedReports()->where('status_id', 4)->count();
-        
+
+        $approved_news_report_count = $this->submittedReports()->where('reportable_type', 'news')->where('status_id', 4)->count();
+
         return compact(
             'user_data', 
             'news_likes_count',
@@ -141,7 +145,9 @@ class User extends Authenticatable
             'comment_likes_count',
             'liked_comments_count',
             'report_count',
+            'news_report_count',
             'approved_report_count',
+            'approved_news_report_count',
             'news_read_count');
     }
 }
