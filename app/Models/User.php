@@ -110,15 +110,16 @@ class User extends Authenticatable
         ->where('user_read_history.user_id', $this->id)
         ->groupBy('cat_id');
 
-        $news_read_count = DB::table('news_categories')
+        $nrc_data = DB::table('news_categories')
         ->select('name', 't.read_count')
         ->leftJoin(DB::raw("({$subquery->toSql()}) as `t`"), 't.cat_id', '=', 'news_categories.id')
         ->mergeBindings($subquery)
         ->get();
 
-        $news_read_count = array_map(function($data){
-            return [$data->name => ($data->read_count) ?: 0];
-        }, $news_read_count->toArray());
+        $news_read_count = array();
+        foreach ($nrc_data as $key => $data) {
+            $news_read_count[$data->name] = $data->read_count;
+        }
 
         $news_likes_count = $this->likedNews()->count();
 
