@@ -64,6 +64,8 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 
     $api->get('personal/achievements', 'Noox\Http\Controllers\API\UserController@personalAchievements');
 
+    $api->post('personal/achievements', 'Noox\Http\Controllers\API\UserController@addAchievement');
+
     $api->get('personal/settings', 'Noox\Http\Controllers\API\UserController@viewSettings');
 
     $api->put('personal/settings', 'Noox\Http\Controllers\API\UserController@updateSettings');

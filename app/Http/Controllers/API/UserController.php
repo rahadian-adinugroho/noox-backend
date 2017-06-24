@@ -6,7 +6,7 @@ use JWTAuth;
 use Auth;
 use Noox\Models\User;
 use Noox\Models\NewsCategory;
-use \Noox\Models\Setting;
+use Noox\Models\Setting;
 use Noox\Http\Controllers\Traits\FacebookAuthentication;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -253,10 +253,45 @@ class UserController extends BaseController
 
         $data = $user->achievements()
         ->select(['id', 'key', 'title', 'description', 'earn_date'])
-        ->orderBy('pivot_earn_date', 'desc')
+        ->orderBy('earn_date', 'desc')
         ->get();
 
         return response()->json(compact('data'));
+    }
+
+    /**
+     * Add user's achievement.
+     * Will return forbidden if the user is not eligible for the achievement. You can get user stats in /api/personal/stats
+     *
+     * Param: {key: "RN-national-1"}
+     *
+     * @param  \Illuminate\Http\Request
+     * @return \Illuminate\Http\Response
+     */
+    public function addAchievement(\Noox\Http\Requests\AddAchievementRequest $request)
+    {
+        $user = $this->auth->user();
+
+        # check if achievement exist
+        if (! $achievement = \Noox\Models\Achievement::where('key', $request->input('key'))->first()) {
+            $this->response->error('Achievement does not exist.', 422);
+        }
+        # check if the user is eligible
+        if ($this->checkAchievementEligibility($achievement, $user)) {
+            try {
+                $user->achievements()->attach($achievement, ['earn_date' => Carbon::now()]);
+            } catch (\Illuminate\Database\QueryException $e) {
+                if ($e->getCode() == 23000) {
+                    return $this->response->error('This user already has this achievement.', 422);
+                } else {
+                    return $this->response->errorInternal('Please try again later.');
+                }
+            }
+        } else {
+            return $this->response->errorForbidden('This user is not eligible for this achievement.');
+        }
+        # return the result
+        return response()->json(['message' => 'Achievement added.']);
     }
 
     /**
@@ -419,5 +454,54 @@ class UserController extends BaseController
         }
 
         return $initSettings;
+    }
+
+    /**
+     * Check whether the supplied user is eligible for the achievement.
+     * 
+     * @param  \Noox\Models\Achievement $achievement
+     * @param  \Noox\Models\User        $user
+     * @return bool
+     */
+    protected function checkAchievementEligibility(\Noox\Models\Achievement $achievement, User $user)
+    {
+        $parsedAcv = null;
+        $userStats = $user->getStats();
+        preg_match('/(?:(?P<main_category>[A-Z]+)-(?P<sub_category>[\w]+)|(?P<category>[A-Z]+))-(?P<tier>\d)/', $achievement->key, $parsedAcv);
+
+        if (! $parsedAcv['tier'] == '') {
+            switch ($parsedAcv['tier']) {
+                case '1':
+                    $minCount = 5;
+                    break;
+
+                case '2':
+                    $minCount = 25;
+                    break;
+
+                case '3':
+                    $minCount = 45;
+                    break;
+
+                case '4':
+                    $minCount = 80;
+                    break;
+
+                case '5':
+                    $minCount = 125;
+                    break;
+
+                default:
+                    return false;
+            }
+
+            if ($parsedAcv['main_category'] == 'RN') {
+                return $userStats['news_read_count'][$parsedAcv['sub_category']] >= $minCount;
+            } elseif ($parsedAcv['category'] == 'SR') {
+                return $userStats['news_report_count'] >= $minCount;
+            } elseif ($parsedAcv['category'] == 'AR') {
+                return $userStats['approved_news_report_count'] >= $minCount;
+            }
+        }
     }
 }
