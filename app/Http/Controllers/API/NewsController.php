@@ -303,9 +303,9 @@ class NewsController extends BaseController
             $news->likers()->attach($user->id, ['liked_at' => Carbon::now()]);
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) {
-                $this->response->errorBadRequest('This user already liked this news.');
+                return $this->response->errorBadRequest('This user already liked this news.');
             } else {
-                $this->response->errorInternal('Please try again later.');
+                return $this->response->errorInternal('Please try again later.');
             }
         }
 
@@ -543,9 +543,9 @@ class NewsController extends BaseController
             $comment->likers()->attach($user->id);
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) {
-                $this->response->errorBadRequest('This user already liked this comment.');
+                return $this->response->errorBadRequest('This user already liked this comment.');
             } else {
-                $this->response->errorInternal('Please try again later.');
+                return $this->response->errorInternal('Please try again later.');
             }
         }
         $commentAuthor = $comment->author;
