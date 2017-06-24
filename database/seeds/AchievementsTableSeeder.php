@@ -19,106 +19,137 @@ class AchievementsTableSeeder extends Seeder
         Achievement::truncate();
         Schema::enableForeignKeyConstraints();
 
-        $readNews = [
+        $readNews = $this->generateRNAchievements([
             [
-            'key'         => 'RN-1',
-            'title'       => 'Read News 1',
-            'description' => 'Read news ? times.',
-            'xpbonus'     => 10,
+            'name'  => 'national',
+            'title' => 'Nationalist',
             ],
             [
-            'key'         => 'RN-2',
-            'title'       => 'Read News 2',
-            'description' => 'Read news ? times.',
-            'xpbonus'     => 10,
+            'name'  => 'business',
+            'title' => 'Entrepreneur',
             ],
             [
-            'key'         => 'RN-3',
-            'title'       => 'Read News 3',
-            'description' => 'Read news ? times.',
-            'xpbonus'     => 10,
+            'name'  => 'crime',
+            'title' => 'Enforcer',
             ],
             [
-            'key'         => 'RN-4',
-            'title'       => 'Read News 4',
-            'description' => 'Read news ? times.',
-            'xpbonus'     => 10,
+            'name'  => 'health',
+            'title' => 'Regimen',
             ],
             [
-            'key'         => 'RN-5',
-            'title'       => 'Read News 5',
-            'description' => 'Read news ? times.',
-            'xpbonus'     => 10,
+            'name'  => 'lifestyle',
+            'title' => 'Socialist',
             ],
-        ];
+            [
+            'name'  => 'automotive',
+            'title' => 'Mechanic',
+            ],
+            [
+            'name'  => 'politic',
+            'title' => 'Politician',
+            ],
+            [
+            'name'  => 'sport',
+            'title' => 'Marksman',
+            ],
+            [
+            'name'  => 'technology',
+            'title' => 'Geek',
+            ],
+        ]);
 
         $submitReport = [
             [
             'key'         => 'SR-1',
-            'title'       => 'Submit Report 1',
-            'description' => 'Submit a news report ? times.',
-            'xpbonus'     => 10,
+            'title'       => 'Amateurish Claimant',
+            'description' => 'Submit a news report 5 times.',
             ],
             [
             'key'         => 'SR-2',
-            'title'       => 'Submit Report 2',
-            'description' => 'Submit a news report ? times.',
-            'xpbonus'     => 10,
+            'title'       => 'Novice Claimant',
+            'description' => 'Submit a news report 25 times.',
             ],
             [
             'key'         => 'SR-3',
-            'title'       => 'Submit Report 3',
-            'description' => 'Submit a news report ? times.',
-            'xpbonus'     => 10,
+            'title'       => 'Enthusiastic Claimant',
+            'description' => 'Submit a news report 45 times.',
             ],
             [
             'key'         => 'SR-4',
-            'title'       => 'Submit Report 4',
-            'description' => 'Submit a news report ? times.',
-            'xpbonus'     => 10,
+            'title'       => 'Veteran Claimant',
+            'description' => 'Submit a news report 80 times.',
             ],
             [
             'key'         => 'SR-5',
-            'title'       => 'Submit Report 5',
-            'description' => 'Submit a news report ? times.',
-            'xpbonus'     => 10,
+            'title'       => 'Noble Claimant',
+            'description' => 'Submit a news report 125 times.',
             ],
         ];
 
         $approvedReport = [
             [
             'key'         => 'AR-1',
-            'title'       => 'Approved Report 1',
-            'description' => 'Get your report approved ? times.',
-            'xpbonus'     => 10,
+            'title'       => 'Amateurish Trusted-Informant',
+            'description' => 'Get your report approved 5 times.',
             ],
             [
             'key'         => 'AR-2',
-            'title'       => 'Approved Report 2',
-            'description' => 'Get your report approved ? times.',
-            'xpbonus'     => 10,
+            'title'       => 'Novice Trusted-Informant',
+            'description' => 'Get your report approved 25 times.',
             ],
             [
             'key'         => 'AR-3',
-            'title'       => 'Approved Report 3',
-            'description' => 'Get your report approved ? times.',
-            'xpbonus'     => 10,
+            'title'       => 'Enthusiastic Trusted-Informant',
+            'description' => 'Get your report approved 45 times.',
             ],
             [
             'key'         => 'AR-4',
-            'title'       => 'Approved Report 4',
-            'description' => 'Get your report approved ? times.',
-            'xpbonus'     => 10,
+            'title'       => 'Veteran Trusted-Informant',
+            'description' => 'Get your report approved 80 times.',
             ],
             [
             'key'         => 'AR-5',
-            'title'       => 'Approved Report 5',
-            'description' => 'Get your report approved ? times.',
-            'xpbonus'     => 10,
+            'title'       => 'Noble Trusted-Informant',
+            'description' => 'Get your report approved 125 times.',
             ],
         ];
 
         Achievement::insert(array_merge($readNews, $submitReport, $approvedReport));
         Model::reguard();
+    }
+
+    protected function generateRNAchievements(array $newsTypes)
+    {
+        $res = array();
+
+        foreach ($newsTypes as $key => $types) {
+            $res[] = [
+                'key'         => "RN-{$types['name']}-1",
+                'title'       => "Amateurish {$types['title']}",
+                'description' => "Read {$types['name']} news 5 times.",
+            ];
+            $res[] = [
+                'key'         => "RN-{$types['name']}-2",
+                'title'       => "Novice {$types['title']}",
+                'description' => "Read {$types['name']} news 25 times.",
+            ];
+            $res[] = [
+                'key'         => "RN-{$types['name']}-3",
+                'title'       => "Enthusiastic {$types['title']}",
+                'description' => "Read {$types['name']} news 45 times.",
+            ];
+            $res[] = [
+                'key'         => "RN-{$types['name']}-4",
+                'title'       => "Veteran {$types['title']}",
+                'description' => "Read {$types['name']} news 80 times.",
+            ];
+            $res[] = [
+                'key'         => "RN-{$types['name']}-5",
+                'title'       => "Noble {$types['title']}",
+                'description' => "Read {$types['name']} news 125 times.",
+            ];
+        }
+
+        return $res;
     }
 }
