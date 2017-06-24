@@ -25,8 +25,6 @@ class CreateNewsTable extends Migration
             $table->text('content');
             $table->softDeletes();
 
-            $table->index(['pubtime']);
-
             $table->foreign('source_id')
             ->references('id')->on('news_sources')
             ->onDelete('cascade')
