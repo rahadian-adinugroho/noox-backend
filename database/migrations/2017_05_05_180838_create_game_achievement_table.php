@@ -18,7 +18,6 @@ class CreateGameAchievementTable extends Migration
             $table->string('key', 32)->unique();
             $table->string('title', 64);
             $table->text('description');
-            $table->integer('xpbonus')->unsigned();
         });
     }
 
