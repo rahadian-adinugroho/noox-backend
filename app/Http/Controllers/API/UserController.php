@@ -476,7 +476,7 @@ class UserController extends BaseController
                     break;
 
                 case '2':
-                    $minCount = 25;
+                    $minCount = 20;
                     break;
 
                 case '3':
