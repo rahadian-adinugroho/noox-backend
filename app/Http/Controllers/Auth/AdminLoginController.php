@@ -90,7 +90,9 @@ class AdminLoginController extends Controller
     {
         $this->guard()->logout();
 
-        JWTAuth::invalidate($request->session()->get('JWTToken'));
+        if ($request->session()->get('JWTToken')) {
+            JWTAuth::invalidate($request->session()->get('JWTToken'));            
+        }
 
         $request->session()->flush();
 
