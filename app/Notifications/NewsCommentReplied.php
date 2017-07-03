@@ -6,8 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Noox\Channels\FcmChannel;
 
-class NewsCommentReplied extends Notification
+class NewsCommentReplied extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -36,7 +37,7 @@ class NewsCommentReplied extends Notification
      */
     public function via($notifiable)
     {
-        return ['broadcast', 'database'];
+        return ['broadcast', 'database', FcmChannel::class];
     }
 
     /**
@@ -71,6 +72,22 @@ class NewsCommentReplied extends Notification
         'replier_id'   => $this->replyAuthor->id,
         'replier_name' => $this->replyAuthor->name,
         'news_title'   => $this->parent->news->title,
+        ];
+    }
+
+    /**
+     * Get the fcm representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toFcm($notifiable)
+    {
+        return [
+        'to'      => $notifiable->fcmTokens()->pluck('token')->toArray(),
+        'title'   => 'Comment replied!',
+        'body'    => "Your comment has been replied by {$this->replyAuthor->name}!",
+        'payload' => $this->toArray($notifiable),
         ];
     }
 }
