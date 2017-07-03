@@ -38,9 +38,9 @@ class ApiAuthTest extends TestCase
      */
     public function it_authenticate_a_user()
     {
-        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $user = factory(User::class)->create(['password' => bcrypt('foobar')]);
 
-        $this->post('/api/auth/login', ['email' => $user->email, 'password' => 'foo'])
+        $this->post('/api/auth/login', ['email' => $user->email, 'password' => 'foobar', 'fcm_token' => "fYMJUiJrlrg:APA91bERrlx-JAHTpEoWMFInWQGpHx9ljXxKxadPYjIHy2WR7Bx9aelEcu_xXkL10kCL1UOPyyQirn6IdUg7_K5Veq6QyoIGjE2yFUALJZ1q6C1p8Rxm1ycpHo1ORHcIwSgswcKL3oTo"])
         ->assertJsonStructure(['valid_until', 'refresh_before', 'token']);
     }
 
@@ -51,7 +51,7 @@ class ApiAuthTest extends TestCase
      */
     public function it_renew_a_token()
     {
-        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $user = factory(User::class)->create(['password' => bcrypt('foobar')]);
 
         $this->get('/api/auth/renew_token', $this->headers($user))
         ->assertJsonStructure(['valid_until', 'refresh_before', 'token']);
@@ -64,7 +64,7 @@ class ApiAuthTest extends TestCase
      */
     public function it_invalidate_a_token()
     {
-        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+        $user = factory(User::class)->create(['password' => bcrypt('foobar')]);
 
         $token = JWTAuth::fromUser($user);
 

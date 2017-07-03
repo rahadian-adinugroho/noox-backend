@@ -51,6 +51,11 @@ class User extends Authenticatable
         return $this->belongsToMany('\Noox\Models\Setting', 'user_settings')->withPivot('value');
     }
 
+    public function fcmTokens()
+    {
+        return $this->hasMany('Noox\Models\FcmToken');
+    }
+
     public function newsPreferences()
     {
         return $this->belongsToMany('Noox\Models\NewsCategory', 'user_news_preferences', 'user_id', 'category_id');
