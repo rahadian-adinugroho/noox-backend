@@ -81,6 +81,17 @@ class User extends Authenticatable
     	return $this->belongsToMany('Noox\Models\NewsComment', 'news_comment_likes', 'user_id', 'comment_id');
     }
 
+    public function getSetting($key, $allowDefault = false)
+    {
+        if ($item = $this->settings()->where('key', $key)->first()) {
+            return $item->pivot->value;
+        }
+        if ($allowDefault) {
+            return \Noox\Models\Setting::where('key', $key)->pluck('default_value')->first();
+        }
+        return null;
+    }
+
     public function getRecentNewsPreferences()
     {
         return $this->newsReadHistory()
