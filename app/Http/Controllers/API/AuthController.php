@@ -4,9 +4,11 @@ namespace Noox\Http\Controllers\API;
 
 use Carbon\Carbon;
 use JWTAuth;
+use Auth;
 use Noox\Http\Controllers\Traits\FacebookAuthentication;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Noox\Models\FcmToken;
 
 /**
  * @resource Authentication
@@ -21,13 +23,13 @@ class AuthController extends BaseController
      *  API Login
      *  Will return API token <token> with its lifetime <lifetime> and time window <gracetime> to renew the token after generated. <lifetime> and <gracetime> is in minutes.
      *  The token should be included in the header "Authorization : Bearer <token>"
-     * 
+     *
      * @param string $email
      * @param string $password
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function authenticate(Request $request)
+    public function authenticate(\Noox\Http\Requests\APILoginRequest $request)
     {
         $token = null;
         // check if fb_token is supplied
@@ -53,7 +55,15 @@ class AuthController extends BaseController
                 return response()->json(['error' => 'could_not_create_token'], 500);
             }
         }
-        
+
+        // add the supplied token if not exist in the database
+        if (! FcmToken::where('token', $request->input('fcm_token'))->count() > 0) {
+            $fcmToken = new FcmToken();
+            $fcmToken->token = $request->input('fcm_token');
+
+            Auth::user()->fcmTokens()->save($fcmToken);
+        }
+
         // all good so return the token
         if ($token) {
                 $ret = [
