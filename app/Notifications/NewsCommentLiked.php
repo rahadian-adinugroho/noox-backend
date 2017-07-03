@@ -7,8 +7,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Noox\Channels\FcmChannel;
 
-class NewsCommentLiked extends Notification
+class NewsCommentLiked extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -35,7 +36,7 @@ class NewsCommentLiked extends Notification
      */
     public function via($notifiable)
     {
-        return ['broadcast', 'database'];
+        return ['broadcast', 'database', FcmChannel::class];
     }
 
     /**
@@ -68,6 +69,22 @@ class NewsCommentLiked extends Notification
         'comment_content' => $this->comment->content,
         'liker_id'        => $this->liker->id,
         'liker_name'      => $this->liker->name,
+        ];
+    }
+
+    /**
+     * Get the fcm representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toFcm($notifiable)
+    {
+        return [
+        'to'      => $notifiable->fcmTokens()->pluck('token')->toArray(),
+        'title'   => 'Comment liked!',
+        'body'    => "Your comment has been liked by {$this->liker->name}!",
+        'payload' => $this->toArray($notifiable),
         ];
     }
 }
