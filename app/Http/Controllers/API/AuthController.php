@@ -61,7 +61,11 @@ class AuthController extends BaseController
             $fcmToken = new FcmToken();
             $fcmToken->token = $request->input('fcm_token');
 
-            Auth::user()->fcmTokens()->save($fcmToken);
+            if (! isset($user)) {
+                Auth::user()->fcmTokens()->save($fcmToken);
+            } else {
+                $user->fcmTokens()->save($fcmToken);
+            }
         }
 
         // all good so return the token
