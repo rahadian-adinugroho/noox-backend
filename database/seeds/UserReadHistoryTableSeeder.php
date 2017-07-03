@@ -2,7 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-use Noox\Models\UserReadHistory;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UserReadHistoryTableSeeder extends Seeder
 {
@@ -14,26 +15,22 @@ class UserReadHistoryTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        
+
         Schema::disableForeignKeyConstraints();
-        UserReadHistory::truncate();
+        DB::table('user_read_history')->truncate();
         Schema::enableForeignKeyConstraints();
 
         $entries = [
-        ['news_id' => 1, 'user_id' => 1],
-        ['news_id' => 1, 'user_id' => 2],
-        ['news_id' => 1, 'user_id' => 3],
-        ['news_id' => 2, 'user_id' => 1],
-        ['news_id' => 2, 'user_id' => 2],
-        ['news_id' => 2, 'user_id' => 3],
-        ['news_id' => 3, 'user_id' => 3],
+        ['news_id' => 1, 'user_id' => 1, 'first_read' => Carbon::now(), 'last_read' => Carbon::now()],
+        ['news_id' => 1, 'user_id' => 2, 'first_read' => Carbon::now(), 'last_read' => Carbon::now()],
+        ['news_id' => 1, 'user_id' => 3, 'first_read' => Carbon::now(), 'last_read' => Carbon::now()],
+        ['news_id' => 2, 'user_id' => 1, 'first_read' => Carbon::now(), 'last_read' => Carbon::now()],
+        ['news_id' => 2, 'user_id' => 2, 'first_read' => Carbon::now(), 'last_read' => Carbon::now()],
+        ['news_id' => 2, 'user_id' => 3, 'first_read' => Carbon::now(), 'last_read' => Carbon::now()],
+        ['news_id' => 3, 'user_id' => 3, 'first_read' => Carbon::now(), 'last_read' => Carbon::now()],
         ];
-        foreach ($entries as $key => $entry) {
-            $data = new UserReadHistory;
-            $data->news_id = $entry['news_id'];
-            $data->user_id = $entry['user_id'];
-            $data->save();
-        }
+
+        DB::table('user_read_history')->insert($entries);
         Model::reguard();
     }
 }

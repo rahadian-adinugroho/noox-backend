@@ -1,9 +1,8 @@
 <?php
 
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-use Noox\Models\NewsLike;
+use Carbon\Carbon;
 
 class NewsLikeTableSeeder extends Seeder
 {
@@ -15,9 +14,9 @@ class NewsLikeTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        
+
         Schema::disableForeignKeyConstraints();
-        NewsLike::truncate();
+        DB::table('news_likes')->truncate();
         Schema::enableForeignKeyConstraints();
 
         $entries = [
@@ -26,7 +25,7 @@ class NewsLikeTableSeeder extends Seeder
         ['news_id' => 3, 'user_id' => 3, 'liked_at' => Carbon::now()],
         ];
 
-        NewsLike::insert($entries);
+        DB::table('news_likes')->insert($entries);
         Model::reguard();
     }
 }

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-use Noox\Models\NewsCommentLike;
+use Illuminate\Support\Facades\DB;
 
 class NewsCommentLikeTableSeeder extends Seeder
 {
@@ -14,9 +14,9 @@ class NewsCommentLikeTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        
+
         Schema::disableForeignKeyConstraints();
-        NewsCommentLike::truncate();
+        DB::table('news_comment_likes')->truncate();
         Schema::enableForeignKeyConstraints();
 
         $entries = [
@@ -27,7 +27,8 @@ class NewsCommentLikeTableSeeder extends Seeder
         ['comment_id' => 10, 'user_id' => 1],
         ['comment_id' => 11, 'user_id' => 2],
         ];
-        NewsCommentLike::insert($entries);
+
+        DB::table('news_comment_likes')->insert($entries);
         Model::reguard();
     }
 }
