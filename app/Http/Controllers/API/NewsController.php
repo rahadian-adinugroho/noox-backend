@@ -517,7 +517,8 @@ class NewsController extends BaseController
 
         if ($res = $parent->replies()->save($comment)) {
             $parentAuthor = $parent->author;
-            if ($this->auth->user()->id != $parentAuthor->id) {
+            if (($this->auth->user()->id != $parentAuthor->id)
+                && ($parentAuthor->getSetting('comment_replied_notif') == '1')) {
                 $res->author = $this->auth->user();
                 $parentAuthor->notify(new NewsCommentReplied($parent, $res));
             }
@@ -549,7 +550,7 @@ class NewsController extends BaseController
             }
         }
         $commentAuthor = $comment->author;
-        if ($user->id != $commentAuthor->id) {
+        if (($user->id != $commentAuthor->id) && ($commentAuthor->getSetting('comment_liked_notif') == '1')) {
             $commentAuthor->notify(new NewsCommentLiked($comment, $user));
         }
         return response()->json(['message' => 'User like has been saved.']);
