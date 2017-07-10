@@ -17,6 +17,7 @@
   <title>{{ config('app.name', 'Noox') }} Admin</title>
 
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="jwt" content="{{ session('JWTToken') }}">
 
   <link href="{{ asset('admin/css/app.css') }}" rel="stylesheet">
   <!-- page specific styles -->
@@ -104,7 +105,7 @@
 
                 <li role="presentation" class="dropdown">
                   <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-envelope-o"></i>
+                    <i class="fa fa-bullhorn"></i>
                     <span class="badge bg-green" id="noox-notification-badge">{{ $unreadNotifications ?: '' }}</span>
                   </a>
                   <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
@@ -173,7 +174,7 @@
       {{ csrf_field() }}
     </form>
 
-    <script type="text/javascript" src="//{{ Request::getHost() }}:6001/socket.io/socket.io.js"></script>
+    <!-- <script type="text/javascript" src="//{{ Request::getHost() }}:6001/socket.io/socket.io.js"></script> -->
     <script src="{{ asset('admin/js/app.js') }}"></script>
     <!-- page specific scripts -->
     @yield('pagespecificscripts')
