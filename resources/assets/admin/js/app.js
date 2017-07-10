@@ -321,9 +321,11 @@ function notifGenerator(notification) {
 }
 
 // Init laravel-echo
-import Echo from 'laravel-echo'
+import Echo from 'laravel-echo';
 
-if (typeof io !== "undefined") {
+let jwt = document.head.querySelector('meta[name="jwt"]');
+
+if ((typeof io !== "undefined") && jwt) {
     window.Echo = new Echo({
     broadcaster: 'socket.io',
     host: window.location.hostname+':6001',
@@ -331,7 +333,7 @@ if (typeof io !== "undefined") {
     {
         headers:
         {
-            'Authorization': 'Bearer ' + window.Noox.jwt
+            'Authorization': 'Bearer ' + jwt.content
         }
     }
 });

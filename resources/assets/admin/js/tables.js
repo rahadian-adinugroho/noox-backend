@@ -2,9 +2,9 @@
 /**
  * This token is used to authenticate ajax request to CMS API.
  * 
- * @type {String}
+ * @type {Dom}
  */
-var apiToken = 'Bearer ' + window.Noox.jwt;
+let jwt = document.head.querySelector('meta[name="jwt"]');
 
 /**
  * Automatically instantiate DataTables object in the target element.
@@ -15,7 +15,7 @@ var apiToken = 'Bearer ' + window.Noox.jwt;
  * @return {Object}
  */
 function dtAttacher(target, url, additionalOptions) {
-    if (typeof target !== 'undefined' && typeof url !== 'undefined') {
+    if ((typeof target !== 'undefined') && (typeof url !== 'undefined') && jwt) {
         var options = {
             responsive: true,
             // processing: true,
@@ -24,7 +24,7 @@ function dtAttacher(target, url, additionalOptions) {
                 url : window.location.origin + '/cms/api/' + url,
                 type: 'GET',
                 beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", apiToken);
+                    request.setRequestHeader("Authorization", 'Bearer ' + jwt.content);
                 }
             }
         };
@@ -35,6 +35,8 @@ function dtAttacher(target, url, additionalOptions) {
                         processing ? NProgress.start() : NProgress.done() ;
                     }
                 }).DataTable(options);
+    } else {
+        console.error('Cannot load table as JWT not exist, navigate to: ' + window.location.origin + '/cms/login');
     }
 }
 
