@@ -3,6 +3,7 @@
 namespace Noox\Http\Middleware;
 
 use Closure;
+use JWTAuth;
 use Illuminate\Support\Facades\Auth;
 
 class RedirectIfAuthenticated
@@ -20,6 +21,7 @@ class RedirectIfAuthenticated
         switch ($guard) {
         case 'admin':
           if (Auth::guard($guard)->check()) {
+            $this->validateJwt($request);
             return redirect()->route('admin.dashboard');
           }
           break;
@@ -31,5 +33,14 @@ class RedirectIfAuthenticated
       }
       
       return $next($request);
+    }
+
+    protected function validateJwt($request)
+    {
+      if (! $request->session()->get('JWTToken')) {
+        $token = JWTAuth::fromUser(Auth::guard('admin')->user(), ['type' => 'admin']);
+
+        $request->session()->put('JWTToken', $token);
+      }
     }
 }
