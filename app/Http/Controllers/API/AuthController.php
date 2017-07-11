@@ -60,18 +60,7 @@ class AuthController extends BaseController
             $user = Auth::user();
         }
 
-        $existingToken = FcmToken::where('token', $request->input('fcm_token'))->first();
-        if (! $existingToken) {
-            $fcmToken = new FcmToken();
-            $fcmToken->token = $request->input('fcm_token');
-
-            $user->fcmTokens()->save($fcmToken);
-        } else {
-            if ($existingToken->user_id !== $user->id) {
-                $existingToken->user_id = $user->id;
-                $existingToken->save();
-            }
-        }
+        $user->addFcmToken($request->input('fcm_token'));
 
         // all good so return the token
         if ($token) {

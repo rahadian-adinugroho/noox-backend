@@ -5,6 +5,7 @@ namespace Noox\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Noox\Models\FcmToken;
 
 class User extends Authenticatable
 {
@@ -90,6 +91,23 @@ class User extends Authenticatable
             return \Noox\Models\Setting::where('key', $key)->pluck('default_value')->first();
         }
         return null;
+    }
+
+    public function addFcmToken($token)
+    {
+        $existingToken = FcmToken::where('token', $token)->first();
+
+        if (! $existingToken) {
+            $fcmToken = new FcmToken();
+            $fcmToken->token = $token;
+
+            $this->fcmTokens()->save($fcmToken);
+        } else {
+            if ($existingToken->user_id !== $this->id) {
+                $existingToken->user_id = $this->id;
+                $existingToken->save();
+            }
+        }
     }
 
     public function getRecentNewsPreferences()
