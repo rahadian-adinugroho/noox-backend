@@ -22,7 +22,7 @@ class NewsAnalyzerController extends BaseController
     {
         $this->client = new Client([
             'base_uri' => config('noox.analyzer_base_url'),
-            'timeout'  => 10,
+            'timeout'  => 20,
             ]);
     }
 
