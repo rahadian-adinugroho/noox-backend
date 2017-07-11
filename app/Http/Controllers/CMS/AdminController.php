@@ -80,12 +80,11 @@ class AdminController extends Controller
 
         $this->validate($request, [
             'name' => 'required|min:3',
-            'email' => 'required|unique:admins',
+            'email' => 'required|email|unique:admins',
             'password' => 'required|min:6'
         ]);
 
         $data = array_merge($request->only(['name', 'email']), ['role' => 1, 'password' => bcrypt($request->input('password'), ['rounds' => 12])]);
-        var_dump($data);
         Admin::create($data);
 
         $request->session()->flash('flash_notification', 'Administrator successfully created!');

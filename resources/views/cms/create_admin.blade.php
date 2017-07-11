@@ -43,33 +43,39 @@
             <br>
             <form id="data-form" method="POST" action="{{ route('admin.create.submit') }}" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
               {{ csrf_field() }}
-              <div class="form-group">
+              <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Name <span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <input type="text" id="name" name="name" value="{{ old('name') }}" required="required" minlength="3" class="form-control col-md-7 col-xs-12">
                   @if ($errors->has('name'))
-                  <ul class="parsley-errors-list filled laravel-error"><li class="parsley-type">{{ $errors->first('name') }}</li></ul>
+                  <span class="help-block">
+                    <strong>{{ $errors->first('name') }}</strong>
+                  </span>
                   @endif
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <input type="email" id="email" name="email" value="{{ old('email') }}" required="required" class="form-control col-md-7 col-xs-12 {{ ($errors->has('email')) ? 'parsley-error' : '' }}">
+                  <input type="email" id="email" name="email" value="{{ old('email') }}" required="required" class="form-control col-md-7 col-xs-12">
                   @if ($errors->has('email'))
-                  <ul class="parsley-errors-list filled laravel-error"><li class="parsley-type">{{ $errors->first('email') }}</li></ul>
+                  <span class="help-block">
+                    <strong>{{ $errors->first('email') }}</strong>
+                  </span>
                   @endif
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password">Password <span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <input type="password" id="password" name="password" required="required" minlength="6" class="form-control col-md-7 col-xs-12">
                   @if ($errors->has('password'))
-                  <ul class="parsley-errors-list filled laravel-error"><li class="parsley-type">{{ $errors->first('password') }}</li></ul>
+                  <span class="help-block">
+                    <strong>{{ $errors->first('password') }}</strong>
+                  </span>
                   @endif
                 </div>
               </div>
