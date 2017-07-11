@@ -2,6 +2,7 @@
 
 namespace Noox\Models;
 
+use Cache;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -52,18 +53,10 @@ class News extends Model
         $catId = $this->cat_id;
 
         $catName = null;
-        if (\Cache::has('news_categories')) {
+        if (Cache::has('news_categories')) {
 
-            $categories = \Cache::get('news_categories');
+            $categories = Cache::get('news_categories');
 
-        } elseif (\Cache::has('newsCategories')) {
-            $cache = \Cache::get('newsCategories');
-
-            $categories = array();
-            foreach ($cache as $key => $data) {
-                $categories[$data] = $key;
-            }
-            \Cache::put('news_categories', $categories, Carbon::now()->addDay());
         } else {
             $res = NewsCategory::all();
 
@@ -71,7 +64,7 @@ class News extends Model
             foreach ($res as $key => $data) {
                 $categories[$data->id] = $data->name;
             }
-            \Cache::put('news_categories', $categories, Carbon::now()->addDay());
+            Cache::put('news_categories', $categories, Carbon::now()->addDay());
         }
 
         if (isset($categories[$catId])) {

@@ -645,15 +645,20 @@ class NewsController extends BaseController
      */
     protected function getCategoriesId($keys)
     {
-        if (Cache::has('newsCategories')) {
-            $categories = Cache::get('newsCategories');
+        if (Cache::has('news_categories')) {
+            $cache = Cache::get('news_categories');
+
+            $categories = array_flip($cache);
         } else {
             $res = \Noox\Models\NewsCategory::get();
-            $categories = array();
+
+            $toCache = array();
             foreach ($res as $key => $data) {
-                $categories[$data->name] = $data->id;
+                $toCache[$data->id] = $data->name;
             }
-            Cache::put('newsCategories', $categories, Carbon::now()->addDay());
+            Cache::put('news_categories', $toCache, Carbon::now()->addDay());
+
+            $categories = array_flip($toCache);
         }
 
         if (is_array($keys)) {
