@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Noox\Channels\FcmChannel;
 
-class NewsCommentReplied extends Notification
+class NewsCommentReplied extends Notification implements ShouldQueue
 {
     use Queueable;
 
