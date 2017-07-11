@@ -38,7 +38,12 @@ class ApiUserTest extends TestCase
      */
     public function it_register_user()
     {
-        $data = ['email' => 'username@email.org', 'password' => 'testpass', 'name' => 'Test User'];
+        $data = [
+            'email' => 'username@email.org',
+            'password' => 'testpass',
+            'name' => 'Test User',
+            'fcm_token' => 'fYMJUiJrlrg:APA91bERrlx-JAHTpEoWMFInWQGpHx9ljXxKxadPYjIHy2WR7Bx9aelEcu_xXkL10kCL1UOPyyQirn6IdUg7_K5Veq6QyoIGjE2yFUALJZ1q6C1p8Rxm1ycpHo1ORHcIwSgswcKL3oTo'
+        ];
 
         $this->post('/api/users', $data)
         ->assertStatus(201);

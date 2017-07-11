@@ -28,7 +28,8 @@ class UserRegistrationRequest extends FormRequest
             'name'     => 'required|regex:/^[A-Za-z\s]+$/u',
             'gender'   => 'nullable|size:1',
             'birthday' => 'nullable|date',
-            'fb_token' => 'nullable|alpha_num'
+            'fb_token' => 'nullable|alpha_num',
+            'fcm_token' => 'required|min:151'
         ];
     }
 }

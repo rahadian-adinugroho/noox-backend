@@ -58,6 +58,8 @@ class UserController extends BaseController
             'token'        => $token,
             ];
 
+            $user->addFcmToken($request->input('fcm_token'));
+
             $user->settings()->attach($this->getInitialSettings());
             return $this->response->created(
                 url('/api/user/'.$user->id),
