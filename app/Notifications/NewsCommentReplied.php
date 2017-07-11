@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Noox\Channels\FcmChannel;
 
-class NewsCommentReplied extends Notification implements ShouldQueue
+class NewsCommentReplied extends Notification
 {
     use Queueable;
 
@@ -49,12 +49,13 @@ class NewsCommentReplied extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-        'parent_id'    => $this->parent->id,
-        'reply_id'     => $this->reply->id,
-        'replier_id'   => $this->replyAuthor->id,
-        'replier_name' => $this->replyAuthor->name,
-        'news_title'   => $this->parent->news->title,
-        'time'         => $this->reply->created_at,
+        'parent_id'          => $this->parent->id,
+        'reply_id'           => $this->reply->id,
+        'replier_id'         => $this->replyAuthor->id,
+        'replier_name'       => $this->replyAuthor->name,
+        'news_title'         => $this->parent->news->title,
+        'news_category_name' => $this->parent->news->getCategoryName(),
+        'time'               => $this->reply->created_at,
         ];
     }
 
@@ -72,6 +73,7 @@ class NewsCommentReplied extends Notification implements ShouldQueue
         'replier_id'   => $this->replyAuthor->id,
         'replier_name' => $this->replyAuthor->name,
         'news_title'   => $this->parent->news->title,
+        'news_category_name' => $this->parent->news->getCategoryName(),
         ];
     }
 
