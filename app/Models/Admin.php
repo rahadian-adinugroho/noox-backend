@@ -12,6 +12,6 @@ class Admin extends Authenticatable
 
     protected $guard = 'admin';
 
-    protected $fillable = array('name', 'email', 'password');
+    protected $fillable = array('name', 'email', 'password', 'role');
     protected $hidden   = array('password', 'remember_token', 'role');
 }

@@ -180,6 +180,9 @@
     @yield('pagespecificscripts')
 
     <script type="text/javascript">
+      @if (Session::has('flash_notification'))
+        spawnNoty('{{ Session::get('flash_notification') }}', '{{ Session::get('flash_notification_type', 'info') }}')
+      @endif
       if (typeof Echo !== "undefined") {
             Echo.private("Noox.Models.Admin.{{Auth::user()->id}}")
             .notification((notification) => {

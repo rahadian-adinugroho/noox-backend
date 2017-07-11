@@ -16,7 +16,7 @@ class AdminController extends Controller
 
     /**
      * Return the dashboard
-     * 
+     *
      * @return Illuminate\Http\Response
      */
     public function index()
@@ -26,7 +26,7 @@ class AdminController extends Controller
 
     /**
      * Return the dashboard
-     * 
+     *
      * @return Illuminate\Http\Response
      */
     public function adminList()
@@ -37,7 +37,7 @@ class AdminController extends Controller
 
     /**
      * View the profile of the requested admin. Return current authenticated admin profile by default.
-     * 
+     *
      * @param  integer $id
      * @return Illuminate\Http\Response
      */
@@ -51,10 +51,45 @@ class AdminController extends Controller
 
         try {
             $this->authorize('profile', $user);
-            echo "this is your profile<br>";
             var_dump($user);
         } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
             return redirect()->route('admin.profile');
         }
+    }
+
+    /**
+     * View admin creation page.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function viewCreate()
+    {
+        $this->authorize('create', Admin::class);
+        return view('cms.create_admin');
+    }
+
+    /**
+     * Process the new administrator data.
+     *
+     * @param  Illuminate\Http\Request
+     * @return Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
+        $this->authorize('create', Admin::class);
+
+        $this->validate($request, [
+            'name' => 'required|min:3',
+            'email' => 'required|unique:admins',
+            'password' => 'required|min:6'
+        ]);
+
+        $data = array_merge($request->only(['name', 'email']), ['role' => 1, 'password' => bcrypt($request->input('password'), ['rounds' => 12])]);
+        var_dump($data);
+        Admin::create($data);
+
+        $request->session()->flash('flash_notification', 'Administrator successfully created!');
+
+        return redirect()->route('admins');
     }
 }

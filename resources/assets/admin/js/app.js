@@ -267,7 +267,7 @@ window.handleNotification = function (notification) {
     }
 };
 
-window.spawnNoty = function (text, type = 'info', onCloseCallback = null) {
+window.spawnNoty = function (text, type = 'info', onCloseCallback = function(){}) {
     if (text.length > 0) {
        return new Noty({
           type: type,
