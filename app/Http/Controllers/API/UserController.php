@@ -335,6 +335,22 @@ class UserController extends BaseController
     }
 
     /**
+     * Add FCM token.
+     * Add an FCM token to the current user. The token either added or updated to the database depending on conditions.
+     * 
+     * @param  \Illuminate\Http\Request
+     * @return \Illuminate\Http\Response
+     */
+    public function addFcmToken(\Noox\Http\Requests\AddFcmTokenRequest $request)
+    {
+        $user = $this->auth->user();
+
+        $user->addFcmToken($request->input('fcm_token'));
+
+        return response()->json(['message' => 'FCM token saved.']);
+    }
+
+    /**
      * Submit new user preferences.
      * In JSON: {"categories" : ["national", "crime"]}
      * 

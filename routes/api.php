@@ -70,6 +70,8 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 
     $api->put('personal/settings', 'Noox\Http\Controllers\API\UserController@updateSettings');
 
+    $api->post('personal/fcm_token', 'Noox\Http\Controllers\API\UserController@addFcmToken');
+
     $api->get('personal/news_preferences', 'Noox\Http\Controllers\API\UserController@viewPreferences');
 
     $api->post('personal/news_preferences', 'Noox\Http\Controllers\API\UserController@updatePreferences');

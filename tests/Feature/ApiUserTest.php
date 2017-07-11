@@ -176,6 +176,40 @@ class ApiUserTest extends TestCase
     /**
      * @test
      * 
+     * Test: POST /api/personal/fcm_token
+     */
+    public function it_accepts_valid_fcm_token()
+    {
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+
+        $payload = [
+        'fcm_token' => 'fYMJUiJrlrg:APA91bERrlx-JAHTpEoWMFInWQGpHx9ljXxKxadPYjIHy2WR7Bx9aelEcu_xXkL10kCL1UOPyyQirn6IdUg7_K5Veq6QyoIGjE2yFUALJZ1q6C1p8Rxm1ycpHo1ORHcIwSgswcKL3oTo'
+        ];
+
+        $this->post('/api/personal/fcm_token', $payload, $this->headers($user))
+        ->assertStatus(200);
+    }
+
+    /**
+     * @test
+     * 
+     * Test: POST /api/personal/fcm_token
+     */
+    public function it_rejects_invalid_fcm_token()
+    {
+        $user = factory(User::class)->create(['password' => bcrypt('foo')]);
+
+        $payload = [
+            'fcm_token' => ''
+        ];
+
+        $this->post('/api/personal/fcm_token', $payload, $this->headers($user))
+        ->assertStatus(422);
+    }
+
+    /**
+     * @test
+     * 
      * Test: PUT /api/personal/settings
      */
     public function it_rejects_invalid_user_settings()
