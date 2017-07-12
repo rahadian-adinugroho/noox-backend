@@ -9,7 +9,7 @@
   <div class="">
     <div class="page-title">
       <div class="title_left">
-        <h3>Administrator Details</h3>
+        <h3>User Details</h3>
       </div>
 
       <div class="title_right">
@@ -56,6 +56,26 @@
                   <input type="email" id="email" name="email" value="{{ $user->email }}" required="required" class="form-control col-md-7 col-xs-12" disabled>
                 </div>
               </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Gender <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div id="gender" class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default {{ ($user->gender == 'm') ? 'active' : '' }}" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                      <input type="radio" name="gender" value="m" data-parsley-multiple="gender" {{ ($user->gender == 'm') ? 'checked' : '' }} disabled> &nbsp; Male &nbsp;
+                    </label>
+                    <label class="btn btn-primary {{ ($user->gender == 'f') ? 'active' : '' }}" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                      <input type="radio" name="gender" value="f" data-parsley-multiple="gender" {{ ($user->gender == 'f') ? 'checked' : '' }} disabled> Female
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Date of Birth <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input id="birthday" name="birthday" value="{{ $user->birthday }}" max="{{ Carbon\Carbon::now()->addDay()->format('Y-m-d') }}" class="form-control col-md-7 col-xs-12" required="required" type="date" disabled>
+                </div>
+              </div>
               <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password">Password
                 </label>
@@ -69,7 +89,7 @@
               <div class="ln_solid"></div>
               <div class="form-group">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <button type="" class="btn btn-success">Update</button>
+                  <button type="" id="edit-button" class="btn btn-success">Update</button>
                 </div>
               </div>
             </form>
@@ -84,14 +104,14 @@
 @section('pagespecificscripts')
 <script type="text/javascript">
   let form    = $('#data-form');
-  let button  = $('#data-form button');
-  let adminId = null;
+  let button  = $('#edit-button');
+  let userId = null;
 
   $( document ).ready(function (e) {
     pathname = window.location.pathname.split('/');
-    adminId  = parseInt(pathname[pathname.length - 1]);
+    userId  = parseInt(pathname[pathname.length - 1]);
 
-    if (isNaN(adminId)) {adminId = '';}
+    if (isNaN(userId)) {userId = '';}
   });
 
   button.on('click', function(e){
@@ -102,7 +122,7 @@
         form.find('span.help-block').remove();
         form.find('.form-group').toggleClass('has-error', false);
 
-        axios.put(gCmsApiBase + '/admin/' + adminId, form.serialize())
+        axios.put(gCmsApiBase + '/user/' + userId, form.serialize())
         .then(function (response) {
           button.removeClass('submit-button');
           form.find('input').prop('disabled', true);
@@ -130,10 +150,10 @@
       let errContainer = el.next('span.help-block');
       if (! errContainer.length) {
         el.after(
-        `
+          `
           <span class="help-block">
           </span>
-        `);
+          `);
         errContainer = el.next('span.help-block');
       }
 

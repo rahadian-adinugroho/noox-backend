@@ -59,5 +59,42 @@ class UserController extends Controller
             })
             ->make(true);
     }
+
+    /**
+     * Update the user.
+     * 
+     * @param  Illuminate\Http\Request
+     * @param  int
+     * @return Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        if (! $user = User::find($id)) {
+            return response(['message' => 'User not found.'], 422);
+        }
+
+        $validation = [
+            'name'     => 'required|min:3',
+            'password' => 'nullable|min:6',
+            'gender'   => 'required|regex:/^[mf]$/u',
+            'birthday' => 'required|before:' . \Carbon\Carbon::now()->format('Y-m-d')
+        ];
+        if ($request->input('email') != $user->email) {
+            $validation = array_merge($validation, ['email' => 'required|email|unique:users']);
+        }
+        $this->validate($request, $validation);
+
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->gender = $request->input('gender');
+        $user->birthday = $request->input('birthday');
+
+        if (! is_null($request->input('password'))) {
+            $user->password = bcrypt($request->input('password'), ['rounds' => 12]);
+        }
+        $user->save();
+
+        return response(['message' => 'User data successfully updated.']);
+    }
 }
 

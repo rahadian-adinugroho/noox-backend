@@ -24,6 +24,8 @@ use Illuminate\Http\Request;
 
 Route::put('/admin/{id?}', 'CMS\API\AdminController@update');
 
+Route::put('/user/{id}', 'CMS\API\UserController@update');
+
 /*
 |--------------------------------------------------------------------------
 | Datatables API

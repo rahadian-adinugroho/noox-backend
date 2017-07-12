@@ -38,6 +38,13 @@ class AdminController extends Controller
             ->make(true);
     }
 
+    /**
+     * Update the administrator. The update administrator depends on the supplied ID.
+     * 
+     * @param  Illuminate\Http\Request
+     * @param  int
+     * @return Illuminate\Http\Response
+     */
     public function update(Request $request, $id=null)
     {
         if (is_null($id)) {

@@ -55,6 +55,6 @@ class UserController extends Controller
             abort(404);
         }
 
-        return $user;
+        return view('cms.user_profile', compact('user'));
     }
 }
