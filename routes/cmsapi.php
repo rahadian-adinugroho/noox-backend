@@ -13,6 +13,25 @@ use Illuminate\Http\Request;
 |
 */
 
+/*
+|--------------------------------------------------------------------------
+| Common API
+|--------------------------------------------------------------------------
+|
+| Here's the route for common API endpoints.
+|
+*/
+
+Route::put('/admin/{id?}', 'CMS\API\AdminController@update');
+
+/*
+|--------------------------------------------------------------------------
+| Datatables API
+|--------------------------------------------------------------------------
+|
+| Here's the route for Datatables API endpoints.
+|
+*/
 Route::get('/users', 'CMS\API\UserController@index');
 
 Route::get('/users/reported', 'CMS\API\UserController@reported');

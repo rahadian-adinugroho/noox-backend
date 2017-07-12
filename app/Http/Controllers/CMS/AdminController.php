@@ -31,8 +31,12 @@ class AdminController extends Controller
      */
     public function adminList()
     {
-        $this->authorize('view', Admin::class);
-        return view('cms.admins');
+        try {
+            $this->authorize('view', Admin::class);
+            return view('cms.admins');
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return redirect()->route('admin.profile');
+        }
     }
 
     /**
@@ -51,7 +55,7 @@ class AdminController extends Controller
 
         try {
             $this->authorize('profile', $user);
-            var_dump($user);
+            return view('cms.admin_profile', compact('user'));
         } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
             return redirect()->route('admin.profile');
         }
