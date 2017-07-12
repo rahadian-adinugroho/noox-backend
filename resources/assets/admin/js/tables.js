@@ -15,7 +15,7 @@ let jwt = document.head.querySelector('meta[name="jwt"]');
  * @return {Object}
  */
 function dtAttacher(target, url, additionalOptions) {
-    if ((typeof target !== 'undefined') && (typeof url !== 'undefined') && jwt) {
+    if ((typeof target !== 'undefined') && (typeof url !== 'undefined') && jwt && (jwt.content.length > 0)) {
         var options = {
             responsive: true,
             // processing: true,

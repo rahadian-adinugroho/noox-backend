@@ -12,6 +12,7 @@ require('./bootstrap');
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+window.gCmsApiBase = window.location.origin + '/cms/api';
 
 var CURRENT_URL = window.location.href.split('?')[0],
     $BODY = $('body'),
@@ -325,7 +326,7 @@ import Echo from 'laravel-echo';
 
 let jwt = document.head.querySelector('meta[name="jwt"]');
 
-if ((typeof io !== "undefined") && jwt) {
+if ((typeof io !== "undefined") && jwt && (jwt.content.length > 0)) {
     window.Echo = new Echo({
     broadcaster: 'socket.io',
     host: window.location.hostname+':6001',

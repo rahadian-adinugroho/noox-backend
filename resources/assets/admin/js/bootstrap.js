@@ -43,7 +43,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 let jwt = document.head.querySelector('meta[name="jwt"]');
 
-if (jwt) {
+if (jwt && (jwt.content.length > 0)) {
     window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + jwt.content;
 } else {
     console.error('JWT not found, please navigate to: ' + window.location.origin + '/cms/login');
