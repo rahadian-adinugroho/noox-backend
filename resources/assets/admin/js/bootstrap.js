@@ -16,6 +16,8 @@ try {
     Noty = require('noty');
     NProgress = require('nprogress');
 
+    require('parsleyjs');
+
     var dataTable   = require('datatables.net-bs');
     var responsive  = require('datatables.net-responsive-bs');
     

@@ -175,6 +175,8 @@
     </form>
 
     <!-- <script type="text/javascript" src="//{{ Request::getHost() }}:6001/socket.io/socket.io.js"></script> -->
+    <script src="{{ asset('admin/js/manifest.js') }}"></script>
+    <script src="{{ asset('admin/js/vendor.js') }}"></script>
     <script src="{{ asset('admin/js/app.js') }}"></script>
     <!-- page specific scripts -->
     @yield('pagespecificscripts')
