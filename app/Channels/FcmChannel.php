@@ -2,6 +2,7 @@
 
 namespace Noox\Channels;
 
+use Noox\Models\FcmToken;
 use Illuminate\Notifications\Notification;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
@@ -22,12 +23,12 @@ class FcmChannel
     {
         $settings = $notification->toFcm($notifiable);
 
-        $data = null;
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['id' => $notification->id, 'type' => get_class($notification)]);
         if (isset($settings['payload'])) {
-            $dataBuilder = new PayloadDataBuilder();
             $dataBuilder->addData($settings['payload']);
-            $data = $dataBuilder->build();
         }
+        $data = $dataBuilder->build();
 
         $notificationBuilder = new PayloadNotificationBuilder($settings['title']);
         $notificationBuilder->setBody($settings['body']);
@@ -48,6 +49,6 @@ class FcmChannel
         } else {
             $downstreamResponse = FCM::sendTo($settings['to'], $option, $fcmNotification, $data);
         }
-        
+        \Log::debug($data);
     }
 }
