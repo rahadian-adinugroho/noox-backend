@@ -2,15 +2,18 @@
 
 namespace Noox\Models;
 
+use Cache;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use \Noox\Models\NewsCategory;
 
 class News extends Model
 {
     use SoftDeletes;
-    
+
     public $timestamps  = false;
-    
+
     protected $dates    = ['deleted_at'];
     protected $fillable = array('source_id','cat_id', 'title', 'pubtime', 'author', 'content');
     protected $hidden   = ['pivot'];
@@ -43,5 +46,30 @@ class News extends Model
     public function likers()
     {
         return $this->belongsToMany('Noox\Models\User', 'news_likes')->withPivot('liked_at');
+    }
+
+    public function getCategoryName()
+    {
+        $catId = $this->cat_id;
+
+        $catName = null;
+        if (Cache::has('news_categories')) {
+
+            $categories = Cache::get('news_categories');
+
+        } else {
+            $res = NewsCategory::all();
+
+            $categories = array();
+            foreach ($res as $key => $data) {
+                $categories[$data->id] = $data->name;
+            }
+            Cache::put('news_categories', $categories, Carbon::now()->addDay());
+        }
+
+        if (isset($categories[$catId])) {
+            $catName = $categories[$catId];
+        }
+        return $catName;
     }
 }

@@ -58,6 +58,8 @@ class UserController extends BaseController
             'token'        => $token,
             ];
 
+            $user->addFcmToken($request->input('fcm_token'));
+
             $user->settings()->attach($this->getInitialSettings());
             return $this->response->created(
                 url('/api/user/'.$user->id),
@@ -332,6 +334,22 @@ class UserController extends BaseController
         if ($user->settings()->sync($this->formatNewSettings($settings))) {
             return response()->json(['message' => 'Settings saved.']);
         }
+    }
+
+    /**
+     * Add FCM token.
+     * Add an FCM token to the current user. The token either added or updated to the database depending on conditions.
+     * 
+     * @param  \Illuminate\Http\Request
+     * @return \Illuminate\Http\Response
+     */
+    public function addFcmToken(\Noox\Http\Requests\AddFcmTokenRequest $request)
+    {
+        $user = $this->auth->user();
+
+        $user->addFcmToken($request->input('fcm_token'));
+
+        return response()->json(['message' => 'FCM token saved.']);
     }
 
     /**
