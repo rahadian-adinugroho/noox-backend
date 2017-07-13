@@ -48,11 +48,13 @@ class NewsCommentLiked extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-        'comment_id'      => $this->comment->id,
-        'comment_content' => $this->comment->content,
-        'liker_id'        => $this->liker->id,
-        'liker_name'      => $this->liker->name,
-        'time'            => Carbon::now(),
+        'comment_id'         => $this->comment->id,
+        'comment_content'    => $this->comment->content,
+        'liker_id'           => $this->liker->id,
+        'liker_name'         => $this->liker->name,
+        'news_title'         => $this->comment->news->title,
+        'news_category_name' => $this->comment->news->getCategoryName(),
+        'time'               => Carbon::now(),
         ];
     }
 
