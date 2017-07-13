@@ -23,6 +23,8 @@ $api->version('v1', function ($api)
 {
     $api->post('auth/login', 'Noox\Http\Controllers\API\AuthController@authenticate');
 
+    $api->get('auth/renew_token', 'Noox\Http\Controllers\API\AuthController@getToken');
+
     $api->post('auth/logout', 'Noox\Http\Controllers\API\AuthController@logout');
 
     $api->post('users', 'Noox\Http\Controllers\API\UserController@register');
@@ -93,6 +95,4 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
     $api->post('news/comment/{id}/report', 'Noox\Http\Controllers\API\NewsController@submitNewsCommentReport');
 
     $api->post('news/{id}/report', 'Noox\Http\Controllers\API\NewsController@submitReport');
-
-    $api->get('auth/renew_token', 'Noox\Http\Controllers\API\AuthController@getToken');
 });
