@@ -93,5 +93,32 @@ class NewsController extends Controller
             })
             ->make(true);
     }
+
+    /**
+     * Update the news.
+     * 
+     * @param  Illuminate\Http\Request
+     * @param  int
+     * @return Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        if (! $news = News::find($id)) {
+            return response(['message' => 'News not found.'], 422);
+        }
+
+        $validation = [
+            'title' => 'required|min:10',
+            'content' => 'required|min:400'
+        ];
+        $this->validate($request, $validation);
+
+        $news->title = $request->input('title');
+        $news->content = $request->input('content');
+        var_dump($request->input('content'));
+        $news->save();
+
+        return response(['message' => 'News successfully updated.']);
+    }
 }
 

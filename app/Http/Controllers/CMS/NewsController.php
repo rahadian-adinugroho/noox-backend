@@ -61,10 +61,10 @@ class NewsController extends Controller
      */
     public function view($id)
     {
-        if (! $news = News::find($id)) {
+        if (! $data = News::with(['source', 'category'])->find($id)) {
             abort(404);
         }
 
-        return $news;
+        return view('cms.news_details', compact('data'));
     }
 }

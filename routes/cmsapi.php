@@ -26,6 +26,8 @@ Route::put('/admin/{id?}', 'CMS\API\AdminController@update');
 
 Route::put('/user/{id}', 'CMS\API\UserController@update');
 
+Route::put('/news/{id}', 'CMS\API\NewsController@update');
+
 /*
 |--------------------------------------------------------------------------
 | Datatables API
