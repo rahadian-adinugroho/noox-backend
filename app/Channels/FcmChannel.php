@@ -49,6 +49,5 @@ class FcmChannel
         } else {
             $downstreamResponse = FCM::sendTo($settings['to'], $option, $fcmNotification, $data);
         }
-        \Log::debug($data);
     }
 }
