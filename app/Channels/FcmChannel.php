@@ -23,6 +23,10 @@ class FcmChannel
     {
         $settings = $notification->toFcm($notifiable);
 
+        if (! $this->isSettingsValid($settings, $notifiable, $notification)) {
+            return;
+        }
+
         $dataBuilder = new PayloadDataBuilder();
         $dataBuilder->addData(['id' => $notification->id, 'type' => get_class($notification)]);
         if (isset($settings['payload'])) {
@@ -48,6 +52,30 @@ class FcmChannel
             $topicResponse = FCM::sendToTopic($settings['to'], $option, $fcmNotification, $data);
         } else {
             $downstreamResponse = FCM::sendTo($settings['to'], $option, $fcmNotification, $data);
+            if (count($downstreamResponse->tokensToDelete()) > 0) {
+                FcmToken::whereIn('token', $downstreamResponse->tokensToDelete())->delete();
+            }
         }
+    }
+
+    /**
+     * Check the validity of the notification object.
+     *
+     * @param  array  $settings
+     * @param  \Illuminate\Notifications\Notifiable  $notifiable
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return boolean
+     */
+    protected function isSettingsValid($settings, $notifiable, $notification)
+    {
+        if (! is_array($settings['to']) || (count($settings['to']) < 1)) {
+            \Log::warning("User ({$notifiable->id}) has no FCM token.");
+            return false;
+        }
+        if (! isset($settings['title']) || ! isset($settings['body'])) {
+            \Log::error("FcmChannel: Notification {get_class($notification)} are missing title or body.");
+            return false;
+        }
+        return true;
     }
 }
