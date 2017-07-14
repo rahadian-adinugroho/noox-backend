@@ -22,6 +22,15 @@ class AppServiceProvider extends ServiceProvider
             'user'    => 'Noox\Models\User',
             'comment' => 'Noox\Models\NewsComment',
             ]);
+
+        app('Dingo\Api\Http\RateLimit\Handler')->setRateLimiter(function ($app, $request) {
+            if (! $identifier = $request->header('Authorization')) {
+                $identifier = $request->ip();
+            }
+            return sha1(implode('|', array_merge(
+                $request->route()->methods(), [$request->route()->domain(), $request->route()->uri(), $identifier]
+            )));
+        });
     }
 
     /**

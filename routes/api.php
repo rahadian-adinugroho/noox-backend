@@ -82,7 +82,13 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 
     $api->get('news/personalised', 'Noox\Http\Controllers\API\NewsController@getPersonalisedNews');
 
-    $api->post('news/{id}/like', 'Noox\Http\Controllers\API\NewsController@submitLike');
+    $api->post('news/{id}/like', [
+        'uses' => 'Noox\Http\Controllers\API\NewsController@submitLike',
+        'controller' => 'Noox\Http\Controllers\API\NewsController@submitLike',
+        'middleware' => 'api.throttle',
+        'limit' => 20,
+        'expires' => 1, // in minutes
+    ]);
 
     $api->delete('news/{id}/like', 'Noox\Http\Controllers\API\NewsController@deleteLike');
 
@@ -90,7 +96,13 @@ $api->version('v1', ['middleware' => 'api.auth'], function ($api)
 
     $api->post('news/comment/{id}/reply', 'Noox\Http\Controllers\API\NewsController@submitCommentReply');
 
-    $api->post('news/comment/{id}/like', 'Noox\Http\Controllers\API\NewsController@submitCommentLike');
+    $api->post('news/comment/{id}/like', [
+        'uses' => 'Noox\Http\Controllers\API\NewsController@submitCommentLike',
+        'controller' => 'Noox\Http\Controllers\API\NewsController@submitCommentLike',
+        'middleware' => 'api.throttle',
+        'limit' => 20,
+        'expires' => 1, // in minutes
+    ]);
 
     $api->delete('news/comment/{id}/like', 'Noox\Http\Controllers\API\NewsController@deleteCommentLike');
 
