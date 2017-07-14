@@ -44,6 +44,8 @@ Route::get('/users/ranking', 'CMS\API\UserController@ranking');
 
 Route::get('/news', 'CMS\API\NewsController@index');
 
+Route::get('/news/{id}/reports', 'CMS\API\NewsController@newsReports');
+
 Route::get('/news/reported', 'CMS\API\NewsController@reported');
 
 Route::get('/news/deleted', 'CMS\API\NewsController@deleted');

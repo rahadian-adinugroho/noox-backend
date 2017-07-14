@@ -1,7 +1,12 @@
 @extends('layouts.admin')
 
-@section('pagespecificstyles')
+@section('pagespecificmetas')
+<meta name="context-id" content="{{ $data->id }}">
+@stop
 
+@section('pagespecificstyles')
+<!-- datatables css-->
+<link href="{{ asset('admin/css/tables.css') }}" rel="stylesheet">
 @stop
 
 @section('content')
@@ -41,7 +46,7 @@
           </div>
           <div class="x_content">
             <br>
-            <form id="data-form" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
+            <form id="data-form" method="POST" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
               <div class="form-group {{ $errors->has('title') ? ' has-error' : '' }}">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="title">Title <span class="required">*</span>
                 </label>
@@ -89,10 +94,49 @@
               <div class="ln_solid"></div>
               <div class="form-group">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <button type="" id="edit-button" class="btn btn-success">Update</button>
+                  <button type="submit" id="edit-button" class="btn btn-success">Update</button>
+                  <a href="{{ $data->url }}" target="_blank"><button type="button" class="btn btn-info">View Original</button></a>
                 </div>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Reports</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <table id="noox-news-reports" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Content</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Content</th>
+                        <th>Actions</th>
+                    </tr>
+                </tfoot>
+            </table>
           </div>
         </div>
       </div>
@@ -110,8 +154,7 @@
   let editor = null;
 
   $( document ).ready(function (e) {
-    pathname = window.location.pathname.split('/');
-    targetId  = parseInt(pathname[pathname.length - 1]);
+    targetId = getContextId();
 
     if (isNaN(targetId)) {targetId = '';}
 
@@ -171,5 +214,31 @@
       errContainer.html(errorMsgs);
     }
   }
+</script>
+
+<script type="text/javascript">
+  $( document ).ready(function (e) {
+    attachDT('#noox-news-reports', 'news/' + getContextId() +'/reports', 
+      {columns: [
+              { data: 'id' },
+              { data: 'reporter.name' },
+              { data: 'created_at' },
+              { data: 'content' },
+              { data: 'action', sortable: false, searchable: false }
+          ],
+      columnDefs: [ 
+              {"className": "center", "targets": "_all"},
+              {
+                  targets: [1, 2],
+                  width: "20%"
+              },
+              {
+                  targets: 3,
+                  width: "50%"
+              },
+          ]
+      }
+    );
+  });
 </script>
 @stop

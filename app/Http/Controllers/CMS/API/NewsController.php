@@ -94,6 +94,23 @@ class NewsController extends Controller
             ->make(true);
     }
 
+    public function newsReports($id)
+    {
+        if (! $news = News::find($id)) {
+            return response(['message' => 'News not found.'], 422);
+        }
+
+        $reports = $news->reports()->select(['id', 'reporter_id', \DB::raw('LEFT(`content`, 100) as `content`'), 'status_id', 'reportable_type', 'created_at'])
+        ->with(['reporter' => function($q){
+            $q->select(['id', 'name']);
+        }, 'status']);
+
+        return Datatables::of($reports)->addColumn('action', function ($report) {
+                return '<a href="'.route('cms.report.details', [$report->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
+            })
+            ->make(true);
+    }
+
     /**
      * Update the news.
      * 

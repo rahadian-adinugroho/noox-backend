@@ -61,7 +61,7 @@ class NewsController extends Controller
      */
     public function view($id)
     {
-        if (! $data = News::with(['source', 'category'])->find($id)) {
+        if (! $data = News::with(['source', 'category'])->withCount(['reports', 'comments'])->find($id)) {
             abort(404);
         }
 
