@@ -19,7 +19,11 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="jwt" content="{{ session('JWTToken') }}">
 
+  <!-- page specific metas -->
+  @yield('pagespecificmetas')
+
   <link href="{{ asset('admin/css/app.css') }}" rel="stylesheet">
+  <link href="{{ asset('admin/css/sweetalert2.css') }}" rel="stylesheet">
   <!-- page specific styles -->
   @yield('pagespecificstyles')
 

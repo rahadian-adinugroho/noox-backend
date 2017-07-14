@@ -254,6 +254,45 @@ if (typeof NProgress != 'undefined') {
     });
 }
 
+/**
+ * Uppercase the given string.
+ * 
+ * @param  string string
+ * @return string
+ */
+window.ucFirst = function (string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+/**
+ * Get context id meta content.
+ * 
+ * @param  {Boolean} isInt
+ * @return vary
+ */
+window.getContextId = function (isInt=true) {
+    let container = $('meta[name="context-id"]');
+    if (container.length < 1) {
+        console.error('Context ID not found.');
+        return null;
+    }
+
+    let contextId = container.prop('content');
+    if (contextId.length < 1) {
+        console.error('Context ID is empty.');
+        if (isInt) {return NaN} else {return null};
+    }
+
+    if (isInt) {
+        contextId = parseInt(contextId);
+        if (isNaN(contextId)) {
+            console.error('Cannot parse int from context ID.');
+            return NaN;
+        }
+    }
+    return contextId;
+}
+
 window.handleNotification = function (notification) {
     if (/NewsReportBeyondThreshold/i.test(notification.type)) {
         var val = parseInt($('#noox-notification-badge').html());
