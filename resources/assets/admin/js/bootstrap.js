@@ -13,7 +13,11 @@ try {
     require('bootstrap-sass');
     
     require('fastclick');
+
     Noty = require('noty');
+
+    window.swal = require('sweetalert2');
+
     NProgress = require('nprogress');
 
     require('parsleyjs');
@@ -52,3 +56,5 @@ if (jwt && (jwt.content.length > 0)) {
 }
 
 require('./helper');
+
+require('./dt-helper');
