@@ -13,9 +13,7 @@
     "axios": "^0.15.3",
     "bootstrap-sass": "^3.3.7",
     "cross-env": "^3.2.3",
-    "datatables.net": "^1.10.15",
     "datatables.net-bs": "^1.10.15",
-    "datatables.net-responsive": "^2.1.1",
     "datatables.net-responsive-bs": "^2.1.1",
     "font-awesome": "^4.7.0",
     "fastclick": "^1.0.6",
@@ -25,6 +23,7 @@
     "noty": "^3.1.0",
     "nprogress": "^0.2.0",
     "parsleyjs": "^2.7.2",
+    "sweetalert2": "^6.6.6",
     "vue": "^2.1.10"
   }
 }
