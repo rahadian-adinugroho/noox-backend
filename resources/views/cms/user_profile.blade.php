@@ -1,5 +1,9 @@
 @extends('layouts.admin')
 
+@section('pagespecificmetas')
+<meta name="context-id" content="{{ $user->id }}">
+@stop
+
 @section('pagespecificstyles')
 
 @stop
@@ -108,8 +112,7 @@
   let userId = null;
 
   $( document ).ready(function (e) {
-    pathname = window.location.pathname.split('/');
-    userId  = parseInt(pathname[pathname.length - 1]);
+    userId = getContextId();
 
     if (isNaN(userId)) {userId = '';}
   });
