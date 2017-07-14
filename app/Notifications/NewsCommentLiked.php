@@ -24,6 +24,7 @@ class NewsCommentLiked extends Notification implements ShouldQueue
      */
     public function __construct($comment, $liker)
     {
+        $this->time    = Carbon::now();
         $this->comment = $comment;
         $this->liker   = $liker;
     }
@@ -54,7 +55,7 @@ class NewsCommentLiked extends Notification implements ShouldQueue
         'liker_name'         => $this->liker->name,
         'news_title'         => $this->comment->news->title,
         'news_category_name' => $this->comment->news->getCategoryName(),
-        'time'               => Carbon::now(),
+        'time'               => $this->time,
         ];
     }
 
