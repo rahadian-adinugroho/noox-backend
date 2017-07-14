@@ -75,6 +75,9 @@ class NewsAnalyzerController extends BaseController
             \Log::critical('NewsAnalyzerController: Article extraction from URL are not available in Windows environment.');
             return null;
         }
+        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+            return null;
+        }
         $shDir = config('noox.news_extractor_dir');
         $shRes = explode("\n", shell_exec("cd {$shDir} && python3 nooxcrawler.py '{$url}'"));
         if (! $article = json_decode($shRes[0])) {
