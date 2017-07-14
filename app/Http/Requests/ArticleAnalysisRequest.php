@@ -24,9 +24,9 @@ class ArticleAnalysisRequest extends FormRequest
     public function rules()
     {
         return [
-            'src'     => 'nullable|url',
+            'src'     => 'required_without:article|url',
             'title'   => 'nullable',
-            'article' => 'required',
+            'article' => 'required_without:src',
         ];
     }
 }

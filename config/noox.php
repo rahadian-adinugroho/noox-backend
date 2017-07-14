@@ -11,7 +11,18 @@ return [
     | Format: http://10.10.10.10:10000
     */
     
-    'analyzer_base_url' => env('ANALYZER_BASE_URL', 'null'),
+    'analyzer_base_url' => env('NOOX_ANALYZER_BASE_URL', 'null'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | News Extractor Script Location
+    |--------------------------------------------------------------------------
+    |
+    | The directory of which the Python script of site scrapper is located.
+    | This command will be executed: shell_exec('cd {config('noox.news_extractor_dir')} && py nooxcrawler.py {$url}')
+    */
+    
+    'news_extractor_dir' => env('NOOX_NEWS_EXTRACTOR_DIR'),
 
     /*
     |--------------------------------------------------------------------------
