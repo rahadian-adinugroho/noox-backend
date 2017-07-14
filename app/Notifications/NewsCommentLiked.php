@@ -13,9 +13,23 @@ class NewsCommentLiked extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    /**
+     * liked comment
+     * @var \Noox\Models\NewsComment
+     */
     protected $comment;
 
+    /**
+     * liker of the comment
+     * @var \Noox\Models\User
+     */
     protected $liker;
+
+    /**
+     * notification generation date
+     * @var \Carbon\Carbon
+     */
+    protected $time;
 
     /**
      * Create a new notification instance.
