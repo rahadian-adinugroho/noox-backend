@@ -221,5 +221,65 @@ class NewsController extends Controller
 
         return response(['message' => 'News successfully restored.']);
     }
+
+    /**
+     * Return the list of comment replies.
+     *
+     * @param  int $id
+     * @return Illuminate\Http\Response
+     */
+    public function commentReplies($id)
+    {
+        if (! $comment = NewsComment::find($id)) {
+            return response(['message' => 'Comment not found.'], 422);
+        }
+
+        // in case of table name change, we use table name from model
+        $tableName = (new NewsComment)->getTable();
+        $replies = $comment->replies()->select([
+        \DB::raw('`'. $tableName .'`' . '.`id`'),
+        'news_id',
+        'user_id',
+        \DB::raw('LEFT(`content`, 100) as `content`'),
+        \DB::raw('`'. $tableName .'`' . '.`created_at`')])
+        ->with(['author' => function($q){
+            $q->select(['id', 'name']);
+        }, 'news' => function($q){
+            $q->select(['id', 'title']);
+        }])
+        ->withCount(['reports', 'replies']);
+
+        return Datatables::of($replies)->addColumn('action', function ($comment) {
+                $actionHtml = '<a href="'.route('cms.news.comment.details', [$comment->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
+                if ($comment->reports_count > 0) {
+                    $actionHtml . '<a href="'.route('cms.news.comment.reports', [$comment->id]).'" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-edit"></i> View Reports</a>';
+                }
+                return $actionHtml;
+            })
+            ->make(true);
+    }
+
+    /**
+     * Restore the list of comment reports.
+     * 
+     * @param  int $id
+     * @return Illuminate\Http\Response
+     */
+    public function commentReports($id)
+    {
+        if (! $comment = NewsComment::find($id)) {
+            return response(['message' => 'Comment not found.'], 422);
+        }
+
+        $reports = $comment->reports()->select(['id', 'reporter_id', \DB::raw('LEFT(`content`, 100) as `content`'), 'status_id', 'reportable_type', 'created_at'])
+        ->with(['reporter' => function($q){
+            $q->select(['id', 'name']);
+        }, 'status']);
+
+        return Datatables::of($reports)->addColumn('action', function ($report) {
+                return '<a href="'.route('cms.report.details', [$report->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
+            })
+            ->make(true);
+    }
 }
 

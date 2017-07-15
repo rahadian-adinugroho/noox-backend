@@ -3,6 +3,7 @@
 namespace Noox\Http\Controllers\CMS;
 
 use Noox\Models\News;
+use Noox\Models\NewsComment;
 use Illuminate\Http\Request;
 use Noox\Http\Controllers\Controller;
 
@@ -54,7 +55,7 @@ class NewsController extends Controller
     }
 
     /**
-     * View the details of the requested admin.
+     * View the details of the requested news.
      * 
      * @param  integer $id
      * @return Illuminate\Http\Response
@@ -66,5 +67,20 @@ class NewsController extends Controller
         }
 
         return view('cms.news_details', compact('data'));
+    }
+
+    /**
+     * View the details of the requested comment.
+     * 
+     * @param  integer $id
+     * @return Illuminate\Http\Response
+     */
+    public function viewComment($id)
+    {
+        if (! $data = NewsComment::with(['author', 'news'])->find($id)) {
+            abort(404);
+        }
+
+        return view('cms.comment_details', compact('data'));
     }
 }

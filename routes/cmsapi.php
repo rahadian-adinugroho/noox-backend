@@ -60,6 +60,10 @@ Route::get('/news/deleted', 'CMS\API\NewsController@deleted');
 
 Route::get('/news/comments/reports', 'CMS\API\NewsController@reportedComments');
 
+Route::get('/news/comment/{id}/replies', 'CMS\API\NewsController@commentReplies');
+
+Route::get('/news/comment/{id}/reports', 'CMS\API\NewsController@commentReports');
+
 Route::get('/reports', 'CMS\API\ReportController@index');
 
 Route::get('/admins', 'CMS\API\AdminController@index');
