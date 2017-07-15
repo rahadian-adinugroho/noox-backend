@@ -30,7 +30,7 @@ class ReportsTableSeeder extends Seeder
         ];
         foreach ($entries as $key => $entry) {
             $data                  = new Report;
-            $data->reporter_id         = $entry['reporter_id'];
+            $data->reporter_id     = $entry['reporter_id'];
             $data->content         = $entry['content'];
             $data->status_id       = $entry['status_id'];
             $data->reportable_id   = $entry['reportable_id'];

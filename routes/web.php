@@ -63,3 +63,4 @@ Route::get('private', function(){
     event(new \Noox\Events\CommentRepliedEvent($parent, $res));
     return 'comment fired!';
 });
+

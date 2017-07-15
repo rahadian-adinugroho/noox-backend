@@ -6,11 +6,14 @@ use Cache;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use JWTAuth;
+use Notification;
+use Noox\Models\Admin;
 use Noox\Models\News;
 use Noox\Models\NewsComment;
 use Noox\Events\CommentRepliedEvent;
 use Noox\Notifications\NewsCommentReplied;
 use Noox\Notifications\NewsCommentLiked;
+use Noox\Notifications\NewsReportBeyondThreshold;
 use Noox\Events\CommentLikedEvent;
 use Noox\Events\NewsReportedEvent;
 
@@ -632,6 +635,9 @@ class NewsController extends BaseController
             $reporter->experience += $reporter->getLevel() * 2;
             $reporter->save();
 
+            if ($news->reports()->count() > config('noox.news_report_threshold')) {
+                Notification::send(Admin::all(), new NewsReportBeyondThreshold($news));
+            }
             return $this->response->created(null, ['status' => true, 'message' => 'Report submitted.']);
         }
         return $this->response->errorInternal('Unable to save your report at this moment.');

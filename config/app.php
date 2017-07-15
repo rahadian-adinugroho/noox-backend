@@ -172,6 +172,7 @@ return [
         * Additional Providers
         */
         Mpociot\ApiDoc\ApiDocGeneratorServiceProvider::class,
+        Yajra\Datatables\DatatablesServiceProvider::class,
         LaravelFCM\FCMServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Dingo\Api\Provider\LaravelServiceProvider::class,
@@ -212,6 +213,7 @@ return [
         'Cookie' => Illuminate\Support\Facades\Cookie::class,
         'Crypt' => Illuminate\Support\Facades\Crypt::class,
         'DB' => Illuminate\Support\Facades\DB::class,
+        'Datatables' => Yajra\Datatables\Facades\Datatables::class,
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
         'Event' => Illuminate\Support\Facades\Event::class,
         'FCM'      => LaravelFCM\Facades\FCM::class,

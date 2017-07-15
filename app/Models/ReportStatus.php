@@ -14,4 +14,33 @@ class ReportStatus extends Model
     {
         return $this->hasMany('Noox\Models\Report', 'status_id');
     }
+
+    /**
+     * Get ID of given status name.
+     *
+     * @param  string $name
+     * @return int
+     */
+    public static function getId($name)
+    {
+        if (\Cache::has('report_statuses')) {
+
+            $statuses = \Cache::get('report_statuses');
+
+        } else {
+            $res = self::all();
+
+            $statuses = array();
+            foreach ($res as $key => $data) {
+                $statuses[$data->name] = $data->id;
+            }
+            \Cache::put('report_statuses', $statuses, \Carbon\Carbon::now()->addDay());
+        }
+
+        if (isset($statuses[$name])) {
+            return $statuses[$name];
+        } else {
+            return null;
+        }
+    }
 }

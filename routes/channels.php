@@ -11,10 +11,10 @@
 |
 */
 
-Broadcast::channel('Noox.User.{id}', function ($user, $id) {
+Broadcast::channel('Noox.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('Noox.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('Noox.Models.Admin.{id}', function ($user, $id) {
+    return ((int) $user->role > 0) && ((int) $user->id === (int) $id);
 });

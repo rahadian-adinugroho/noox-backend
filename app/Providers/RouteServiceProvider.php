@@ -39,7 +39,9 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        //
+        $this->mapCmsApiRoutes();
+
+        $this->mapCmsRoutes();
     }
 
     /**
@@ -69,5 +71,35 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * This is the route file for CMS.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapCmsRoutes()
+    {
+        Route::prefix('cms')
+             ->middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/cms.php'));
+    }
+
+    /**
+     * This is the route file for CMS API (Datatables, edit, etc.)
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapCmsApiRoutes()
+    {
+        Route::prefix('cms/api')
+             ->middleware('api')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/cmsapi.php'));
     }
 }
