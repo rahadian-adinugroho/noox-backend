@@ -57,7 +57,7 @@ $(document).ready(function() {
                 $SIDEBAR_MENU.find('li').removeClass('active active-sm');
                 $SIDEBAR_MENU.find('li ul').slideUp();
             }
-            
+
             $li.addClass('active');
 
             $('ul:first', $li).slideDown(function() {
@@ -91,7 +91,7 @@ $(document).ready(function() {
     }).parent().addClass('active');
 
     // recompute content when resizing
-    $(window).smartresize(function(){  
+    $(window).smartresize(function(){
         setContentHeight();
     });
 
@@ -114,15 +114,15 @@ $(document).ready(function() {
         var $BOX_PANEL = $(this).closest('.x_panel'),
             $ICON = $(this).find('i'),
             $BOX_CONTENT = $BOX_PANEL.find('.x_content');
-        
+
         // fix for some div with hardcoded fix class
         if ($BOX_PANEL.attr('style')) {
             $BOX_CONTENT.slideToggle(200, function(){
                 $BOX_PANEL.removeAttr('style');
             });
         } else {
-            $BOX_CONTENT.slideToggle(200); 
-            $BOX_PANEL.css('height', 'auto');  
+            $BOX_CONTENT.slideToggle(200);
+            $BOX_PANEL.css('height', 'auto');
         }
 
         $ICON.toggleClass('fa-chevron-up fa-chevron-down');
@@ -256,7 +256,7 @@ if (typeof NProgress != 'undefined') {
 
 /**
  * Uppercase the given string.
- * 
+ *
  * @param  string string
  * @return string
  */
@@ -266,7 +266,7 @@ window.ucFirst = function (string) {
 
 /**
  * Get context id meta content.
- * 
+ *
  * @param  {Boolean} isInt
  * @return vary
  */
@@ -291,6 +291,28 @@ window.getContextId = function (isInt=true) {
         }
     }
     return contextId;
+}
+
+/**
+ * Show confirmation dialogue using sweet alert.
+ *
+ * @param  {String} title
+ * @param  {String} text
+ * @param  callable confirmCallback
+ * @param  {String} type
+ * @param  callable cancelCallback
+ * @return void
+ */
+window.swalConfirm = function (confirmCallback, title='Are you sure?', text='Confirm the action.', type='warning', cancelCallback=function(){}){
+    swal({
+    title: title,
+    text: text,
+    type: type,
+    showCancelButton: true,
+    confirmButtonColor: '#337ab7',
+    cancelButtonColor: '#d9534f',
+    confirmButtonText: 'Yes'
+    }).then(confirmCallback, cancelCallback)
 }
 
 window.handleNotification = function (notification) {

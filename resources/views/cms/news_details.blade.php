@@ -96,9 +96,52 @@
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <button type="submit" id="edit-button" class="btn btn-success">Update</button>
                   <a href="{{ $data->url }}" target="_blank"><button type="button" class="btn btn-info">View Original</button></a>
+                  <button type="button" id="recycle-button" class="btn btn-{{ ($data->deleted_at) ? 'primary' : 'danger' }} {{ ($data->deleted_at) ? 'restore-button' : '' }}">{{ ($data->deleted_at) ? 'Restore' : 'Delete' }}</button>
                 </div>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Comments</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <table id="noox-comments" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Author</th>
+                        <th># Reports</th>
+                        <th># Replies</th>
+                        <th>Comment Content</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>ID</th>
+                        <th>Author</th>
+                        <th># Reports</th>
+                        <th># Replies</th>
+                        <th>Comment Content</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </tfoot>
+            </table>
           </div>
         </div>
       </div>
@@ -216,18 +259,111 @@
   }
 </script>
 
+<!-- delete button script -->
+<script type="text/javascript">
+  let delButton = $('#recycle-button');
+
+  function deleteNews() {
+    axios.delete(gCmsApiBase + '/news/' + targetId)
+    .then(function (response) {
+      delButton.toggleClass('restore-button', true);
+      delButton.addClass('btn-primary').removeClass('btn-danger');
+      delButton.html('Restore');
+      swal(
+        'Deleted!',
+        'News deleted!',
+        'success'
+      )
+    })
+    .catch(function (error) {
+      if (error.response.status === 422) {
+        swal(
+          'Error!',
+          'News already deleted!',
+          'error'
+        )
+      }
+    });
+  }
+
+  function restoreNews() {
+    axios.post(gCmsApiBase + '/news/' + targetId + '/restore')
+    .then(function (response) {
+      delButton.toggleClass('restore-button', false);
+      delButton.addClass('btn-danger').removeClass('btn-primary');
+      delButton.html('Delete');
+      swal(
+        'Restored!',
+        'News restored!',
+        'success'
+      )
+    })
+    .catch(function (error) {
+      if (error.response.status === 422) {
+        swal(
+          'Error!',
+          'News not deleted!',
+          'error'
+        )
+      }
+    });
+  }
+
+  delButton.on('click', function (e){
+    if (delButton.hasClass('restore-button')) {
+      swalConfirm(restoreNews, 'Restore this news?', 'The news will be searchable by the users.');
+    } else {
+      swalConfirm(deleteNews, 'Are you sure?', 'Deleted news can be accessed through the deleted news page.');
+    }
+  });
+</script>
+
+<!-- tables instantiation script -->
 <script type="text/javascript">
   $( document ).ready(function (e) {
-    attachDT('#noox-news-reports', 'news/' + getContextId() +'/reports', 
+    let contextId = getContextId();
+    /**
+     * Comment table.
+     */
+    attachDT('#noox-comments', 'news/' + contextId +'/comments', 
+        {columns: [
+                { data: 'id' },
+                { data: 'author.name' },
+                { data: 'reports_count', searchable: false },
+                { data: 'replies_count', searchable: false },
+                { data: 'content', searchable: false},
+                { data: 'created_at' },
+                { data: 'action', sortable: false, searchable: false }
+            ],
+        columnDefs: [ 
+              {
+                  targets: [0, 2, 3],
+                  width: "5%"
+              },
+              {
+                  targets: 1,
+                  width: "10%"
+              },
+              {
+                  targets: 4,
+                  width: "50%"
+              }
+          ]
+        }
+    );
+
+    /**
+     * Reports table.
+     */
+    attachDT('#noox-news-reports', 'news/' + contextId +'/reports', 
       {columns: [
               { data: 'id' },
               { data: 'reporter.name' },
               { data: 'created_at' },
-              { data: 'content' },
+              { data: 'content', searchable: false},
               { data: 'action', sortable: false, searchable: false }
           ],
       columnDefs: [ 
-              {"className": "center", "targets": "_all"},
               {
                   targets: [1, 2],
                   width: "20%"
@@ -235,7 +371,7 @@
               {
                   targets: 3,
                   width: "50%"
-              },
+              }
           ]
       }
     );

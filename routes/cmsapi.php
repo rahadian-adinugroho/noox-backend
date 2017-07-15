@@ -28,6 +28,10 @@ Route::put('/user/{id}', 'CMS\API\UserController@update');
 
 Route::put('/news/{id}', 'CMS\API\NewsController@update');
 
+Route::delete('/news/{id}', 'CMS\API\NewsController@delete');
+
+Route::post('/news/{id}/restore', 'CMS\API\NewsController@restore');
+
 /*
 |--------------------------------------------------------------------------
 | Datatables API
@@ -43,6 +47,8 @@ Route::get('/users/reported', 'CMS\API\UserController@reported');
 Route::get('/users/ranking', 'CMS\API\UserController@ranking');
 
 Route::get('/news', 'CMS\API\NewsController@index');
+
+Route::get('/news/{id}/comments', 'CMS\API\NewsController@newsComments');
 
 Route::get('/news/{id}/reports', 'CMS\API\NewsController@newsReports');
 
