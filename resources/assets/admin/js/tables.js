@@ -4,7 +4,7 @@
  * 
  * @type {Dom}
  */
-let jwt = document.head.querySelector('meta[name="jwt"]');
+var jwt = document.head.querySelector('meta[name="jwt"]');
 
 /**
  * Automatically instantiate DataTables object in the target element.

@@ -385,7 +385,7 @@ function notifGenerator(notification) {
 // Init laravel-echo
 import Echo from 'laravel-echo';
 
-let jwt = document.head.querySelector('meta[name="jwt"]');
+var jwt = document.head.querySelector('meta[name="jwt"]');
 
 if ((typeof io !== "undefined") && jwt && (jwt.content.length > 0)) {
     window.Echo = new Echo({

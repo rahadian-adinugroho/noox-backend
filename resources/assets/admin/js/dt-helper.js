@@ -7,7 +7,7 @@
  * 
  * @type {Dom}
  */
-let jwt = document.head.querySelector('meta[name="jwt"]');
+var jwt = document.head.querySelector('meta[name="jwt"]');
 
 /**
  * Attach DataTable to a given element.

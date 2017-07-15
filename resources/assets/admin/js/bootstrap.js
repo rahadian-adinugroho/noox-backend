@@ -47,7 +47,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 // }
 
-let jwt = document.head.querySelector('meta[name="jwt"]');
+var jwt = document.head.querySelector('meta[name="jwt"]');
 
 if (jwt && (jwt.content.length > 0)) {
     window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + jwt.content;
