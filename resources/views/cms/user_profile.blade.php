@@ -101,6 +101,44 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Reports</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <table id="noox-user-reports" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Content</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Content</th>
+                        <th>Actions</th>
+                    </tr>
+                </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 @endsection
@@ -168,5 +206,36 @@
       errContainer.html(errorMsgs);
     }
   }
+</script>
+
+<!-- tables script -->
+<script type="text/javascript">
+  $( document ).ready(function (e) {
+    let contextId = getContextId();
+
+    /**
+     * Reports table.
+     */
+    attachDT('#noox-user-reports', 'user/' + contextId +'/reports', 
+      {columns: [
+              { data: 'id' },
+              { data: 'reporter.name' },
+              { data: 'created_at' },
+              { data: 'content', searchable: false},
+              { data: 'action', sortable: false, searchable: false }
+          ],
+      columnDefs: [ 
+              {
+                  targets: [1, 2],
+                  width: "20%"
+              },
+              {
+                  targets: 3,
+                  width: "50%"
+              }
+          ]
+      }
+    );
+  });
 </script>
 @stop

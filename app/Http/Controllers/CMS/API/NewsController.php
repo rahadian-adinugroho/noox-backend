@@ -43,8 +43,7 @@ class NewsController extends Controller
             ->has('reports');
 
         return Datatables::of($news)->addColumn('action', function ($news) {
-                return '<a href="'.route('cms.news.details', [$news->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>'
-                        .'<a href="'.route('cms.news.reports', [$news->id]).'" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-edit"></i> View Reports</a>';
+                return '<a href="'.route('cms.news.details', [$news->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
             })
             ->make(true);
     }
@@ -88,8 +87,7 @@ class NewsController extends Controller
         ->withCount('reports');
 
         return Datatables::of($comments)->addColumn('action', function ($comment) {
-                return '<a href="'.route('cms.news.comment.details', [$comment->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>'
-                        .'<a href="'.route('cms.news.comment.reports', [$comment->id]).'" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-edit"></i> View Reports</a>';
+                return '<a href="'.route('cms.news.comment.details', [$comment->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
             })
             ->make(true);
     }

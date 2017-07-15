@@ -39,8 +39,30 @@ class UserController extends Controller
         $users = User::select(['id', 'name', 'email'])->withCount('reports')->has('reports');
 
         return Datatables::of($users)->addColumn('action', function ($user) {
-                return '<a href="'.route('cms.user.profile', [$user->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>'
-                        .'<a href="'.route('cms.user.reports', [$user->id]).'" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-edit"></i> View Reports</a>';
+                return '<a href="'.route('cms.user.profile', [$user->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
+            })
+            ->make(true);
+    }
+
+    /**
+     * Restore the list of user reports.
+     * 
+     * @param  int $userId
+     * @return Illuminate\Http\Response
+     */
+    public function reports($userId)
+    {
+        if (! $user = User::find($userId)) {
+            return response(['message' => 'Comment not found.'], 422);
+        }
+
+        $reports = $user->reports()->select(['id', 'reporter_id', \DB::raw('LEFT(`content`, 100) as `content`'), 'status_id', 'reportable_type', 'created_at'])
+        ->with(['reporter' => function($q){
+            $q->select(['id', 'name']);
+        }, 'status']);
+
+        return Datatables::of($reports)->addColumn('action', function ($report) {
+                return '<a href="'.route('cms.report.details', [$report->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
             })
             ->make(true);
     }
