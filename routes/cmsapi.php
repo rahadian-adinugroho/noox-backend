@@ -32,6 +32,8 @@ Route::delete('/news/{id}', 'CMS\API\NewsController@delete');
 
 Route::post('/news/{id}/restore', 'CMS\API\NewsController@restore');
 
+Route::put('/report/{id}', 'CMS\API\ReportController@update');
+
 /*
 |--------------------------------------------------------------------------
 | Datatables API

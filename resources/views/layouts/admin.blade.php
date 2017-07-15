@@ -44,7 +44,7 @@
       <div class="col-md-3 left_col">
         <div class="left_col scroll-view">
           <div class="navbar nav_title" style="border: 0;">
-            <a href="{{ url('admin') }}" class="site_title"><span>{{ config('app.name', 'Noox') }}</span></a>
+            <a href="{{ route('admin.dashboard') }}" class="site_title"><span>{{ config('app.name', 'Noox') }}</span></a>
           </div>
 
           <div class="clearfix"></div>

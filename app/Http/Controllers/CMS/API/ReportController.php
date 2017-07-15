@@ -4,6 +4,7 @@ namespace Noox\Http\Controllers\CMS\API;
 
 use Datatables;
 use Noox\Models\Report;
+use Noox\Models\ReportStatus;
 use Illuminate\Http\Request;
 use Noox\Http\Controllers\Controller;
 
@@ -30,5 +31,28 @@ class ReportController extends Controller
                 return '<a href="'.route('cms.report.details', [$report->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
             })
             ->make(true);
+    }
+
+    public function update(Request $request, $id)
+    {
+        if (! $report = Report::with(['status'])->find($id)) {
+            return response(['message' => 'Report not found.'], 422);
+        }
+        if ($report->status->name === 'solved' || $report->status->name === 'approved') {
+            return response(['message' => 'The current report status is already final.'], 422);
+        }
+        if ($report->status->name === 'investigating' || $report->status->name === 'closed') {
+            if ($request->input('status') === 'open') {
+                return response(['message' => 'Not allowed to update to this status.'], 403);
+            }
+        }
+        if (! $newStatusId = ReportStatus::getId($request->input('status'))) {
+            return response(['message' => 'Invalid status name.'], 422);
+        }
+
+        $report->status_id = $newStatusId;
+        $report->save();
+
+        return response(['message' => 'Report status successfully updated.']);
     }
 }

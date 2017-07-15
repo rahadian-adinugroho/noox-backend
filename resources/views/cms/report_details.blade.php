@@ -46,12 +46,12 @@
           </div>
           <div class="x_content">
             <br>
-            <form id="data-form" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
+            <form id="data-form" class="form-horizontal form-label-left" novalidate="">
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="reporter-name">Reporter
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <input type="text" id="reporter-name" name="reporter-name" value="{{ $data->reporter->name }}" required="required" minlength="3" class="form-control col-md-7 col-xs-12" readonly>
+                  <input type="text" id="reporter-name" name="reporter-name" value="{{ $data->reporter->name }}" required="required" class="form-control col-md-7 col-xs-12" readonly>
                 </div>
               </div>
               <div class="form-group">
@@ -59,6 +59,13 @@
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <input type="date" id="date" name="date" value="{{ $data->created_at->format('Y-m-d') }}" required="required" class="form-control col-md-7 col-xs-12" readonly>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="reported-type">Reported Type
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input type="text" id="reported-type" name="reported-type" value="{{ ucfirst($data->reportable_type) }}" required="required" class="form-control col-md-7 col-xs-12" readonly>
                 </div>
               </div>
               <div class="form-group">
@@ -90,9 +97,7 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Content
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <textarea id="content" name="content" class="form-control col-md-7 col-xs-12" required="required" disabled>
-                  {{ $data->content }}
-                  </textarea>
+                  <textarea id="content" name="content" class="form-control col-md-7 col-xs-12" required="required" disabled>{{ $data->content }}</textarea>
                 </div>
               </div>
               <div class="ln_solid"></div>
@@ -102,7 +107,7 @@
                   <a href="{{ route('cms.news.details', $data->reportable_id) }}"><button type="button" id="edit-button" class="btn btn-primary">View Reported Item</button></a>
                   @elseif ($data->reportable_type == 'user')
                   <a href="{{ route('cms.user.profile', $data->reportable_id) }}"><button type="button" id="edit-button" class="btn btn-primary">View Reported Item</button></a>
-                  @else 
+                  @else
                   <a href="{{ route('cms.news.comment.details', $data->reportable_id) }}"><button type="button" id="edit-button" class="btn btn-primary">View Reported Item</button></a>
                   @endif
                 </div>
@@ -127,18 +132,7 @@
     targetId   = getContextId();
     currentStatus = $('#status input[checked]').val();
 
-    if (currentStatus === 'solved' || currentStatus === 'approved' || currentStatus === 'closed') {
-      if (currentStatus === 'closed') {
-        elements = $('#status label input[type="radio"]:not([value="closed"]):not([value="solved"]):not([value="approved"])');
-      } else {
-        elements = $('#status label input[type="radio"]:not([value="solved"]):not([value="approved"])');
-      }
-
-      elements.each(function (i, el){
-        $(el).attr('disabled', true);
-        $(el).parent().attr('disabled', true);
-      })
-    }
+    updateDisabledButton();
   });
 
   $('#status label').on('click', function (e){
@@ -148,12 +142,7 @@
       return undefined;
     }
 
-    if (currentStatus === 'investigating' && status === 'open') {
-      nopeAlert();
-      return undefined;
-    }
-    if (currentStatus === 'closed' && (status === 'open' || status === 'investigating')) {
-      nopeAlert();
+    if ((currentStatus === 'investigating' || currentStatus === 'closed') && status === 'open') {
       return undefined;
     }
     if (currentStatus === 'solved' || currentStatus === 'approved') {
@@ -175,15 +164,71 @@
       console.error('This status is unavailable for news.');
       return undefined;
     }
+    if (type !== 'news' && status === 'approved') {
+      console.error('This status is unavailable for this item.');
+      return undefined;
+    }
 
     if (type === 'news' && status === 'approved') {
       swalConfirm(function (c) {
+
         axios.put(gCmsApiBase + '/report/' + targetId, {status: 'approved'})
-      }, 'Attention!', 'Deleting the news will set all reports for this particular news to approved. Delete the news instead of updating the report status!');
+        .then(function (response) {
+          swal('Success!', 'Status updated!', 'success');
+          $('#status input').attr('checked', false);
+          $('#status input[value="'+ status +'"]').attr('checked', true);
+          updateDisabledButton();
+        })
+        .catch(function (error) {
+          swal('Error!', 'Failed to update the status!', 'error');
+        });
+
+      }, 'Attention!', 'Deleting the news will set all reports for this particular news to approved. It is recommended to delete the news instead of updating the report status. Continue?');
     } else {
       swalConfirm(function (c) {
+
         axios.put(gCmsApiBase + '/report/' + targetId, {status: status})
+        .then(function (response) {
+          swal('Success!', 'Status updated!', 'success');
+          $('#status input').attr('checked', false);
+          $('#status input[value="'+ status +'"]').attr('checked', true);
+          updateDisabledButton();
+        })
+        .catch(function (error) {
+          swal('Error!', 'Failed to update the status!', 'error');
+        });
+
       }, 'Are you sure?', 'Once updated, the status cannot be reverted to previous status.', 'question');
+    }
+  }
+
+  function updateDisabledButton() {
+    currentStatus = $('#status input[checked]').val();
+
+    $('#status label input[type="radio"]').each(function (i, el){
+        $(el).attr('disabled', false);
+        $(el).parent().attr('disabled', false);
+    });
+
+    if (currentStatus === 'solved' || currentStatus === 'approved' || currentStatus === 'closed' || currentStatus === 'investigating') {
+      switch (currentStatus) {
+        case 'investigating':
+          elements = $('#status label input[type="radio"]:not([value="investigating"]):not([value="closed"]):not([value="solved"]):not([value="approved"])');
+          break;
+
+        case 'closed':
+          elements = $('#status label input[type="radio"]:not([value="investigating"]):not([value="closed"]):not([value="solved"]):not([value="approved"])');
+          break;
+
+        default:
+          elements = $('#status label input[type="radio"]:not([value="solved"]):not([value="approved"])');
+          break;
+      }
+
+      elements.each(function (i, el){
+        $(el).attr('disabled', true);
+        $(el).parent().attr('disabled', true);
+      })
     }
   }
 
