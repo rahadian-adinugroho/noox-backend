@@ -45,22 +45,7 @@ class NewsReportBeyondThreshold extends Notification
         return [
             'title'      => 'News report',
             'text'       => 'News "' . $this->news->title . '" total reports are beyond permitted threshold.',
-            'target_url' => 'news/'. $this->news->id .'/reports',
-        ];
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
-    public function toDatabase($notifiable)
-    {
-        return [
-            'title'      => 'News report',
-            'text'       => 'News "' . $this->news->title . '" total reports are beyond permitted threshold.',
-            'target_url' => 'news/'. $this->news->id .'/reports', 
+            'target_url' => 'news/'. $this->news->id,
         ];
     }
 }
