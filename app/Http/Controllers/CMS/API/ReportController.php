@@ -7,6 +7,7 @@ use Noox\Models\Report;
 use Noox\Models\ReportStatus;
 use Illuminate\Http\Request;
 use Noox\Http\Controllers\Controller;
+use Noox\Notifications\NewsReportApprovedNotification;
 
 class ReportController extends Controller
 {
@@ -52,6 +53,10 @@ class ReportController extends Controller
 
         $report->status_id = $newStatusId;
         $report->save();
+
+        if (($report->reportable_type == 'news') && ($report->reporter->getSetting('report_approved_notif') == '1')) {
+           $report->reporter->notify(new NewsReportApprovedNotification($report->reportable));
+        }
 
         return response(['message' => 'Report status successfully updated.']);
     }
