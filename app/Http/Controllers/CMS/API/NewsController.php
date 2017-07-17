@@ -3,10 +3,15 @@
 namespace Noox\Http\Controllers\CMS\API;
 
 use Datatables;
+use Notification;
 use Noox\Models\News;
+use Noox\Models\Report;
+use Noox\Models\ReportStatus;
 use Noox\Models\NewsComment;
+use Noox\Models\User;
 use Illuminate\Http\Request;
 use Noox\Http\Controllers\Controller;
+use Noox\Notifications\NewsReportApprovedNotification;
 
 class NewsController extends Controller
 {
@@ -17,7 +22,7 @@ class NewsController extends Controller
 
     /**
      * Return the list of news.
-     * 
+     *
      * @return Illuminate\Http\Response
      */
     public function index()
@@ -32,7 +37,7 @@ class NewsController extends Controller
 
     /**
      * Return the list of reported news.
-     * 
+     *
      * @return Illuminate\Http\Response
      */
     public function reported()
@@ -50,7 +55,7 @@ class NewsController extends Controller
 
     /**
      * Return deleted news.
-     * 
+     *
      * @return Illuminate\Http\Response
      */
     public function deleted()
@@ -65,7 +70,7 @@ class NewsController extends Controller
 
     /**
      * Return the list of reported comments.
-     * 
+     *
      * @return Illuminate\Http\Response
      */
     public function reportedComments()
@@ -132,7 +137,7 @@ class NewsController extends Controller
 
     /**
      * Restore the list of news reports.
-     * 
+     *
      * @param  int $id
      * @return Illuminate\Http\Response
      */
@@ -155,7 +160,7 @@ class NewsController extends Controller
 
     /**
      * Update the news.
-     * 
+     *
      * @param  Illuminate\Http\Request
      * @param  int
      * @return Illuminate\Http\Response
@@ -181,7 +186,7 @@ class NewsController extends Controller
 
     /**
      * Delete the news.
-     * 
+     *
      * @param  int
      * @return Illuminate\Http\Response
      */
@@ -193,15 +198,37 @@ class NewsController extends Controller
         if ($news->deleted_at) {
             return response(['message' => 'News already deleted.'], 422);
         }
-        
+
         $news->delete();
+
+        // retrieve all reports related to this news/
+        $reports = $news->reports()
+        ->whereHas('status', function($q) {
+            $q->where('name', 'investigating')->orWhere('name', 'open');
+        })
+        ->get();
+
+        // if there's any report, update the status to approved.
+        if (! is_null($reports)) {
+            $reportIds = $reports->pluck('id');
+            $approvedStatusId = ReportStatus::getId('approved');
+            Report::whereIn('id', $reportIds)->update(['status_id' => $approvedStatusId]);
+
+            
+            $reporterIds = $reports->unique('reporter_id')->pluck('reporter_id');
+            $reporters   = User::whereIn('id', $reporterIds)->get();
+            // should add reporter's exp here
+
+            // notify the reporter that their report has been approved
+            Notification::send($reporters, new NewsReportApprovedNotification($news));
+        }
 
         return response(['message' => 'News successfully deleted.']);
     }
 
     /**
      * Restore the news.
-     * 
+     *
      * @param  int
      * @return Illuminate\Http\Response
      */
@@ -213,7 +240,7 @@ class NewsController extends Controller
         if (is_null($news->deleted_at)) {
             return response(['message' => 'News is not deleted.'], 422);
         }
-        
+
         $news->deleted_at = null;
         $news->save();
 
@@ -259,7 +286,7 @@ class NewsController extends Controller
 
     /**
      * Restore the list of comment reports.
-     * 
+     *
      * @param  int $id
      * @return Illuminate\Http\Response
      */

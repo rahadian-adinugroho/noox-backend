@@ -35,10 +35,9 @@ class NewsReportApprovedNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($news, array $fcmTokens=null)
+    public function __construct($news)
     {
         $this->news      = $news;
-        $this->fcmTokens = $fcmTokens;
         $this->time      = \Carbon\Carbon::now();
     }
 
@@ -88,14 +87,8 @@ class NewsReportApprovedNotification extends Notification implements ShouldQueue
      */
     public function toFcm($notifiable)
     {
-        if (! is_null($this->fcmTokens)) {
-            $fcmTokens = $this->fcmTokens;
-        } else {
-            $fcmTokens = $notifiable->fcmTokens()->pluck('token')->toArray();
-        }
-        
         return [
-        'to'      => $fcmTokens,
+        'to'      => $notifiable->fcmTokens()->pluck('token')->toArray(),
         'title'   => 'News report approved!',
         'body'    => "Your report on news '{$this->news->title}' has been approved!",
         'payload' => $this->toArray($notifiable),
