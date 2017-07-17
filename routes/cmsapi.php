@@ -34,6 +34,10 @@ Route::delete('/news/{id}', 'CMS\API\NewsController@delete');
 
 Route::post('/news/{id}/restore', 'CMS\API\NewsController@restore');
 
+Route::delete('/news/comment/{id}', 'CMS\API\NewsController@deleteComment');
+
+Route::post('/news/comment/{id}/restore', 'CMS\API\NewsController@restoreComment');
+
 Route::put('/report/{id}', 'CMS\API\ReportController@update');
 
 /*

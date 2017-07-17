@@ -248,6 +248,47 @@ class NewsController extends Controller
     }
 
     /**
+     * Delete the comment.
+     *
+     * @param  int
+     * @return Illuminate\Http\Response
+     */
+    public function deleteComment($id)
+    {
+        if (! $comment = NewsComment::withTrashed()->find($id)) {
+            return response(['message' => 'Comment not found.'], 422);
+        }
+        if ($comment->deleted_at) {
+            return response(['message' => 'Comment already deleted.'], 422);
+        }
+
+        $comment->delete();
+
+        return response(['message' => 'Comment successfully deleted.']);
+    }
+
+    /**
+     * Restore the comment.
+     *
+     * @param  int
+     * @return Illuminate\Http\Response
+     */
+    public function restoreComment($id)
+    {
+        if (! $comment = NewsComment::withTrashed()->find($id)) {
+            return response(['message' => 'Comment not found.'], 422);
+        }
+        if (is_null($comment->deleted_at)) {
+            return response(['message' => 'Comment is not deleted.'], 422);
+        }
+
+        $comment->deleted_at = null;
+        $comment->save();
+
+        return response(['message' => 'Comment successfully restored.']);
+    }
+
+    /**
      * Return the list of comment replies.
      *
      * @param  int $id
@@ -255,7 +296,7 @@ class NewsController extends Controller
      */
     public function commentReplies($id)
     {
-        if (! $comment = NewsComment::find($id)) {
+        if (! $comment = NewsComment::withTrashed()->find($id)) {
             return response(['message' => 'Comment not found.'], 422);
         }
 
@@ -292,7 +333,7 @@ class NewsController extends Controller
      */
     public function commentReports($id)
     {
-        if (! $comment = NewsComment::find($id)) {
+        if (! $comment = NewsComment::withTrashed()->find($id)) {
             return response(['message' => 'Comment not found.'], 422);
         }
 

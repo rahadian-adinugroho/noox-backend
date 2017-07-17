@@ -3,11 +3,14 @@
 namespace Noox\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class NewsComment extends Model
 {
+    use SoftDeletes;
     use Traits\NPerGroup;
 
+    protected $dates    = ['deleted_at'];
     protected $fillable = array('news_id', 'user_id', 'content', 'parent_id');
     protected $hidden = array('pivot');
 

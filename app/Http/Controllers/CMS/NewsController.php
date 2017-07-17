@@ -77,7 +77,7 @@ class NewsController extends Controller
      */
     public function viewComment($id)
     {
-        if (! $data = NewsComment::with(['author', 'news'])->find($id)) {
+        if (! $data = NewsComment::withTrashed()->with(['author', 'news'])->find($id)) {
             abort(404);
         }
 
