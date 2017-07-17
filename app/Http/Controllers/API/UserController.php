@@ -201,6 +201,7 @@ class UserController extends BaseController
         $user = $this->auth->user();
 
         $data = $user->comments()
+        ->withTrashed()
         ->select(['id', 'news_id', 'created_at', 'content'])
         ->with(['news' => function($q){
             $q->select('id', 'cat_id', 'title');
