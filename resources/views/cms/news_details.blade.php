@@ -97,6 +97,9 @@
                   <button type="submit" id="edit-button" class="btn btn-success">Update</button>
                   <a href="{{ $data->url }}" target="_blank"><button type="button" class="btn btn-info">View Original</button></a>
                   <button type="button" id="recycle-button" class="btn btn-{{ ($data->deleted_at) ? 'primary' : 'danger' }} {{ ($data->deleted_at) ? 'restore-button' : '' }}">{{ ($data->deleted_at) ? 'Restore' : 'Delete' }}</button>
+                  @can('permanentDelete', Noox\Models\Admin::class)
+                  <button type="button" id="perma-delete-button" class="btn btn-danger">Permanent Delete</button>
+                  @endcan
                 </div>
               </div>
             </form>

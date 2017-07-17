@@ -86,6 +86,9 @@
               <div class="form-group">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <button type="button" id="recycle-button" class="btn btn-{{ ($data->deleted_at) ? 'primary' : 'danger' }} {{ ($data->deleted_at) ? 'restore-button' : '' }}">{{ ($data->deleted_at) ? 'Restore' : 'Delete' }}</button>
+                  @can('permanentDelete', Noox\Models\Admin::class)
+                  <button type="button" id="perma-delete-button" class="btn btn-danger">Permanent Delete</button>
+                  @endcan
                 </div>
               </div>
             </form>
