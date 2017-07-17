@@ -24,6 +24,8 @@ use Illuminate\Http\Request;
 
 Route::put('/admin/{id?}', 'CMS\API\AdminController@update');
 
+Route::post('/notifications/dismiss_all', 'CMS\API\AdminController@dismissAllNotifications');
+
 Route::put('/user/{id}', 'CMS\API\UserController@update');
 
 Route::put('/news/{id}', 'CMS\API\NewsController@update');

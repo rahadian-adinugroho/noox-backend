@@ -76,4 +76,18 @@ class AdminController extends Controller
 
         return response(['message' => 'Administrator data successfully updated.']);
     }
+
+    /**
+     * Dismiss all unread notifications.
+     * 
+     * @return Illuminate\Http\Response
+     */
+    public function dismissAllNotifications()
+    {
+        $admin = Auth::user();
+
+        $admin->unreadNotifications()->update(['read_at' => \Carbon\Carbon::now()]);
+
+        return response(['message' => 'All notifications dismissed.']);
+    }
 }

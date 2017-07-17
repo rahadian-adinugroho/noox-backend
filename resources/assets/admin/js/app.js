@@ -382,6 +382,30 @@ function notifGenerator(notification) {
     return html;
 }
 
+// Noox event listeners
+
+/**
+ * Handle the dismiss all notification button in top menu.
+ */
+$('.notif-dismiss-button').on('click', function (e){
+    axios.post(gCmsApiBase + '/notifications/dismiss_all')
+    .then(function (response){
+      let html = 
+      `
+      <li class="notif-button">
+        <div class="text-center">
+            <strong>No Notifications</strong>
+        </div>
+      </li>
+      `;
+      $('#menu1').html(html);
+      $('#noox-notification-badge').html('');
+    })
+    .catch(function (error){
+      spawnNoty('Cannot dismiss notifications!', 'error');
+    });
+});
+
 // Init laravel-echo
 import Echo from 'laravel-echo';
 

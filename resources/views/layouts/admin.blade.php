@@ -140,7 +140,7 @@
                       @endif
                       <li class="notif-dismiss-button">
                         <div class="text-center">
-                          <a href="{{ url('cms/notifications') }}">
+                          <a href="javascript:;">
                             <strong>{{ ($unreadNotifications === 1) ? 'Dismiss Notification' : 'Dismiss All Notifications' }}</strong>
                           </a>
                         </div>
@@ -190,11 +190,11 @@
         spawnNoty('{{ Session::get('flash_notification') }}', '{{ Session::get('flash_notification_type', 'info') }}')
       @endif
       if (typeof Echo !== "undefined") {
-            Echo.private("Noox.Models.Admin.{{Auth::user()->id}}")
-            .notification((notification) => {
-                handleNotification(notification);
-            });
-        }
+        Echo.private("Noox.Models.Admin.{{Auth::user()->id}}")
+        .notification((notification) => {
+            handleNotification(notification);
+        });
+      }
     </script>
   </body>
   </html>
