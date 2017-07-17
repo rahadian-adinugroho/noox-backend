@@ -52,7 +52,7 @@ class ReportController extends Controller
         }
 
         $report->status_id = $newStatusId;
-        // $report->save();
+        $report->save();
 
         if (($report->reportable_type == 'news') && ($report->reporter->getSetting('report_approved_notif') == '1')) {
            $report->reporter->notify(new NewsReportApprovedNotification($report->reportable()->withTrashed()->first()));

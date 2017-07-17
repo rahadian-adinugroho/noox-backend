@@ -214,7 +214,6 @@ class NewsController extends Controller
             $approvedStatusId = ReportStatus::getId('approved');
             Report::whereIn('id', $reportIds)->update(['status_id' => $approvedStatusId]);
 
-            
             $reporterIds = $reports->unique('reporter_id')->pluck('reporter_id');
             $reporters   = User::whereIn('id', $reporterIds)->get();
             // should add reporter's exp here
