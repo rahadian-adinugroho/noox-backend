@@ -22,10 +22,10 @@ class ReportsTableSeeder extends Seeder
 
         $entries = [
         ['reporter_id' => 1, 'content' => 'Tukang ngespam.', 'status_id' => 2, 'reportable_id' => 3, 'reportable_type' => 'user'],
-        ['reporter_id' => 3, 'content' => 'Sok pinter.', 'status_id' => 4, 'reportable_id' => 1, 'reportable_type' => 'user'],
+        ['reporter_id' => 3, 'content' => 'Sok pinter.', 'status_id' => 3, 'reportable_id' => 1, 'reportable_type' => 'user'],
         ['reporter_id' => 2, 'content' => 'Ternyata hoax.', 'status_id' => 1, 'reportable_id' => 3, 'reportable_type' => 'news'],
         ['reporter_id' => 2, 'content' => 'Hobinya ngespam.', 'status_id' => 1, 'reportable_id' => 3, 'reportable_type' => 'user'],
-        ['reporter_id' => 1, 'content' => 'Kurang relevan.', 'status_id' => 3, 'reportable_id' => 4, 'reportable_type' => 'news'],
+        ['reporter_id' => 1, 'content' => 'Kurang relevan.', 'status_id' => 4, 'reportable_id' => 4, 'reportable_type' => 'news'],
         ['reporter_id' => 3, 'content' => 'Komen gak penting', 'status_id' => 1, 'reportable_id' => 1, 'reportable_type' => 'comment'],
         ];
         foreach ($entries as $key => $entry) {
