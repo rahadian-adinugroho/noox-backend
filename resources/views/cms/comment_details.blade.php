@@ -178,6 +178,11 @@
     </div>
   </div>
 </div>
+@can('permanentDelete', Noox\Models\Admin::class)
+<form id="perma-delete-form" action="{{ route('cms.news.comment.delete', $data->id) }}" method="POST" style="display: none;">
+  {{ csrf_field() }}
+</form>
+@endcan
 @endsection
 
 @section('pagespecificscripts')
@@ -306,4 +311,20 @@
     );
   });
 </script>
+
+@can('permanentDelete', Noox\Models\Admin::class)
+<!-- permanent delete script -->
+<script type="text/javascript">
+  let perDelButton = $('#perma-delete-button');
+
+  function permaDeleteItem() {
+    form = $('#perma-delete-form');
+    form.submit();
+  }
+
+  perDelButton.on('click', function (e){
+      swalConfirm(permaDeleteItem, 'WARNING', 'This comment and its replies will be deleted permanently! Proceed?', 'warning');
+  });
+</script>
+@endcan
 @stop
