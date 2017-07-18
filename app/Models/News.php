@@ -64,7 +64,7 @@ class News extends Model
             foreach ($res as $key => $data) {
                 $categories[$data->id] = $data->name;
             }
-            Cache::put('news_categories', $categories, Carbon::now()->addDay());
+            Cache::forever('news_categories', $categories);
         }
 
         if (isset($categories[$catId])) {

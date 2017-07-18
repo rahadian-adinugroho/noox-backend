@@ -662,7 +662,7 @@ class NewsController extends BaseController
             foreach ($res as $key => $data) {
                 $toCache[$data->id] = $data->name;
             }
-            Cache::put('news_categories', $toCache, Carbon::now()->addDay());
+            Cache::forever('news_categories', $toCache);
 
             $categories = array_flip($toCache);
         }

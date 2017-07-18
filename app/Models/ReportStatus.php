@@ -34,7 +34,7 @@ class ReportStatus extends Model
             foreach ($res as $key => $data) {
                 $statuses[$data->name] = $data->id;
             }
-            \Cache::put('report_statuses', $statuses, \Carbon\Carbon::now()->addDay());
+            \Cache::forever('report_statuses', $statuses);
         }
 
         if (isset($statuses[$name])) {
