@@ -81,4 +81,16 @@ class AdminPolicy
     {
         return $user->role === 2;
     }
+
+    /**
+     * Determine whether the current admin can permanent delete item.
+     *
+     * @param  \Noox\Models\Admin  $user
+     * @param  \Noox\Models\Admin  $admin
+     * @return mixed
+     */
+    public function permanentDelete(Admin $user)
+    {
+        return $user->role === 2;
+    }
 }
