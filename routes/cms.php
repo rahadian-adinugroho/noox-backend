@@ -45,6 +45,8 @@ Route::get('/news/{id}', 'CMS\NewsController@view')->name('cms.news.details');
 
 Route::get('/news/{id}/reports', 'CMS\NewsController@newsReports')->name('cms.news.reports');
 
+Route::post('/news/{id}/delete', 'CMS\NewsController@permanentDelete')->name('cms.news.delete');
+
 Route::get('/news/comments/reported', 'CMS\NewsController@reportedComments')->name('cms.news.comments.reported');
 
 Route::get('/news/comment/{id}', 'CMS\NewsController@viewComment')->name('cms.news.comment.details');

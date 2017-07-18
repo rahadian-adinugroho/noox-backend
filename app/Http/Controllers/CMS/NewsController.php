@@ -84,6 +84,34 @@ class NewsController extends Controller
         return view('cms.comment_details', compact('data'));
     }
 
+    /**
+     * Delete the news permanently.
+     * 
+     * @param  Illuminate\Http\Request
+     * @param  int
+     * @return Illuminate\Http\Response
+     */
+    public function permanentDelete(Request $request, $id)
+    {
+        if (! $news = News::withTrashed()->find($id)) {
+            abort(404);
+        }
+
+        $news->forceDelete();
+
+        $request->session()->flash('flash_notification', 'The news has been permanently deleted!');
+        $request->session()->flash('flash_notification_type', 'success');
+
+        return redirect()->route('cms.news');
+    }
+
+    /**
+     * Delete the comment permanently.
+     * 
+     * @param  Illuminate\Http\Request
+     * @param  int
+     * @return Illuminate\Http\Response
+     */
     public function permanentDeleteComment(Request $request, $id)
     {
         if (! $comment = NewsComment::withTrashed()->find($id)) {
