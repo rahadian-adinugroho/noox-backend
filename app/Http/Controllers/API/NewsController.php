@@ -131,13 +131,16 @@ class NewsController extends BaseController
      */
     public function search(\Noox\Http\Requests\NewsSearchRequest $r)
     {
-        $search = $r->input('q');
+        $words = array_map(function ($in){
+            return '+' . $in;
+        }, explode(' ', $r->input('q')));
+        $search = implode(' ', $words);
 
         $query = News::
         select(['id', 'title', 'pubtime', 'source_id', 'cat_id'])
         ->with('source', 'category')
         ->withCount(['readers', 'comments'])
-        ->where('title', 'like', '%' . $search . '%');
+        ->whereRaw('MATCH (title) AGAINST (? IN BOOLEAN MODE)' , array($search));
 
         $categories = $r->input('category');
         if (count($categories)) {
