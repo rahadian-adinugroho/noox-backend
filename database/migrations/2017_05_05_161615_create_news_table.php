@@ -35,6 +35,8 @@ class CreateNewsTable extends Migration
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });
+
+        DB::statement('ALTER TABLE `news` ADD FULLTEXT `news_title_fulltext` (`title`)');
     }
 
     /**

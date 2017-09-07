@@ -32,6 +32,14 @@ class NewsController extends Controller
         return Datatables::of($news)->addColumn('action', function ($news) {
                 return '<a href="'.route('cms.news.details', [$news->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
             })
+            ->filterColumn('title', function($query, $keyword) {
+                $words = array_map(function ($in){
+                    return '+' . $in;
+                }, explode(' ', $keyword));
+                $search = implode(' ', $words);
+
+                $query->whereRaw('MATCH (title) AGAINST (? IN BOOLEAN MODE)' , array($search));
+            })
             ->make(true);
     }
 
@@ -50,6 +58,14 @@ class NewsController extends Controller
         return Datatables::of($news)->addColumn('action', function ($news) {
                 return '<a href="'.route('cms.news.details', [$news->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
             })
+            ->filterColumn('title', function($query, $keyword) {
+                $words = array_map(function ($in){
+                    return '+' . $in;
+                }, explode(' ', $keyword));
+                $search = implode(' ', $words);
+
+                $query->whereRaw('MATCH (title) AGAINST (? IN BOOLEAN MODE)' , array($search));
+            })
             ->make(true);
     }
 
@@ -64,6 +80,14 @@ class NewsController extends Controller
 
         return Datatables::of($news)->addColumn('action', function ($news) {
                 return '<a href="'.route('cms.news.details', [$news->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> View</a>';
+            })
+            ->filterColumn('title', function($query, $keyword) {
+                $words = array_map(function ($in){
+                    return '+' . $in;
+                }, explode(' ', $keyword));
+                $search = implode(' ', $words);
+
+                $query->whereRaw('MATCH (title) AGAINST (? IN BOOLEAN MODE)' , array($search));
             })
             ->make(true);
     }
