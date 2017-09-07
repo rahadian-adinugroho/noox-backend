@@ -5,6 +5,7 @@ namespace Noox\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Noox\Models\News;
+use Cache;
 
 class NewsController extends Controller
 {
@@ -23,7 +24,14 @@ class NewsController extends Controller
             abort(404, 'Artikel tidak ditemukan :(');
         }
 
-        $otherNews = News::with('category')->inRandomOrder()->take(3)->get();
+        if (Cache::has('latest_news')) {
+            $newsSet = Cache::get('latest_news');
+        } else {
+            $newsSet = News::with('category')->orderBy('id', 'desc')->take(50)->get();
+            Cache::put('latest_news', $newsSet, Carbon::now()->addMinutes(15));
+        }
+
+        $otherNews = $newsSet->random(3);
 
         return view('news', compact(['news', 'otherNews']));
     }
