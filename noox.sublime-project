@@ -1,0 +1,38 @@
+{
+	"translate_tabs_to_spaces": true,
+	"folders":
+	[
+		{
+			"name": "App",
+			"path": "app"
+		},
+		{
+			"name": "Routes",
+			"path": "routes"
+		},
+		{
+			"name": "Resources",
+			"path": "resources"
+		},
+		{
+			"name": "Database",
+			"path": "database"
+		},
+		{
+			"name": "Public",
+			"path": "public"
+		},
+		{
+			"name": "Configurations",
+			"path": "config"
+		},
+		{
+			"name": "Tests",
+			"path": "tests"
+		},
+		{
+			"name": "Vendor",
+			"path": "vendor"
+		}
+	]
+}
